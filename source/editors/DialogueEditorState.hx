@@ -49,6 +49,12 @@ class DialogueEditorState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 		FlxG.camera.bgColor = FlxColor.fromHSL(0, 0, 0.5);
 
+		if (!FlxG.autoPause && FlxG.sound.music != null)
+		{
+			curVolume = 0;
+			minVolume = 0;
+		}
+
 		defaultLine = {
 			portrait: DialogueCharacter.DEFAULT_CHARACTER,
 			expression: 'talk',

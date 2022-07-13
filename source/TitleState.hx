@@ -497,7 +497,7 @@ class TitleState extends MusicBeatState
 				
 				if(titleText != null) titleText.animation.play('press');
 
-				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 0.4);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 				transitioning = true;
@@ -638,10 +638,12 @@ class TitleState extends MusicBeatState
 				case 1:
 					//FlxG.sound.music.stop();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-					FlxG.sound.music.fadeIn(4, 0, 0.7);
+					FlxG.sound.music.fadeIn(4, 0, 0.3);
 				case 2:
 					#if PSYCH_WATERMARKS
 					createCoolText(['Psych Engine by'], 15);
+					#elseif LETTERY_WATERMARKS
+					createCoolText(['LetterY']);
 					#else
 					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 					#end
@@ -651,6 +653,8 @@ class TitleState extends MusicBeatState
 					addMoreText('Shadow Mario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('shubs', 15);
+					#elseif LETTERY_WATERMARKS
+					addMoreText('presents');
 					#else
 					addMoreText('present');
 					#end
@@ -662,7 +666,7 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = 'In association \nwith';
 				// credTextShit.screenCenter();
 				case 6:
-					#if PSYCH_WATERMARKS
+					#if (PSYCH_WATERMARKS || LETTERY_WATERMARKS) 
 					createCoolText(['Not associated', 'with'], -40);
 					#else
 					createCoolText(['In association', 'with'], -40);
@@ -768,7 +772,7 @@ class TitleState extends MusicBeatState
 			{
 				remove(ngSpr);
 				remove(credGroup);
-				FlxG.camera.flash(FlxColor.WHITE, 4);
+				FlxG.camera.flash(FlxColor.WHITE, 0.6);
 
 				var easteregg:String = FlxG.save.data.psychDevsEasterEgg;
 				if (easteregg == null) easteregg = '';

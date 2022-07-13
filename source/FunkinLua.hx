@@ -8,6 +8,7 @@ import llua.Convert;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.addons.effects.FlxTrail;
+import flixel.effects.FlxFlicker;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -1671,6 +1672,31 @@ class FunkinLua {
 			}
 			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
+		Lua_helper.add_callback(lua, "flickerEliminate", function(obj:String, duration:Float, interval:Float = 0.1) {
+			if(PlayState.instance.getLuaObject(obj)!=null) {
+				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
+				FlxFlicker.flicker(shit, duration, interval, false, false, function(flick:FlxFlicker)
+				{
+					shit.kill();
+				});
+				return;
+			}
+
+			var killMe:Array<String> = obj.split('.');
+			var poop:FlxSprite = getObjectDirectly(killMe[0]);
+			if(killMe.length > 1) {
+				poop = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
+			}
+
+			if(poop != null) {
+				FlxFlicker.flicker(poop, duration, interval, false, false, function(flick:FlxFlicker)
+				{
+					poop.kill();
+				});
+				return;
+			}
+			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
+		});
 		Lua_helper.add_callback(lua, "updateHitbox", function(obj:String) {
 			if(PlayState.instance.getLuaObject(obj)!=null) {
 				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
@@ -2445,6 +2471,16 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "stringEndsWith", function(str:String, end:String) {
 			return str.endsWith(end);
+		});
+
+		// lettery lua stuff!!
+		Lua_helper.add_callback(lua, "setSongTime", function(time:Float) {
+			return PlayState.instance.setSongTime(time);
+		});
+		Lua_helper.add_callback(lua, "skipFoward", function(time:Float) { // doesn't work fine but meeeh whateverrr >:(
+			PlayState.instance.setSongTime(Conductor.songPosition + time * 1000);
+			PlayState.instance.health = 1;
+			return;
 		});
 
 		call('onCreate', []);

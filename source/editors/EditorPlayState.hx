@@ -67,6 +67,12 @@ class EditorPlayState extends MusicBeatState
 	{
 		instance = this;
 
+		if (!FlxG.autoPause && FlxG.sound.music != null)
+		{
+			curVolume = 1;
+			minVolume = 1;
+		}
+
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = FlxColor.fromHSB(FlxG.random.int(0, 359), FlxG.random.float(0, 0.8), FlxG.random.float(0.3, 1));

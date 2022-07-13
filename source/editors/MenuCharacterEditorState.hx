@@ -40,6 +40,13 @@ class MenuCharacterEditorState extends MusicBeatState
 	var defaultCharacters:Array<String> = ['dad', 'bf', 'gf'];
 
 	override function create() {
+
+		if (!FlxG.autoPause && FlxG.sound.music != null)
+		{
+			curVolume = 0;
+			minVolume = 0;
+		}
+		
 		characterFile = {
 			image: 'Menu_Dad',
 			scale: 1,

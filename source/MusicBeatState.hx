@@ -19,6 +19,9 @@ class MusicBeatState extends FlxUIState
 	private var curSection:Int = 0;
 	private var stepsToDo:Int = 0;
 
+	private var curVolume:Float = 0.7;
+	private var minVolume:Float = 0.2;
+
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 
@@ -64,6 +67,18 @@ class MusicBeatState extends FlxUIState
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
 		super.update(elapsed);
+	}
+
+	override public function onFocus():Void
+	{
+		if (!FlxG.autoPause) FlxTween.tween(FlxG.sound.music, {volume: curVolume}, 0.4);
+		super.onFocus();
+	}
+		
+	override public function onFocusLost():Void
+	{
+		if (!FlxG.autoPause) FlxTween.tween(FlxG.sound.music, {volume: minVolume}, 0.4);
+		super.onFocusLost();
 	}
 
 	private function updateSection():Void

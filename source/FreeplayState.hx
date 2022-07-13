@@ -50,6 +50,8 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
+	public static var inverse:Bool = false;
+
 	override function create()
 	{
 		//Paths.clearStoredMemory();
@@ -203,6 +205,12 @@ class FreeplayState extends MusicBeatState
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
+
+		var text2:FlxText = new FlxText(textBG.x, textBG.y - 40, FlxG.width, 'PRESS ALT TO PLAY AS ENEMY', size);
+		text2.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, LEFT);
+		text2.scrollFactor.set();
+		add(text2);
+
 		super.create();
 	}
 
@@ -243,10 +251,6 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.7)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
@@ -355,6 +359,21 @@ class FreeplayState extends MusicBeatState
 				vocals.volume = 0.7;
 				instPlaying = curSelected;
 				#end
+			}
+		}
+
+		if (FlxG.keys.justPressed.ALT)
+		{
+			if (inverse == true)
+			{
+				inverse = false;
+				trace('false');
+			}
+
+			if (inverse == false)
+			{
+				inverse = true;
+				trace('true');
 			}
 		}
 
