@@ -171,6 +171,9 @@ class PlayState extends MusicBeatState
 	private var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
+	public var noteShit:FlxSprite;
+	// public var noteShitNum:FlxSprite;
+
 	public var ratingsData:Array<Rating> = [];
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
@@ -1182,6 +1185,47 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(scoreTxt);
 
+		noteShit = new FlxSprite(120, 240, Paths.image('noteCombo'));
+		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
+		noteShit.animation.addByPrefix("boom", "appear", 30, false);
+		noteShit.animation.addByPrefix("fosh", "disappear", 60, false);
+		noteShit.scrollFactor.set();
+		noteShit.visible = false;
+		noteShit.active = false;
+		noteShit.antialiasing = ClientPrefs.globalAntialiasing;
+		add(noteShit);
+
+		noteShit.setGraphicSize(Std.int(noteShit.width * 0.74));
+		noteShit.updateHitbox();
+
+		/*
+
+		for (i in 1...3)
+		{
+			noteShitNum = new FlxSprite(0, 0, Paths.image('noteComboNumbers'));
+
+			noteShitNum.x = noteShit.x;
+			noteShitNum.y = noteShit.y;
+
+			noteShitNum.frames = Paths.getSparrowAtlas('noteComboNumbers');
+
+			for (m in 0...9)
+			{
+				noteShitNum.animation.addByPrefix("boom", Std.string(m) + "_appear", 30, false);
+				noteShitNum.animation.addByPrefix("fosh", Std.string(m) + "_disappear", 60, false);
+			}
+			noteShitNum.scrollFactor.set();
+			noteShitNum.antialiasing = ClientPrefs.globalAntialiasing;
+			add(noteShitNum);
+	
+			noteShitNum.setGraphicSize(Std.int(noteShitNum.width * 0.74));
+			noteShitNum.updateHitbox();
+		}
+		
+		*/
+
+		CoolUtil.precacheSound('noteComboSound');
+
 		botplayTxt = new FlxText(-20, 632, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
@@ -1204,6 +1248,7 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
+		noteShit.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -3181,10 +3226,50 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		if (lastNote && !SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+		{
+			if (fuckinBool)
+			{
+				noteShit.visible = true;
+				noteShit.active = true;
+				miniPlayAnimation(noteShit, "boom");
+				FlxG.sound.play(Paths.sound('noteComboSound'));
+				// trace(noteComboNumberlol);
+				noteComboNumberlol = 0;
+				fuckinBool2 = true;
+				fuckinBool = false;
+			}
+	
+			if (noteShit.animation.curAnim.finished && noteShit.animation.curAnim.name == "boom")
+			{
+				if (fuckinBool2)
+				{
+					miniPlayAnimation(noteShit, "fosh");
+					noteShit.x += 90;
+					fuckinBool2 = false;
+				}
+			}
+	
+			if (noteShit.animation.curAnim.finished && noteShit.animation.curAnim.name == "fosh")
+			{
+				noteShit.visible = false;
+				noteShit.active = false;
+				noteShit.x -= 90;
+	
+				lastNote = false;
+			}
+	
+		}
+
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
 		callOnLuas('onUpdatePost', [elapsed]);
+	}
+
+	function miniPlayAnimation(object:FlxSprite, anim:String)
+	{
+		object.animation.play(anim);
 	}
 
 	function openPauseMenu()
@@ -3949,6 +4034,12 @@ class PlayState extends MusicBeatState
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
+	public var lastNote:Bool = false;
+	public var showNoteCombo:Bool = true;
+	var fuckinBool:Bool = false;
+	var fuckinBool2:Bool = false;
+	var noteComboNumberlol:Int = 0;
+
 	private function popUpScore(note:Note = null):Void
 	{
 		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
@@ -4122,6 +4213,12 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet * 0.002
 		});
+
+		if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && showNoteCombo)
+		{
+			lastNote = true;
+			fuckinBool = true;
+		}
 	}
 
 	private function popUpMiss():Void
@@ -4545,6 +4642,8 @@ class PlayState extends MusicBeatState
 				combo += 1;
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
+
+				noteComboNumberlol++;
 			}
 			health += note.hitHealth * healthGain;
 
