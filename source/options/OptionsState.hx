@@ -23,21 +23,22 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
+import flixel.system.FlxSound;
 import Controls;
 
 using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
+	var options:Array<String> = ['Gameplay', 'Visuals and UI', 'Graphics', 'Controls', 'Adjust Delay and Combo']; // i removed note colors cause it's useless :/ (but the code still on the source)
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
+	
+	var pauseMusicC:FlxSound;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
-			case 'Note Colors':
-				openSubState(new options.NotesSubState());
 			case 'Controls':
 				openSubState(new options.ControlsSubState());
 			case 'Graphics':
@@ -83,6 +84,31 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true, false);
 		add(selectorRight);
 
+		if (MainMenuState.instance.stinkypoopoo)
+		{
+			pauseMusicC = new FlxSound();
+			
+			if (ClientPrefs.pauseMusic != 'None') {
+				pauseMusicC.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.pauseMusic)), true, true);
+			}
+				
+			pauseMusicC.volume = 0;
+			pauseMusicC.play(false, Std.int(pauseMusicC.length / 2));
+	
+			FlxTween.tween(pauseMusicC, {volume: 0.8}, 0.4, {ease: FlxEase.quintOut});
+	
+			FlxG.sound.list.add(pauseMusicC);
+	
+			if (controls.BACK)
+			{
+				FlxTween.tween(pauseMusicC, {volume: 0}, 0.4, {ease: FlxEase.quintOut});
+				new FlxTimer().start(0.4, function(tmr:FlxTimer)
+				{
+					pauseMusicC.destroy();
+				});
+			}
+		}
+
 		changeSelection();
 		ClientPrefs.saveSettings();
 
@@ -106,7 +132,13 @@ class OptionsState extends MusicBeatState
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			if (!MainMenuState.instance.stinkypoopoo)
+			{
+				MusicBeatState.switchState(new MainMenuState());
+				MainMenuState.instance.stinkypoopoo = false;
+			} else {
+				LoadingState.loadAndSwitchState(new PlayState());
+			}
 		}
 
 		if (controls.ACCEPT) {

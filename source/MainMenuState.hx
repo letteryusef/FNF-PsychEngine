@@ -27,6 +27,8 @@ class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
+	public static var instance:MainMenuState;
+	public var stinkypoopoo:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
@@ -47,6 +49,8 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+		instance = this;
+		
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
 		#end

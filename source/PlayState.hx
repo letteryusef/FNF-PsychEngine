@@ -1392,9 +1392,9 @@ class PlayState extends MusicBeatState
 
 		Conductor.safeZoneOffset = (ClientPrefs.safeFrames / 60) * 1000;
 
-		if (!isStoryMode && FreeplayState.inverse)
-		{
-		}
+		// if (!isStoryMode && FreeplayState.inverse)
+		// {
+		// }
 
 		
 		callOnLuas('onCreatePost', []);
@@ -4676,6 +4676,7 @@ class PlayState extends MusicBeatState
 
 			if (!isStoryMode)
 			{
+				/*
 				if (FreeplayState.inverse)
 				{
 					boyfriend.playAnim(animToPlay + note.animSuffix, true);
@@ -4686,6 +4687,13 @@ class PlayState extends MusicBeatState
 						char.playAnim(animToPlay, true);
 						char.holdTimer = 0;
 					}
+				}
+				*/
+
+				if(char != null)
+				{
+					char.playAnim(animToPlay, true);
+					char.holdTimer = 0;
 				}
 			}
 		}
@@ -4785,6 +4793,7 @@ class PlayState extends MusicBeatState
 				{
 					if (!isStoryMode)
 					{
+						/*
 						if (!FreeplayState.inverse)
 						{
 							boyfriend.playAnim(animToPlay + note.animSuffix, true);
@@ -4796,6 +4805,10 @@ class PlayState extends MusicBeatState
 								dad.holdTimer = 0;
 							}
 						}
+						*/
+
+						boyfriend.playAnim(animToPlay + note.animSuffix, true);
+						boyfriend.holdTimer = 0;
 					}
 				}
 

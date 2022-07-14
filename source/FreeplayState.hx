@@ -13,7 +13,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
@@ -50,7 +52,7 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
-	public static var inverse:Bool = false;
+	// public static var inverse:Bool = false;
 
 	override function create()
 	{
@@ -206,10 +208,14 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		add(text);
 
+		/*
+
 		var text2:FlxText = new FlxText(textBG.x, textBG.y - 40, FlxG.width, 'PRESS ALT TO PLAY AS ENEMY', size);
 		text2.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, LEFT);
 		text2.scrollFactor.set();
 		add(text2);
+
+		*/
 
 		super.create();
 	}
@@ -362,6 +368,8 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
+		/*
+
 		if (FlxG.keys.justPressed.ALT)
 		{
 			if (inverse == true)
@@ -376,6 +384,8 @@ class FreeplayState extends MusicBeatState
 				trace('true');
 			}
 		}
+
+		*/
 
 		else if (accepted)
 		{
@@ -402,10 +412,26 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			
+			if (FlxG.sound.music != null)
+				
+				FlxTween.tween(FlxG.sound.music, {volume: 0}, 1, {ease: FlxEase.expoOut});
+
+			FlxG.sound.play(Paths.sound('cancelMenu'), 0.4);
+
+			FlxG.camera.zoom += 0.045;
+
+			FlxTween.tween(FlxG.camera, {zoom: 1.0}, 1, {ease: FlxEase.expoOut});
+			
 			if (FlxG.keys.pressed.SHIFT){
-				LoadingState.loadAndSwitchState(new ChartingState());
+				new FlxTimer().start(0.4, function(tmr:FlxTimer)
+				{
+					LoadingState.loadAndSwitchState(new ChartingState());
+				});
 			}else{
-				LoadingState.loadAndSwitchState(new PlayState());
+				new FlxTimer().start(0.4, function(tmr:FlxTimer)
+				{
+					LoadingState.loadAndSwitchState(new PlayState());
+				});
 			}
 
 			FlxG.sound.music.volume = 0;
