@@ -4056,13 +4056,12 @@ class PlayState extends MusicBeatState
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
-<<<<<<< HEAD
 	public var lastNote:Bool = false;
 	public var showNoteCombo:Bool = true;
 	var fuckinBool:Bool = false;
 	var fuckinBool2:Bool = false;
 	var noteComboNumberlol:Int = 0;
-=======
+	
 	private function cachePopUpScore()
 	{
 		var pixelShitPart1:String = '';
@@ -4083,7 +4082,6 @@ class PlayState extends MusicBeatState
 			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
 		}
 	}
->>>>>>> main
 
 	private function popUpScore(note:Note = null):Void
 	{
