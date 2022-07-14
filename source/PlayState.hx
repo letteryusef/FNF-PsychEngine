@@ -302,6 +302,10 @@ class PlayState extends MusicBeatState
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
 
+	// little camera shit
+	var cameraofs:Float = 8;
+
+	// extra stuff
 	var botPlayx:Float;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
@@ -3254,7 +3258,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		if (lastNote && !SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+		if (lastNote && !SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished)
 		{
 			if (fuckinBool)
 			{
@@ -3835,20 +3839,20 @@ class PlayState extends MusicBeatState
 	{
 		if (isNote && ClientPrefs.followChars){
 			if (boyfriend.animation.curAnim.name.startsWith('singUP')){
-				yOffsetB = -25;
+				yOffsetB = -cameraofs;
 				xOffsetB = 0;
 			}
 			else if (boyfriend.animation.curAnim.name.startsWith('singDOWN')){
-				yOffsetB = 25;
+				yOffsetB = cameraofs;
 				xOffsetB = 0;
 			}
 			else if (boyfriend.animation.curAnim.name.startsWith('singLEFT')){
 				yOffsetB = 0;
-				xOffsetB = -25;
+				xOffsetB = -cameraofs;
 			}
 			else if (boyfriend.animation.curAnim.name.startsWith('singRIGHT')){
 				yOffsetB = 0;
-				xOffsetB = 25;
+				xOffsetB = cameraofs;
 			}
 			else if (!boyfriend.animation.curAnim.name.startsWith('sing') || !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection){
 				yOffsetB = 0;
@@ -3856,20 +3860,20 @@ class PlayState extends MusicBeatState
 			}
 
 			if (dad.animation.curAnim.name.startsWith('singUP')){
-				yOffsetD = -25;
+				yOffsetD = -cameraofs;
 				xOffsetD = 0;
 			}
 			else if (dad.animation.curAnim.name.startsWith('singDOWN')){
-				yOffsetD = 25;
+				yOffsetD = cameraofs;
 				xOffsetD = 0;
 			}
 			else if (dad.animation.curAnim.name.startsWith('singLEFT')){
 				yOffsetD = 0;
-				xOffsetD = -25;
+				xOffsetD = -cameraofs;
 			}
 			else if (dad.animation.curAnim.name.startsWith('singRIGHT')){
 				yOffsetD = 0;
-				xOffsetD = 25;
+				xOffsetD = cameraofs;
 			}
 			else if (!dad.animation.curAnim.name.startsWith('sing') || PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection){
 				yOffsetD = 0;
@@ -4762,7 +4766,7 @@ class PlayState extends MusicBeatState
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 
-				if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && !startingSong && showNoteCombo)
+				if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished && showNoteCombo)
 				{
 					lastNote = true;
 					fuckinBool = true;
