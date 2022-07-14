@@ -303,7 +303,7 @@ class PlayState extends MusicBeatState
 	private var keysArray:Array<Dynamic>;
 
 	// little camera shit
-	var cameraofs:Float = 8;
+	public var cameraofs:Float = 10;
 
 	// extra stuff
 	var botPlayx:Float;
