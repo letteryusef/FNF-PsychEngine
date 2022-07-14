@@ -70,6 +70,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Camera Movement',
+			"If checked, camera will move if you hit a certain note.",
+			'followChars',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",
 			'noReset',

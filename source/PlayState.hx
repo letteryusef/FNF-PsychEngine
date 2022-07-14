@@ -270,6 +270,7 @@ class PlayState extends MusicBeatState
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
+	public var countdownFinished:Bool = false;
 	var songLength:Float = 0;
 
 	public var boyfriendCameraOffset:Array<Float> = null;
@@ -1144,7 +1145,7 @@ class PlayState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		FlxG.fixedTimestep = false;
-		moveCameraSection();
+		moveCameraSection(0);
 
 		healthBarBG = new AttachedSprite('healthBar');
 		healthBarBG.y = FlxG.height * 0.89;
@@ -2172,6 +2173,7 @@ class PlayState extends MusicBeatState
 						});
 						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
 					case 4:
+						countdownFinished = true;
 				}
 
 				notes.forEachAlive(function(note:Note) {
@@ -2813,6 +2815,10 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
+
+		if (countdownFinished && generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos){
+			moveCameraSection(Std.int(curStep / 16), true);
+		}
 
 		switch (curStage)
 		{
@@ -3775,12 +3781,36 @@ class PlayState extends MusicBeatState
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}
 
-	function moveCameraSection():Void {
+	function moveCameraSection(?id:Int = 0, isNote:Bool = false):Void {
 		if(SONG.notes[curSection] == null) return;
 
 		if (gf != null && SONG.notes[curSection].gfSection)
 		{
-			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
+			var yOffsetB:Int = 0;
+			var xOffsetB:Int = 0;
+			if (ClientPrefs.followChars){
+				if (gf.animation.curAnim.name.startsWith('singUP')){
+					yOffsetB = -25;
+					xOffsetB = 0;
+				}
+				else if (gf.animation.curAnim.name.startsWith('singDOWN')){
+					yOffsetB = 25;
+					xOffsetB = 0;
+				}
+				else if (gf.animation.curAnim.name.startsWith('singLEFT')){
+					yOffsetB = 0;
+					xOffsetB = -25;
+				}
+				else if (gf.animation.curAnim.name.startsWith('singRIGHT')){
+					yOffsetB = 0;
+					xOffsetB = 25;
+				}
+				else if (!gf.animation.curAnim.name.startsWith('sing')){
+					yOffsetB = 0;
+					xOffsetB = 0;
+				}
+			}
+			camFollow.set(gf.getMidpoint().x + xOffsetB, gf.getMidpoint().y + yOffsetB);
 			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
 			tweenCamIn();
@@ -3790,29 +3820,73 @@ class PlayState extends MusicBeatState
 
 		if (!SONG.notes[curSection].mustHitSection)
 		{
-			moveCamera(true);
+			moveCamera(true, isNote);
 			callOnLuas('onMoveCamera', ['dad']);
 		}
 		else
 		{
-			moveCamera(false);
+			moveCamera(false, isNote);
 			callOnLuas('onMoveCamera', ['boyfriend']);
 		}
 	}
 
 	var cameraTwn:FlxTween;
-	public function moveCamera(isDad:Bool)
+	public function moveCamera(isDad:Bool, isNote:Bool = false, yOffsetB:Float = 0, xOffsetB:Float = 0, yOffsetD:Float = 0, xOffsetD:Float = 0) // took it from OURPLE GUY mod
 	{
+		if (isNote && ClientPrefs.followChars){
+			if (boyfriend.animation.curAnim.name.startsWith('singUP')){
+				yOffsetB = -25;
+				xOffsetB = 0;
+			}
+			else if (boyfriend.animation.curAnim.name.startsWith('singDOWN')){
+				yOffsetB = 25;
+				xOffsetB = 0;
+			}
+			else if (boyfriend.animation.curAnim.name.startsWith('singLEFT')){
+				yOffsetB = 0;
+				xOffsetB = -25;
+			}
+			else if (boyfriend.animation.curAnim.name.startsWith('singRIGHT')){
+				yOffsetB = 0;
+				xOffsetB = 25;
+			}
+			else if (!boyfriend.animation.curAnim.name.startsWith('sing') || !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection){
+				yOffsetB = 0;
+				xOffsetB = 0;
+			}
+
+			if (dad.animation.curAnim.name.startsWith('singUP')){
+				yOffsetD = -25;
+				xOffsetD = 0;
+			}
+			else if (dad.animation.curAnim.name.startsWith('singDOWN')){
+				yOffsetD = 25;
+				xOffsetD = 0;
+			}
+			else if (dad.animation.curAnim.name.startsWith('singLEFT')){
+				yOffsetD = 0;
+				xOffsetD = -25;
+			}
+			else if (dad.animation.curAnim.name.startsWith('singRIGHT')){
+				yOffsetD = 0;
+				xOffsetD = 25;
+			}
+			else if (!dad.animation.curAnim.name.startsWith('sing') || PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection){
+				yOffsetD = 0;
+				xOffsetD = 0;
+			}
+		}
+		
 		if(isDad)
 		{
-			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+			camFollow.set(dad.getMidpoint().x + 150 + xOffsetD, dad.getMidpoint().y - 100 + yOffsetD);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
 			tweenCamIn();
 		}
 		else
 		{
-			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+			camFollow.set(boyfriend.getMidpoint().x - 100 + xOffsetB, boyfriend.getMidpoint().y - 100 + yOffsetB);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
 
@@ -4061,7 +4135,7 @@ class PlayState extends MusicBeatState
 	var fuckinBool:Bool = false;
 	var fuckinBool2:Bool = false;
 	var noteComboNumberlol:Int = 0;
-	
+
 	private function cachePopUpScore()
 	{
 		var pixelShitPart1:String = '';
@@ -4256,12 +4330,6 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet * 0.002
 		});
-
-		if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && showNoteCombo)
-		{
-			lastNote = true;
-			fuckinBool = true;
-		}
 	}
 
 	private function popUpMiss():Void
@@ -4685,6 +4753,12 @@ class PlayState extends MusicBeatState
 				combo += 1;
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
+
+				if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && !startingSong && showNoteCombo)
+				{
+					lastNote = true;
+					fuckinBool = true;
+				}
 
 				noteComboNumberlol++;
 			}
