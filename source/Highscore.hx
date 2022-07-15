@@ -171,5 +171,9 @@ class Highscore
 		{
 			songRating = FlxG.save.data.songRating;
 		}
+		if (FlxG.save.data.songFC != null)
+		{
+			songFC = FlxG.save.data.songFC;
+		}
 	}
 }
