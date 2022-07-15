@@ -34,6 +34,8 @@ class FreeplayState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
+	
+	public var ratingFC:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC']; // for lua editing
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -276,7 +278,7 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%) - ' + PlayState.instance.arrayRatingFC[Std.int(intendedFC)];
+		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%) - ' + ratingFC[Std.int(intendedFC)];
 		positionHighscore();
 
 		var upP = controls.UI_UP_P;
