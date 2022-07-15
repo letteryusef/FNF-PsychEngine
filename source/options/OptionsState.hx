@@ -95,7 +95,7 @@ class OptionsState extends MusicBeatState
 			pauseMusicC.volume = 0;
 			pauseMusicC.play(false, Std.int(pauseMusicC.length / 2));
 	
-			FlxTween.tween(pauseMusicC, {volume: 0.8}, 0.4, {ease: FlxEase.quintOut});
+			FlxTween.tween(pauseMusicC, {volume: 0.6}, 0.4, {ease: FlxEase.quintOut});
 	
 			FlxG.sound.list.add(pauseMusicC);
 	

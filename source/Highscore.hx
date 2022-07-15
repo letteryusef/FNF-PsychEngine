@@ -10,10 +10,12 @@ class Highscore
 	public static var weekScores:Map<String, Int> = new Map();
 	public static var songScores:Map<String, Int> = new Map();
 	public static var songRating:Map<String, Float> = new Map();
+	public static var songFC:Map<String, Float> = new Map();
 	#else
 	public static var weekScores:Map<String, Int> = new Map();
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
 	public static var songRating:Map<String, Float> = new Map<String, Float>();
+	public static var songFC:Map<String, Float> = new Map<String, Float>();
 	#end
 
 
@@ -46,7 +48,7 @@ class Highscore
 		return newValue / tempMult;
 	}
 
-	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1):Void
+	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1, ?fcRating:Float = 0):Void
 	{
 		var daSong:String = formatSong(song, diff);
 
@@ -55,9 +57,15 @@ class Highscore
 				setScore(daSong, score);
 				if(rating >= 0) setRating(daSong, rating);
 			}
+
+			if (songFC.get(daSong) < fcRating && fcRating != 0)
+			{
+				setFC(daSong, fcRating);
+			}
 		}
 		else {
 			setScore(daSong, score);
+			if (fcRating != 0) setFC(daSong, fcRating);
 			if(rating >= 0) setRating(daSong, rating);
 		}
 	}
@@ -101,6 +109,13 @@ class Highscore
 		FlxG.save.flush();
 	}
 
+	static function setFC(song:String, curFC:Float):Void
+	{
+		songFC.set(song, curFC);
+		FlxG.save.data.songFC = songFC;
+		FlxG.save.flush();
+	}
+
 	public static function formatSong(song:String, diff:Int):String
 	{
 		return Paths.formatToSongPath(song) + CoolUtil.getDifficultyFilePath(diff);
@@ -122,6 +137,15 @@ class Highscore
 			setRating(daSong, 0);
 
 		return songRating.get(daSong);
+	}
+
+	public static function getFC(song:String, diff:Int):Float
+	{
+		var daSong:String = formatSong(song, diff);
+		if (!songFC.exists(daSong))
+			setFC(daSong, 0);
+	
+		return songFC.get(daSong);
 	}
 
 	public static function getWeekScore(week:String, diff:Int):Int

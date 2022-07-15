@@ -3999,7 +3999,7 @@ class PlayState extends MusicBeatState
 				#if !switch
 				var percent:Float = ratingPercent;
 				if(Math.isNaN(percent)) percent = 0;
-				Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
+				Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent, curFC);
 				#end
 			}
 
@@ -5290,7 +5290,9 @@ class PlayState extends MusicBeatState
 
 	public var ratingName:String = '?';
 	public var ratingPercent:Float;
+	public var arrayRatingFC:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC']; // for lua editing
 	public var ratingFC:String;
+	public var curFC:Float; // for saving the fc highscore
 	public function RecalculateRating(badHit:Bool = false) {
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
@@ -5327,11 +5329,29 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
-			if (sicks > 0) ratingFC = "SFC";
-			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
-			else if (songMisses >= 10) ratingFC = "Clear";
+			if (sicks > 0)
+			{
+				ratingFC = arrayRatingFC[4];
+				curFC = 4;
+			}
+			if (goods > 0)
+			{
+				ratingFC = arrayRatingFC[3];
+				curFC = 3;
+			}
+			if (bads > 0 || shits > 0)
+			{
+				ratingFC = arrayRatingFC[2];
+				curFC = 2;
+			}
+			if (songMisses > 0 && songMisses < 10)
+			{
+				ratingFC = arrayRatingFC[1];
+				curFC = 1;
+			} else if (songMisses >= 10) {
+				ratingFC = arrayRatingFC[0];
+				curFC = 0;
+			}
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
 		setOnLuas('rating', ratingPercent);
