@@ -58,14 +58,14 @@ class Highscore
 				if(rating >= 0) setRating(daSong, rating);
 			}
 
-			if (songFC.get(daSong) < fcRating && fcRating != 0)
+			if (songFC.get(daSong) < fcRating)
 			{
 				setFC(daSong, fcRating);
 			}
 		}
 		else {
 			setScore(daSong, score);
-			if (fcRating != 0) setFC(daSong, fcRating);
+			setFC(daSong, fcRating);
 			if(rating >= 0) setRating(daSong, rating);
 		}
 	}
