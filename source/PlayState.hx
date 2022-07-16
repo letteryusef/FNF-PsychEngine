@@ -175,7 +175,7 @@ class PlayState extends MusicBeatState
 	private var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
-	public var noteShit:FlxSprite;
+	// public var noteShit:FlxSprite;
 	// public var noteShitNum:FlxSprite;
 
 	public var ratingsData:Array<Rating> = [];
@@ -1216,6 +1216,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(scoreTxt);
 
+		/*
+
 		noteShit = new FlxSprite(120, 240, Paths.image('noteCombo'));
 		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
 		noteShit.animation.addByPrefix("boom", "appear", 30, false);
@@ -1228,8 +1230,6 @@ class PlayState extends MusicBeatState
 
 		noteShit.setGraphicSize(Std.int(noteShit.width * 0.74));
 		noteShit.updateHitbox();
-
-		/*
 
 		for (i in 1...3)
 		{
@@ -1279,8 +1279,9 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
-		noteShit.cameras = [camHUD];
 		doof.cameras = [camHUD];
+
+		// noteShit.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -3296,6 +3297,8 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		/*
+
 		if (lastNote && !SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished)
 		{
 			if (fuckinBool)
@@ -3330,6 +3333,8 @@ class PlayState extends MusicBeatState
 			}
 	
 		}
+
+		*/
 
 		camStrum.x = camHUD.x;
 		camNote.x = camHUD.x;
@@ -4189,11 +4194,15 @@ class PlayState extends MusicBeatState
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
+	/*
+
 	public var lastNote:Bool = false;
 	public var showNoteCombo:Bool = true;
 	var fuckinBool:Bool = false;
 	var fuckinBool2:Bool = false;
 	var noteComboNumberlol:Int = 0;
+
+    */
 
 	private function cachePopUpScore()
 	{
@@ -4821,6 +4830,8 @@ class PlayState extends MusicBeatState
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 
+				/*
+
 				if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished && showNoteCombo)
 				{
 					lastNote = true;
@@ -4828,6 +4839,8 @@ class PlayState extends MusicBeatState
 				}
 
 				noteComboNumberlol++;
+
+				*/
 			}
 			health += note.hitHealth * healthGain;
 
