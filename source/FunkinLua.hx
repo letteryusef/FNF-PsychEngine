@@ -2482,6 +2482,9 @@ class FunkinLua {
 			PlayState.instance.health = 1;
 			return;
 		});
+		Lua_helper.add_callback(lua, "lerpBoundTo", function(a:Float, b:Float, speed:Float) { // causes lag so look out :3
+			return FlxMath.lerp(a, b, CoolUtil.boundTo(FlxG.elapsed * speed, 0, 1));
+		});
 
 		call('onCreate', []);
 		#end

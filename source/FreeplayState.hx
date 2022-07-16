@@ -415,9 +415,7 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			
-			if (FlxG.sound.music != null)
-				
-				FlxTween.tween(FlxG.sound.music, {volume: 0}, 1, {ease: FlxEase.expoOut});
+			if (FlxG.sound.music != null) FlxTween.tween(FlxG.sound.music, {volume: 0}, 1.4, {ease: FlxEase.expoOut});
 
 			FlxG.sound.play(Paths.sound('cancelMenu'), 0.4);
 
@@ -436,8 +434,6 @@ class FreeplayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				});
 			}
-
-			FlxG.sound.music.volume = 0;
 					
 			destroyFreeplayVocals();
 		}
