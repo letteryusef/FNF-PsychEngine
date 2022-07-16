@@ -7,6 +7,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 class NoteSplash extends FlxSprite
 {
 	public var colorSwap:ColorSwap = null;
+	public var splashOffset:Float;
 	private var idleAnim:String;
 	private var textureLoaded:String = null;
 
@@ -25,8 +26,8 @@ class NoteSplash extends FlxSprite
 		antialiasing = ClientPrefs.globalAntialiasing;
 	}
 
-	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0, splashOffset:Float = 0.7) {
-		setPosition(x - Note.swagWidth * 0.95 * splashOffset, y - Note.swagWidth * splashOffset);
+	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0, leSplashOffset:Float = 0.7) {
+		setPosition(x - Note.swagWidth * 0.95 * leSplashOffset, y - Note.swagWidth * leSplashOffset);
 		alpha = 0.6;
 
 		if(texture == null) {

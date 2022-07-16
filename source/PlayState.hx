@@ -155,6 +155,8 @@ class PlayState extends MusicBeatState
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
+	public var noteSplashOffset:Float = 0.7;
+
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 2.88;
@@ -4861,8 +4863,10 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	public var noteSplashSpawn = true;
+
 	function spawnNoteSplashOnNote(note:Note) {
-		if(ClientPrefs.noteSplashes && note != null) {
+		if(ClientPrefs.noteSplashes && note != null && noteSplashSpawn) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
 			if(strum != null) {
 				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
@@ -4891,7 +4895,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
+		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt, noteSplashOffset);
 		grpNoteSplashes.add(splash);
 	}
 
