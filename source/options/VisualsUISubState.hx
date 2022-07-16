@@ -34,6 +34,13 @@ class VisualsUISubState extends BaseOptionsMenu
 		title = 'Visuals and UI';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
+		var option:Option = new Option('Wavy Holds',
+			"If checked, hold sprites will have a wavy effect.",
+			'wavyHolds',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Note Splashes',
 			"If unchecked, hitting \"Sick!\" notes won't show particles.",
 			'noteSplashes',

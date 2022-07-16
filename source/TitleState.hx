@@ -267,6 +267,8 @@ class TitleState extends MusicBeatState
 			}
 		}
 
+		FlxG.autoPause = false; // putted on startIntro cause it prevents crash
+
 		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
@@ -638,7 +640,7 @@ class TitleState extends MusicBeatState
 				case 1:
 					//FlxG.sound.music.stop();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-					FlxG.sound.music.fadeIn(4, 0, 0.3);
+					FlxG.sound.music.fadeIn(1.2, 0, 0.3);
 				case 2:
 					#if PSYCH_WATERMARKS
 					createCoolText(['Psych Engine by'], 15);

@@ -42,6 +42,8 @@ import lime.utils.Assets;
 import openfl.Lib;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
+import openfl.display.Shader;
+import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 import openfl.utils.Assets as OpenFlAssets;
 import editors.ChartingState;
@@ -203,6 +205,8 @@ class PlayState extends MusicBeatState
 	public var iconP2:HealthIcon;
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
+	public var camStrum:FlxCamera;
+	public var camNote:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
@@ -245,6 +249,7 @@ class PlayState extends MusicBeatState
 
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
+	var susWiggle:ShaderFilter;
 	var bgGhouls:BGSprite;
 
 	var tankWatchtower:BGSprite;
@@ -376,12 +381,18 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
+		camNote = new FlxCamera();
+		camStrum = new FlxCamera();
 		camOther = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
+		camNote.bgColor.alpha = 0;
+		camStrum.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camStrum);
+		FlxG.cameras.add(camNote);
 		FlxG.cameras.add(camOther);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
@@ -1053,6 +1064,19 @@ class PlayState extends MusicBeatState
 		add(strumLineNotes);
 		add(grpNoteSplashes);
 
+		if (ClientPrefs.wavyHolds)
+		{
+			// le wiggle from MIC'D UP, i thought it was cool to add lol
+
+		    wiggleShit.waveAmplitude = 0.07;
+		    wiggleShit.effectType = WiggleEffect.WiggleEffectType.DREAMY;
+		    wiggleShit.waveFrequency = 0;
+		    wiggleShit.waveSpeed = 1.8; // fasto
+		    wiggleShit.shader.uTime.value = [(strumLine.y - Note.swagWidth * 4) / FlxG.height]; // from 4mbr0s3 2
+		    susWiggle = new ShaderFilter(wiggleShit.shader);
+		    camStrum.setFilters([susWiggle]); // only enable it for snake notes
+		}
+
 		if(ClientPrefs.timeBarType == 'Song Name')
 		{
 			timeTxt.size = 24;
@@ -1245,7 +1269,7 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
-		notes.cameras = [camHUD];
+		notes.cameras = [camNote];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
@@ -2441,6 +2465,7 @@ class PlayState extends MusicBeatState
 				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
 				swagNote.noteType = songNotes[3];
+				swagNote.cameras = [camNote];
 				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 
 				swagNote.scrollFactor.set();
@@ -2461,6 +2486,7 @@ class PlayState extends MusicBeatState
 						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
+						sustainNote.cameras = [camStrum];
 						swagNote.tail.push(sustainNote);
 						sustainNote.parent = swagNote;
 						unspawnNotes.push(sustainNote);
@@ -2974,6 +3000,14 @@ class PlayState extends MusicBeatState
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
 
+		if (ClientPrefs.wavyHolds)
+		{
+			wiggleShit.waveAmplitude = FlxMath.lerp(wiggleShit.waveAmplitude, 0, 0.035 / (ClientPrefs.framerate / 60));
+			wiggleShit.waveFrequency = FlxMath.lerp(wiggleShit.waveFrequency, 0, 0.035 / (ClientPrefs.framerate / 60));
+	
+			wiggleShit.update(elapsed);
+		}
+
 		if(botplayTxt.visible) {
 			botplaySine += 180 * elapsed;
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
@@ -3083,6 +3117,8 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
+			camStrum.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 7.425), 0, 1));
+			camNote.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 7.425), 0, 1));
 		}
 
 		FlxG.watch.addQuick("secShit", curSection);
@@ -3295,6 +3331,11 @@ class PlayState extends MusicBeatState
 	
 		}
 
+		camStrum.x = camHUD.x;
+		camNote.x = camHUD.x;
+		camStrum.y = camHUD.y;
+		camNote.y = camHUD.y;
+
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
@@ -3505,6 +3546,8 @@ class PlayState extends MusicBeatState
 							{
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
+								camStrum.zoom += 0.1;
+			                    camNote.zoom += 0.1;
 							}
 
 							blammedLightsBlack.visible = false;
@@ -3531,6 +3574,8 @@ class PlayState extends MusicBeatState
 							{
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
+								camStrum.zoom += 0.1;
+			                    camNote.zoom += 0.1;
 							}
 
 							blammedLightsBlack.visible = true;
@@ -3594,6 +3639,8 @@ class PlayState extends MusicBeatState
 
 					FlxG.camera.zoom += camZoom;
 					camHUD.zoom += hudZoom;
+					camStrum.zoom += hudZoom;
+					camNote.zoom += hudZoom;
 				}
 
 			case 'Trigger BG Ghouls':
@@ -3676,6 +3723,12 @@ class PlayState extends MusicBeatState
 
 					if(duration > 0 && intensity != 0) {
 						targetsArray[i].shake(intensity, duration);
+
+						if (value2 != null)
+						{
+							camStrum.shake(intensity, duration);
+							camNote.shake(intensity, duration);
+						}
 					}
 				}
 
@@ -5006,10 +5059,14 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.camZooms) {
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
+			camStrum.zoom += 0.03;
+			camNote.zoom += 0.03;
 
 			if(!camZooming) { //Just a way for preventing it to be permanently zoomed until Skid & Pump hits a note
 				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.5);
 				FlxTween.tween(camHUD, {zoom: 1}, 0.5);
+				FlxTween.tween(camStrum, {zoom: 1}, 0.5);
+				FlxTween.tween(camNote, {zoom: 1}, 0.5);
 			}
 		}
 
@@ -5138,6 +5195,12 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 
+		if (ClientPrefs.wavyHolds)
+		{
+			wiggleShit.waveAmplitude = 0.035;
+			wiggleShit.waveFrequency = 10;
+		}
+
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
 
@@ -5232,6 +5295,8 @@ class PlayState extends MusicBeatState
 			{
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;
+				camStrum.zoom += 0.03 * camZoomingMult;
+				camNote.zoom += 0.03 * camZoomingMult;
 			}
 
 			if (SONG.notes[curSection].changeBPM)
