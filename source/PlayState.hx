@@ -4627,6 +4627,7 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		//Dupe note remove
+		healthbarshake(1.0);
 		notes.forEachAlive(function(note:Note) {
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
 				note.kill();
@@ -4677,6 +4678,7 @@ class PlayState extends MusicBeatState
 
 		if (!boyfriend.stunned)
 		{
+			healthbarshake(0.6);
 			health -= 0.05 * healthLoss;
 			if(instakillOnMiss)
 			{
@@ -4715,6 +4717,52 @@ class PlayState extends MusicBeatState
 			vocals.volume = 0;
 		}
 		callOnLuas('noteMissPress', [direction]);
+	}
+
+	public function healthbarshake(intensity:Float) // from VS PIP mod
+	{
+	    new FlxTimer().start(0.01, function(tmr:FlxTimer)
+		{
+			iconP1.y += (10 * intensity);
+			iconP2.y += (10 * intensity);
+			healthBar.y += (10 * intensity);
+			healthBarBG.y += (10 * intensity);
+		});
+		new FlxTimer().start(0.05, function(tmr:FlxTimer)
+		{
+			iconP1.y -= (15 * intensity);
+			iconP2.y -= (15 * intensity);
+			healthBar.y -= (15 * intensity);
+			healthBarBG.y -= (15 * intensity);
+		});
+		new FlxTimer().start(0.10, function(tmr:FlxTimer)
+		{
+			iconP1.y += (8 * intensity);
+			iconP2.y += (8 * intensity);
+			healthBar.y += (8 * intensity);
+			healthBarBG.y += (8 * intensity);
+		});
+		new FlxTimer().start(0.15, function(tmr:FlxTimer)
+		{
+			iconP1.y -= (5 * intensity);
+			iconP2.y -= (5 * intensity);
+			healthBar.y -= (5 * intensity);
+			healthBarBG.y -= (5 * intensity);
+		});
+		new FlxTimer().start(0.20, function(tmr:FlxTimer)
+		{
+			iconP1.y += (3 * intensity);
+			iconP2.y += (3 * intensity);
+			healthBar.y += (3 * intensity);
+			healthBarBG.y += (3 * intensity);
+		});
+		new FlxTimer().start(0.25, function(tmr:FlxTimer)
+		{
+			iconP1.y -= (1 * intensity);
+			iconP2.y -= (1 * intensity);
+			healthBar.y -= (1 * intensity);
+			healthBarBG.y -= (1 * intensity);
+		});
 	}
 
 	function opponentNoteHit(note:Note):Void
