@@ -273,7 +273,7 @@ class ChartingState extends MusicBeatState
 
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
-		FlxG.mouse.visible = true;
+		CoolUtil.setupMouse('leMouse');
 		//FlxG.save.bind('funkin', 'ninjamuffin99');
 
 		tempBpm = _song.bpm;
@@ -1648,7 +1648,7 @@ class ChartingState extends MusicBeatState
 			if (FlxG.keys.justPressed.ENTER)
 			{
 				autosaveSong();
-				FlxG.mouse.visible = false;
+				CoolUtil.destroyMouse();
 				PlayState.SONG = _song;
 				FlxG.sound.music.stop();
 				if(vocals != null) vocals.stop();
@@ -1675,7 +1675,7 @@ class ChartingState extends MusicBeatState
 					MusicBeatState.switchState(new editors.MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				//}
-				FlxG.mouse.visible = false;
+				CoolUtil.destroyMouse();
 				return;
 			}
 

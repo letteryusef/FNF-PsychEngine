@@ -2479,7 +2479,7 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "skipFoward", function(time:Float) { // doesn't work fine but meeeh whateverrr >:(
 			PlayState.instance.setSongTime(Conductor.songPosition + time * 1000);
-			PlayState.instance.health = 1;
+			PlayState.instance.clearNotesBefore(Conductor.songPosition);
 			return;
 		});
 		Lua_helper.add_callback(lua, "lerpBoundTo", function(a:Float, b:Float, speed:Float) { // causes lag so look out :3

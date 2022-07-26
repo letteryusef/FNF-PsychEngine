@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
@@ -137,5 +138,18 @@ class CoolUtil
 		#else
 		FlxG.openURL(site);
 		#end
+	}
+
+	public static function setupMouse(graphic:String)
+	{
+		var mouseGraphic:FlxSprite = new FlxSprite(0, 0, Paths.image(graphic));
+		FlxG.mouse.load(mouseGraphic.pixels);
+		FlxG.mouse.visible = true;
+	}
+	
+	public static function destroyMouse()
+	{
+		FlxG.mouse.unload();
+		FlxG.mouse.visible = false;
 	}
 }

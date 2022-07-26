@@ -1199,8 +1199,8 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 		healthBarBG.sprTracker = healthBar;
 
-		ouchUI = new FlxSprite(healthBarBG.x + 387, healthBarBG.y + 4.6, Paths.image('ouch'));
-		ouchUI.scale.y = 1.04;
+		ouchUI = new FlxSprite(healthBarBG.x + 387, healthBarBG.y + 4.5, Paths.image('ouch'));
+		ouchUI.scale.y = 1.08;
 		ouchUI.alpha = 0;
 		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(ouchUI);
@@ -3090,7 +3090,7 @@ class PlayState extends MusicBeatState
 
 		botplayTxt.x = FlxMath.lerp(botPlayx, botplayTxt.x, CoolUtil.boundTo(elapsed * 2.8, 0, 1));
 
-		ouchUI.alpha = FlxMath.lerp(0, ouchUI.alpha, CoolUtil.boundTo(1 - (elapsed * 8), 0, 1));
+		ouchUI.alpha = FlxMath.lerp(0, ouchUI.alpha, CoolUtil.boundTo(1 - (elapsed * 4), 0, 1));
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;

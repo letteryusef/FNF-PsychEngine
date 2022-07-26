@@ -48,6 +48,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
 	var mouseOn:Bool;
+	static var mouseMoved:Bool = false;
 
 	// some of the code was got from Andromeda Engine, Credits to them!!
 
@@ -55,7 +56,7 @@ class MainMenuState extends MusicBeatState
 	{
 		instance = this;
 
-		FlxG.mouse.visible = true;
+		CoolUtil.setupMouse('leMouse');
 		
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
@@ -174,7 +175,7 @@ class MainMenuState extends MusicBeatState
 	}
 
 	function onMouseDown(object:FlxObject){
-		if(!selectedSomethin){
+		if(!selectedSomethin && mouseMoved){
 			for(obj in menuItems.members){
 				if(obj == object){
 					accept();
@@ -187,7 +188,7 @@ class MainMenuState extends MusicBeatState
 	function onMouseUp(object:FlxObject){}
 
 	function onMouseOver(object:FlxObject){
-		if(!selectedSomethin){
+		if(!selectedSomethin && mouseMoved){
 			for(i in 0...menuItems.members.length){
 				var obj = menuItems.members[i];
 				if(obj == object){
@@ -202,7 +203,10 @@ class MainMenuState extends MusicBeatState
 	}
 
 	function onMouseOut(object:FlxObject){
-		mouseOn = false;
+		if(mouseMoved)
+		{
+			mouseOn = false;
+		}
 	}
 
 	function accept()
@@ -213,7 +217,7 @@ class MainMenuState extends MusicBeatState
 
 		} else {
 
-			FlxG.mouse.visible = false;
+			CoolUtil.destroyMouse();
 
 			selectedSomethin = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -279,6 +283,11 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
+			if (FlxG.mouse.justMoved)
+			{
+				mouseMoved = true;
+			}
+
 			if (controls.UI_UP_P)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
