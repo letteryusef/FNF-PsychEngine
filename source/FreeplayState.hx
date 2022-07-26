@@ -35,7 +35,7 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 	
-	public var ratingFC:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC']; // for lua editing
+	public var ratingFC:Array<String> = ['N/A', 'SDCB', 'FC', 'GFC', 'SFC']; // for lua editing
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;

@@ -4675,6 +4675,13 @@ class PlayState extends MusicBeatState
 				note.destroy();
 			}
 		});
+		if (!boyfriend.stunned)
+		{
+			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
+			{
+				gf.playAnim('sad');
+			}
+		}
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 
