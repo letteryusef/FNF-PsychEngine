@@ -170,6 +170,7 @@ class PlayState extends MusicBeatState
 
 	private var healthBarBG:AttachedSprite;
 	public var healthBar:FlxBar;
+	private var ouchUI:FlxSprite;
 	var songPercent:Float = 0;
 
 	private var timeBarBG:AttachedSprite;
@@ -1198,6 +1199,12 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 		healthBarBG.sprTracker = healthBar;
 
+		ouchUI = new FlxSprite(healthBarBG.x + 387, healthBarBG.y + 4.6, Paths.image('ouch'));
+		ouchUI.scale.y = 1.04;
+		ouchUI.alpha = 0;
+		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
+		add(ouchUI);
+
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.hideHud || !cpuControlled;
@@ -1309,6 +1316,7 @@ class PlayState extends MusicBeatState
 		notes.cameras = [camNote];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
+		ouchUI.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
@@ -3082,6 +3090,8 @@ class PlayState extends MusicBeatState
 
 		botplayTxt.x = FlxMath.lerp(botPlayx, botplayTxt.x, CoolUtil.boundTo(elapsed * 2.8, 0, 1));
 
+		ouchUI.alpha = FlxMath.lerp(0, ouchUI.alpha, CoolUtil.boundTo(1 - (elapsed * 8), 0, 1));
+
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 
@@ -4677,6 +4687,8 @@ class PlayState extends MusicBeatState
 		});
 		if (!boyfriend.stunned)
 		{
+			ouchUI.alpha = 1 * ClientPrefs.healthBarAlpha;
+
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -4726,6 +4738,7 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			healthbarshake(0.6);
+			ouchUI.alpha = 1 * ClientPrefs.healthBarAlpha;
 			health -= 0.05 * healthLoss;
 			if(instakillOnMiss)
 			{
@@ -4774,6 +4787,7 @@ class PlayState extends MusicBeatState
 			iconP2.y += (10 * intensity);
 			healthBar.y += (10 * intensity);
 			healthBarBG.y += (10 * intensity);
+			ouchUI.y += (10 * intensity);
 		});
 		new FlxTimer().start(0.05, function(tmr:FlxTimer)
 		{
@@ -4781,6 +4795,7 @@ class PlayState extends MusicBeatState
 			iconP2.y -= (15 * intensity);
 			healthBar.y -= (15 * intensity);
 			healthBarBG.y -= (15 * intensity);
+			ouchUI.y -= (15 * intensity);
 		});
 		new FlxTimer().start(0.10, function(tmr:FlxTimer)
 		{
@@ -4788,6 +4803,7 @@ class PlayState extends MusicBeatState
 			iconP2.y += (8 * intensity);
 			healthBar.y += (8 * intensity);
 			healthBarBG.y += (8 * intensity);
+			ouchUI.y += (8 * intensity);
 		});
 		new FlxTimer().start(0.15, function(tmr:FlxTimer)
 		{
@@ -4795,6 +4811,7 @@ class PlayState extends MusicBeatState
 			iconP2.y -= (5 * intensity);
 			healthBar.y -= (5 * intensity);
 			healthBarBG.y -= (5 * intensity);
+			ouchUI.y -= (5 * intensity);
 		});
 		new FlxTimer().start(0.20, function(tmr:FlxTimer)
 		{
@@ -4802,6 +4819,7 @@ class PlayState extends MusicBeatState
 			iconP2.y += (3 * intensity);
 			healthBar.y += (3 * intensity);
 			healthBarBG.y += (3 * intensity);
+			ouchUI.y += (3 * intensity);
 		});
 		new FlxTimer().start(0.25, function(tmr:FlxTimer)
 		{
@@ -4809,6 +4827,7 @@ class PlayState extends MusicBeatState
 			iconP2.y -= (1 * intensity);
 			healthBar.y -= (1 * intensity);
 			healthBarBG.y -= (1 * intensity);
+			ouchUI.y -= (1 * intensity);
 		});
 	}
 
