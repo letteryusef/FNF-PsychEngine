@@ -354,6 +354,7 @@ class DialogueEditorState extends MusicBeatState
 				reloadText(speedStepper.value);
 			}
 			if(FlxG.keys.justPressed.ESCAPE) {
+				CoolUtil.destroyMouse();
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
 				transitioning = true;

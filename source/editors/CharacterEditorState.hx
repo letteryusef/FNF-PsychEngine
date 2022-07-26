@@ -1115,8 +1115,10 @@ class CharacterEditorState extends MusicBeatState
 		if(!charDropDown.dropPanel.visible) {
 			if (FlxG.keys.justPressed.ESCAPE) {
 				if(goToPlayState) {
+					CoolUtil.destroyMouse();
 					MusicBeatState.switchState(new PlayState());
 				} else {
+					CoolUtil.destroyMouse();
 					MusicBeatState.switchState(new editors.MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				}
