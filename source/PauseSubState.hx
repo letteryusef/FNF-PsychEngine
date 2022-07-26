@@ -36,6 +36,7 @@ class PauseSubState extends MusicBeatSubstate
 	public function new(x:Float, y:Float)
 	{
 		super();
+
 		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
 
 		if(PlayState.chartingMode)
@@ -59,7 +60,6 @@ class PauseSubState extends MusicBeatSubstate
 			difficultyChoices.push(diff);
 		}
 		difficultyChoices.push('BACK');
-
 
 		pauseMusic = new FlxSound();
 		if(songName != null) {
@@ -192,6 +192,14 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (accepted && (cantUnpause <= 0 || !ClientPrefs.controllerMode))
 		{
+			if (Main.fpsVar.alpha == 0)
+			{
+				if (daSelected == "Restart Song" || daSelected == "Leave Charting Mode" || daSelected == "End Song" || daSelected == "Options" || daSelected == "Exit to menu") // that's a lot :/
+				{
+					FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.8, {ease: FlxEase.quintOut});
+				}
+			}
+
 			if (menuItems == difficultyChoices)
 			{
 				if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {

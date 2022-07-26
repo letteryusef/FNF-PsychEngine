@@ -314,6 +314,8 @@ class PlayState extends MusicBeatState
 
 	// extra stuff
 	var botPlayx:Float;
+	var nowPlayingBG:FlxSprite;
+	var nowPlaying:FlxText;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
@@ -1267,6 +1269,41 @@ class PlayState extends MusicBeatState
 			botplayTxt.y = FlxG.width * 0.054;
 		}
 
+		nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
+		nowPlayingBG.alpha = 0.6;
+		add(nowPlayingBG);
+
+		nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
+		nowPlaying.setFormat("VCR OSD Mono", 18);
+		add(nowPlaying);
+
+		nowPlayingBG.scale.x = nowPlaying.width * 2.16;
+
+		nowPlayingBG.y -= 400;
+		nowPlaying.y -= 400;
+
+		FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+			{
+				FlxTween.tween(nowPlaying, {y: nowPlaying.y + 400}, 0.6, {ease: FlxEase.quintOut});
+				FlxTween.tween(nowPlayingBG, {y: nowPlayingBG.y + 400}, 0.6, {ease: FlxEase.quintOut});
+
+				new FlxTimer().start(2.8, function(tmr:FlxTimer) {
+					FlxTween.tween(nowPlaying, {x: nowPlaying.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+						{
+							FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.6, {ease: FlxEase.quintOut});
+							nowPlaying.destroy();
+						}
+					});
+
+					FlxTween.tween(nowPlayingBG, {x: nowPlayingBG.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+						{
+							nowPlayingBG.destroy();
+						}
+					});
+				});
+			}
+		});
+
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camNote];
@@ -1279,6 +1316,8 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
+		nowPlayingBG.cameras = [camOther];
+		nowPlaying.cameras = [camOther];
 		doof.cameras = [camHUD];
 
 		// noteShit.cameras = [camHUD];
@@ -2057,6 +2096,7 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown():Void
 	{
+
 		if(startedCountdown) {
 			callOnLuas('onStartCountdown', []);
 			return;
