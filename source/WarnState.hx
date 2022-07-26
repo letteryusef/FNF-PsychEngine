@@ -25,7 +25,7 @@ class WarnState extends MusicBeatState
 
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey Partner!\n
-			This Mod was programmed on a different version of Psych\n
+			This Mod was programmed on a different version of Psych.\n
 			(You may need to go to the Options to change some of the Settings!)\n
 			It also contains some flashing lights!\n
 			Press ENTER to disable them now or Press ESCAPE to ignore this message.\n

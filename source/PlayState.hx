@@ -1282,7 +1282,7 @@ class PlayState extends MusicBeatState
 		nowPlayingBG.y -= 400;
 		nowPlaying.y -= 400;
 
-		FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+		FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 			{
 				FlxTween.tween(nowPlaying, {y: nowPlaying.y + 400}, 0.6, {ease: FlxEase.quintOut});
 				FlxTween.tween(nowPlayingBG, {y: nowPlayingBG.y + 400}, 0.6, {ease: FlxEase.quintOut});
