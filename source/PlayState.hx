@@ -317,6 +317,8 @@ class PlayState extends MusicBeatState
 
 	// extra stuff
 	var botPlayx:Float;
+	var botPlayLeft:Float;
+	var botPlayRight:Float;
 	var nowPlayingBG:FlxSprite;
 	var nowPlaying:FlxText;
 
@@ -1288,6 +1290,10 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.downScroll) {
 			botplayTxt.y = FlxG.width * 0.054;
 		}
+
+		botPlayx = botplayTxt.x;
+		botPlayRight = FlxG.width - 1280;
+		botPlayLeft = FlxG.width - 1380;
 
 		nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
 		nowPlayingBG.alpha = 0.6;
@@ -3101,7 +3107,7 @@ class PlayState extends MusicBeatState
 
 		var iconOffset:Int = 26;
 
-		botplayTxt.x = FlxMath.lerp(botPlayx, botplayTxt.x, CoolUtil.boundTo(elapsed * 2.8, 0, 1));
+		botplayTxt.x = FlxMath.lerp(botPlayx, botplayTxt.x, CoolUtil.boundTo(1 - (elapsed * 9.6), 0, 1));
 
 		ouchUI.alpha = FlxMath.lerp(0, ouchUI.alpha, CoolUtil.boundTo(1 - (elapsed * 4), 0, 1));
 
@@ -3119,9 +3125,10 @@ class PlayState extends MusicBeatState
 		if (healthBar.percent > 80)
 	    {
 			iconP2.animation.curAnim.curFrame = 1;
+			botPlayx = botPlayLeft;
 		} else {
 			iconP2.animation.curAnim.curFrame = 0;
-		    botPlayx = -20;
+		    botPlayx = botPlayRight;
 		}
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
@@ -4970,12 +4977,6 @@ class PlayState extends MusicBeatState
 				*/
 			}
 			health += note.hitHealth * healthGain;
-
-			if (healthBar.percent >= 88 &&  botPlayx != -80)
-			{
-				botPlayx -= 60;
-				botPlayx += 60;
-			}
 
 			if(!note.noAnimation) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];

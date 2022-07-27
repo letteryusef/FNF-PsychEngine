@@ -88,6 +88,8 @@ class TitleState extends MusicBeatState
 
 	var titleJSON:TitleData;
 
+	var allowCamBeat:Bool = true;
+
 	public static var updateVersion:String = '';
 
 	override public function create():Void
@@ -470,6 +472,8 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
+		FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 7.2), 0, 1));
+
 		if (mouseOn)
 		{
 			if (FlxG.mouse.justPressed)
@@ -584,11 +588,13 @@ class TitleState extends MusicBeatState
 			{
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
+				allowCamBeat = false;
 				
 				if(titleText != null) titleText.animation.play('press');
 
 				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 0.4);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+				FlxG.camera.zoom += 0.068;
 
 				transitioning = true;
 				// FlxG.sound.music.stop();
@@ -709,6 +715,11 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+
+		if(allowCamBeat)
+		{
+			FlxG.camera.zoom += 0.035;
+		}
 
 		if(logoBl != null)
 			logoBl.animation.play('bump', true);
