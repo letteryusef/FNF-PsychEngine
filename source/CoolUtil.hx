@@ -140,16 +140,16 @@ class CoolUtil
 		#end
 	}
 
-	public static function setupMouse(graphic:String)
+	public static function setupMouse(graphic:String, visible:Bool = true)
 	{
 		var mouseGraphic:FlxSprite = new FlxSprite(0, 0, Paths.image(graphic));
 		FlxG.mouse.load(mouseGraphic.pixels);
-		FlxG.mouse.visible = true;
+		FlxG.mouse.visible = visible;
 	}
 	
 	public static function destroyMouse()
 	{
-		FlxG.mouse.unload();
 		FlxG.mouse.visible = false;
+		FlxG.mouse.unload();
 	}
 }

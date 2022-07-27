@@ -348,6 +348,8 @@ class PlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
 
+		CoolUtil.setupMouse('leMouse', false);
+
 		//Ratings
 		ratingsData.push(new Rating('sick')); //default rating
 
@@ -5280,6 +5282,8 @@ class PlayState extends MusicBeatState
 		}
 		luaArray = [];
 
+		CoolUtil.destroyMouse();
+
 		if(!ClientPrefs.controllerMode)
 		{
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -5288,6 +5292,7 @@ class PlayState extends MusicBeatState
 		#if hscript
 		FunkinLua.haxeInterp = null;
 		#end
+
 		super.destroy();
 	}
 
