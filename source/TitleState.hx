@@ -6,11 +6,14 @@ import sys.thread.Thread;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxObject;
+import flixel.text.FlxText;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.addons.transition.TransitionData;
 import haxe.Json;
 import openfl.display.Bitmap;
@@ -64,6 +67,7 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+	var fuckText:FlxText;
 	
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
@@ -197,7 +201,7 @@ class TitleState extends MusicBeatState
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
-		FlxG.mouse.visible = false;
+		CoolUtil.setupMouse('leMouse');
 		#if FREEPLAY
 		MusicBeatState.switchState(new FreeplayState());
 		#elseif CHARTING
@@ -236,6 +240,8 @@ class TitleState extends MusicBeatState
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var swagShader:ColorSwap = null;
+	var secretNum:Int = 0;
+	var mouseOn:Bool = false;
 
 	function startIntro()
 	{
@@ -337,6 +343,8 @@ class TitleState extends MusicBeatState
 		add(logoBl);
 		logoBl.shader = swagShader.shader;
 
+		FlxMouseEventManager.add(gfDance, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 		#if (desktop && MODS_ALLOWED)
 		var path = "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
@@ -387,6 +395,12 @@ class TitleState extends MusicBeatState
 		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
 		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
+		fuckText = new FlxText(12, FlxG.height - 24, 0, "", 16);
+		fuckText.scrollFactor.set();
+		fuckText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT);
+		fuckText.alpha = 0;
+		add(fuckText);
+
 		credGroup = new FlxGroup();
 		add(credGroup);
 		textGroup = new FlxGroup();
@@ -419,6 +433,14 @@ class TitleState extends MusicBeatState
 		// credGroup.add(credTextShit);
 	}
 
+	function onMouseDown(object:FlxObject){}
+
+	function onMouseUp(object:FlxObject){}
+
+	function onMouseOver(object:FlxObject){ mouseOn = true; }
+
+	function onMouseOut(object:FlxObject){ mouseOn = false; }
+
 	function getIntroTextShit():Array<Array<String>>
 	{
 		var fullText:String = Assets.getText(Paths.txt('introText'));
@@ -439,12 +461,78 @@ class TitleState extends MusicBeatState
 	
 	var newTitle:Bool = false;
 	var titleTimer:Float = 0;
+	var leSecretTextTween:FlxTween;
+	var gfScaleTween:FlxTween;
 
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
+
+		if (mouseOn)
+		{
+			if (FlxG.mouse.justPressed)
+			{
+				if (secretNum == 10)
+				{
+					if (!ClientPrefs.secretActivated)
+					{
+						if(leSecretTextTween != null) {
+							leSecretTextTween.cancel();
+						}
+						fuckText.text = 'SECRET MENU ACTIVATED (Go to the Options Section!!)';
+						fuckText.alpha = 1;
+						fuckText.y = FlxG.height - 24;
+						new FlxTimer().start(1, function(tmr:FlxTimer)
+							{
+                                leSecretTextTween = FlxTween.tween(fuckText, {y: FlxG.height + 40, alpha: 0}, 0.8, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+								    {
+										leSecretTextTween = null;
+								    }
+								});
+							}
+						);
+						FlxG.sound.play(Paths.sound('darock'), 1);
+						ClientPrefs.secretActivated = true;
+					} else 
+					{
+						if(leSecretTextTween != null) {
+							leSecretTextTween.cancel();
+						}
+						fuckText.text = 'secret deactivated...';
+						fuckText.alpha = 1;
+						fuckText.y = FlxG.height - 24;
+						new FlxTimer().start(1, function(tmr:FlxTimer)
+							{
+                                leSecretTextTween = FlxTween.tween(fuckText, {y: FlxG.height + 40, alpha: 0}, 0.8, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+								    {
+										leSecretTextTween = null;
+								    }
+								});
+							}
+						);
+						FlxG.sound.play(Paths.sound('cancelMenu'), 1);
+						ClientPrefs.secretActivated = false;
+					}
+                    if (gfScaleTween != null)
+					{
+						gfScaleTween.cancel();
+					}
+					gfDance.scale.set(0.9, 0.9); 
+					gfScaleTween = FlxTween.tween(gfDance.scale, {x: 1, y: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+						{
+							gfScaleTween = null;
+						}
+					});
+					secretNum = 0;
+					
+				} else 
+			    {
+					secretNum++;
+				}
+			}
+		}
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
 

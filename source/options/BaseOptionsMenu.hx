@@ -56,7 +56,12 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		#end
 		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		if (title == 'Secret Stuff')
+		{
+			bg.color = 0xff3a334a;
+		} else {
+			bg.color = 0xff764ad4;
+		}
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);

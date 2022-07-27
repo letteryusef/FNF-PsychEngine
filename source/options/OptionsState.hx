@@ -49,6 +49,8 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+			case 'Secret Stuff':
+				openSubState(new options.SecretOptionsState());
 		}
 	}
 
@@ -60,8 +62,13 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
+		if (ClientPrefs.secretActivated)
+		{
+			options.insert(6, 'Secret Stuff');
+		}
+
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xff764ad4;
 		bg.updateHitbox();
 
 		bg.screenCenter();

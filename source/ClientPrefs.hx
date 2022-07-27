@@ -88,6 +88,11 @@ class ClientPrefs {
 		'debug_2'		=> [EIGHT, NONE]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
+	public static var secretActivated:Bool = false;
+
+	// secret stuff!!
+	public static var mosaicMode:Bool = false;
+	public static var mosaicStrength:Float = 3.0;
 
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
@@ -127,11 +132,15 @@ class ClientPrefs {
 		FlxG.save.data.goodWindow = goodWindow;
 		FlxG.save.data.badWindow = badWindow;
 		FlxG.save.data.safeFrames = safeFrames;
+		FlxG.save.data.secretActivated = secretActivated;
 		FlxG.save.data.gameplaySettings = gameplaySettings;
 		FlxG.save.data.controllerMode = controllerMode;
 		FlxG.save.data.hitsoundVolume = hitsoundVolume;
 		FlxG.save.data.pauseMusic = pauseMusic;
 		FlxG.save.data.checkForUpdates = checkForUpdates;
+
+		FlxG.save.data.mosaicMode = mosaicMode;
+		FlxG.save.data.mosaicStrength = mosaicStrength;
 	
 		FlxG.save.flush();
 
@@ -238,6 +247,9 @@ class ClientPrefs {
 		if(FlxG.save.data.safeFrames != null) {
 			safeFrames = FlxG.save.data.safeFrames;
 		}
+		if(FlxG.save.data.secretActivated != null) {
+			secretActivated = FlxG.save.data.secretActivated;
+		}
 		if(FlxG.save.data.controllerMode != null) {
 			controllerMode = FlxG.save.data.controllerMode;
 		}
@@ -254,6 +266,13 @@ class ClientPrefs {
 			{
 				gameplaySettings.set(name, value);
 			}
+		}
+
+		if(FlxG.save.data.mosaicMode != null) {
+			mosaicMode = FlxG.save.data.mosaicMode;
+		}
+		if(FlxG.save.data.mosaicStrength != null) {
+			mosaicStrength = FlxG.save.data.mosaicStrength;
 		}
 		
 		// flixel automatically saves your volume!

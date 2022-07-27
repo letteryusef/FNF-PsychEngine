@@ -251,6 +251,8 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 	var susWiggle:ShaderFilter;
+	var mosaicShit:MosaicEffect = new MosaicEffect();
+	var effectMosaic:ShaderFilter;
 	var bgGhouls:BGSprite;
 
 	var tankWatchtower:BGSprite;
@@ -398,6 +400,17 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camNote);
 		FlxG.cameras.add(camOther);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+
+		if (ClientPrefs.mosaicMode && ClientPrefs.secretActivated)
+		{
+			mosaicShit.setStrength(ClientPrefs.mosaicStrength, ClientPrefs.mosaicStrength);
+			effectMosaic = new ShaderFilter(mosaicShit.shader);
+			camGame.setFilters([effectMosaic]);
+			camHUD.setFilters([effectMosaic]);
+			camStrum.setFilters([effectMosaic]);
+			camNote.setFilters([effectMosaic]);
+			camOther.setFilters([effectMosaic]); // hi my name is carmen wistead, AAAAAAAAUUUGGGGH.
+		}
 
 		FlxCamera.defaultCameras = [camGame];
 		CustomFadeTransition.nextCamera = camOther;
