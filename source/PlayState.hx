@@ -4535,8 +4535,6 @@ class PlayState extends MusicBeatState
 	var tween2:FlxTween;
 	var tween3:FlxTween;
 	var tween4:FlxTween;
-	var misstween1:FlxTween;
-	var misstween2:FlxTween;
 	var liltimer:FlxTimer;
 	var misstimer:FlxTimer;
 	var onCombo:Bool = false;
@@ -4616,7 +4614,7 @@ class PlayState extends MusicBeatState
 			goofyRating.scale.set(1.3, 1.3);
 			goofyCounter.scale.set(1.3, 1.3);
 
-			if (tween1 == null && misstween1 == null && !onCombo && !comboFalling)
+			if (tween1 == null && !onCombo && !comboFalling)
 			{
 				goofyRating.x = 1600;
 				goofyRating.y = 280;
@@ -4628,7 +4626,7 @@ class PlayState extends MusicBeatState
 				});
 			}
 
-			if (tween2 == null && misstween2 == null && !onCombo && !comboFalling)
+			if (tween2 == null && !onCombo && !comboFalling)
 			{
 				goofyCounter.x = 1600;
 				goofyCounter.y = goofyCounterLocY;
@@ -4703,25 +4701,25 @@ class PlayState extends MusicBeatState
 			}
 			goofyCounter.text = '';
 
-			if (misstween1 == null && tween1 == null && !onCombo && !comboFalling)
+			if (tween1 == null && !onCombo && !comboFalling)
 			{
 				goofyRating.x = 1600;
 				goofyRating.y = 280;
-				misstween1 = FlxTween.tween(goofyRating, {x: 1000, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				tween1 = FlxTween.tween(goofyRating, {x: 1000, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 					{
-						misstween1 = null;
+						tween1 = null;
 						onCombo = true;
 					}
 				});
 			}
 	
-			if (misstween2 == null && tween2 == null && !onCombo && !comboFalling)
+			if (tween2 == null && !onCombo && !comboFalling)
 			{
 				goofyCounter.x = 1600;
 				goofyCounter.y = goofyCounterLocY;
-				misstween1 = FlxTween.tween(goofyCounter, {x: goofyCounterLocX, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				tween2 = FlxTween.tween(goofyCounter, {x: goofyCounterLocX, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 					{
-						misstween1 = null;
+						tween2 = null;
 					}
 				});
 			}
