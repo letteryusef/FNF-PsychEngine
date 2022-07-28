@@ -3953,20 +3953,20 @@ class PlayState extends MusicBeatState
 			var xOffsetB:Int = 0;
 			if (ClientPrefs.followChars){
 				if (gf.animation.curAnim.name.startsWith('singUP')){
-					yOffsetB = -25;
+					yOffsetB = Std.int(-cameraofs);
 					xOffsetB = 0;
 				}
 				else if (gf.animation.curAnim.name.startsWith('singDOWN')){
-					yOffsetB = 25;
+					yOffsetB = Std.int(cameraofs);
 					xOffsetB = 0;
 				}
 				else if (gf.animation.curAnim.name.startsWith('singLEFT')){
 					yOffsetB = 0;
-					xOffsetB = -25;
+					xOffsetB = Std.int(-cameraofs);
 				}
 				else if (gf.animation.curAnim.name.startsWith('singRIGHT')){
 					yOffsetB = 0;
-					xOffsetB = 25;
+					xOffsetB = Std.int(cameraofs);
 				}
 				else if (!gf.animation.curAnim.name.startsWith('sing')){
 					yOffsetB = 0;
