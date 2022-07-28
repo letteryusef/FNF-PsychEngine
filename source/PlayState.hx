@@ -1217,6 +1217,16 @@ class PlayState extends MusicBeatState
 			goofyCounter.borderSize = 3;
 			add(goofyCounter);
 
+			if (isPixelStage)
+			{
+				var mosaicGoofy:MosaicEffect = new MosaicEffect();
+				var mosaicCounter:MosaicEffect = new MosaicEffect();
+				mosaicGoofy.setStrength(2.8, 2.8);
+				mosaicCounter.setStrength(2, 2);
+				goofyRating.shader = mosaicGoofy.shader;
+				goofyCounter.shader = mosaicCounter.shader;
+			}
+
 			goofyRating.alpha = 0;
 			goofyCounter.alpha = 0;
 
