@@ -55,7 +55,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Combo Style',
+		var option:Option = new Option('Combo Style:',
 			"What Combo Style you want to display?",
 			'comboType',
 			'string',
