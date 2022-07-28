@@ -185,6 +185,11 @@ class PlayState extends MusicBeatState
 	public var bads:Int = 0;
 	public var shits:Int = 0;
 
+	public var goofyRating:FlxText;
+	public var goofyCounter:FlxText;
+	public var goofyCounterLocX:Float;
+	public var goofyCounterLocY:Float;
+
 	private var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
@@ -1196,6 +1201,28 @@ class PlayState extends MusicBeatState
 
 		FlxG.fixedTimestep = false;
 		moveCameraSection(0);
+
+		if (ClientPrefs.comboType == "GoofyAAHText")
+		{
+			goofyRating = new FlxText(1000, 280, 0, '');
+			goofyRating.setFormat(Paths.font('phantomMuff.ttf'), 58, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			goofyRating.borderSize = 3;
+			add(goofyRating);
+
+			goofyCounterLocX = goofyRating.x + 126;
+			goofyCounterLocY = goofyRating.y + 50;
+	
+			goofyCounter = new FlxText(goofyCounterLocX, goofyCounterLocY, 0, '');
+			goofyCounter.setFormat(Paths.font('phantomMuff.ttf'), 40, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			goofyCounter.borderSize = 3;
+			add(goofyCounter);
+
+			goofyRating.alpha = 0;
+			goofyCounter.alpha = 0;
+
+			goofyRating.cameras = [camHUD];
+			goofyCounter.cameras = [camHUD];
+		}
 
 		healthBarBG = new AttachedSprite('healthBar');
 		healthBarBG.y = FlxG.height * 0.89;
@@ -4500,6 +4527,266 @@ class PlayState extends MusicBeatState
 		});
 	}
 
+	// a lots of variants to make a single shit ;-;
+
+	var leScaleTween:FlxTween;
+	var leScaleTwene:FlxTween;
+	var tween1:FlxTween;
+	var tween2:FlxTween;
+	var tween3:FlxTween;
+	var tween4:FlxTween;
+	var misstween1:FlxTween;
+	var misstween2:FlxTween;
+	var liltimer:FlxTimer;
+	var misstimer:FlxTimer;
+	var onCombo:Bool = false;
+	var comboFalling:Bool = false;
+
+	function setUpGoofyText(isaMiss:Bool = false, note:Note = null)
+	{
+		if(!isaMiss)
+		{
+			var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
+			var daRating:Rating = Conductor.judgeNote(note, noteDiff);
+			var score:Int = 350;
+
+			totalNotesHit += daRating.ratingMod;
+		    note.ratingMod = daRating.ratingMod;
+		    if(!note.ratingDisabled) daRating.increase();
+		    note.rating = daRating.name;
+		    score = daRating.score;
+
+		    if(daRating.noteSplash && !note.noteSplashDisabled)
+		    {
+			    spawnNoteSplashOnNote(note);
+		    }
+
+		    if(!practiceMode && !cpuControlled) {
+			   songScore += score;
+
+			   if(!note.ratingDisabled)
+			   	{
+					songHits++;
+					totalPlayed++;
+					RecalculateRating(false);
+			   	}
+		    }
+
+			if (daRating.name == 'sick') {
+                goofyRating.text = 'Sick!!';
+				if (goofyRating.color != 0xFFFFFFFF)
+				{
+					goofyRating.color = 0xFFFFFFFF;
+				}
+			} else if (daRating.name == 'good') {
+				goofyRating.text = 'Good!';
+				if (goofyRating.color != 0xFFF6F6F6)
+				{
+					goofyRating.color = 0xFFF6F6F6;
+				}
+			} else if (daRating.name == 'bad') {
+				goofyRating.text = 'Bad';
+				if (goofyRating.color != 0xFF787878)
+				{
+					goofyRating.color = 0xFF787878;
+				}
+			} else if (daRating.name == 'shit') {
+				goofyRating.text = 'shit';
+				if (goofyRating.color != 0xFF3C3C3C)
+				{
+					goofyRating.color = 0xFF3C3C3C;
+				}
+			}
+
+			if (combo >= 1)
+			{
+				goofyCounter.text = combo + 'x';
+			}
+
+			if (leScaleTween != null)
+			{
+				leScaleTween.cancel();
+			}
+
+			if (leScaleTwene != null)
+			{
+				leScaleTwene.cancel();
+			}
+
+			goofyRating.scale.set(1.3, 1.3);
+			goofyCounter.scale.set(1.3, 1.3);
+
+			if (tween1 == null && misstween1 == null && !onCombo && !comboFalling)
+			{
+				goofyRating.x = 1600;
+				goofyRating.y = 280;
+				tween1 = FlxTween.tween(goofyRating, {x: 1000, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+					{
+						tween1 = null;
+						onCombo = true;
+					}
+				});
+			}
+
+			if (tween2 == null && misstween2 == null && !onCombo && !comboFalling)
+			{
+				goofyCounter.x = 1600;
+				goofyCounter.y = goofyCounterLocY;
+				tween2 = FlxTween.tween(goofyCounter, {x: goofyCounterLocX, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+					{
+						tween2 = null;
+					}
+				});
+			}
+
+			if (onCombo)
+			{
+				if (liltimer != null)
+				{
+					liltimer.cancel();
+				}
+
+				if (misstimer != null)
+				{
+					misstimer.cancel();
+				}
+
+				liltimer = new FlxTimer().start(1.26, function(tmr:FlxTimer)
+				    {
+					    onCombo = false;
+						comboFalling = true;
+
+						if (tween3 == null && comboFalling)
+						{
+							tween3 = FlxTween.tween(goofyRating, {y: goofyRating.y + 80, alpha: 0}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+								{
+									tween3 = null;
+									comboFalling = false;
+								},
+								startDelay: Conductor.crochet * 0.001
+							});
+						}
+
+						if (tween4 == null && comboFalling)
+						{
+							tween4 = FlxTween.tween(goofyCounter, {y: goofyCounter.y + 80, alpha: 0}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+								{
+									tween4 = null;
+									comboFalling = false;
+						    	},
+								startDelay: Conductor.crochet * 0.001
+							});
+						}
+				    }
+				);
+			}
+
+			leScaleTween = FlxTween.tween(goofyCounter.scale, {x: 1, y: 1}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				{
+					leScaleTween = null;
+				}
+			});
+
+			leScaleTwene = FlxTween.tween(goofyRating.scale, {x: 1, y: 1}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				{
+					leScaleTwene = null;
+				}
+			});
+
+
+		} else 
+		{
+			goofyRating.text = 'Miss!';
+			if (goofyRating.color != 0xFFA41313)
+			{
+				goofyRating.color = 0xFFA41313;
+			}
+			goofyCounter.text = '';
+
+			if (misstween1 == null && tween1 == null && !onCombo && !comboFalling)
+			{
+				goofyRating.x = 1600;
+				goofyRating.y = 280;
+				misstween1 = FlxTween.tween(goofyRating, {x: 1000, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+					{
+						misstween1 = null;
+						onCombo = true;
+					}
+				});
+			}
+	
+			if (misstween2 == null && tween2 == null && !onCombo && !comboFalling)
+			{
+				goofyCounter.x = 1600;
+				goofyCounter.y = goofyCounterLocY;
+				misstween1 = FlxTween.tween(goofyCounter, {x: goofyCounterLocX, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+					{
+						misstween1 = null;
+					}
+				});
+			}
+
+			if (onCombo)
+			{
+				if (liltimer != null)
+				{
+					liltimer.cancel();
+					liltimer = null;
+				}
+
+				if (misstimer != null)
+				{
+					misstimer.cancel();
+				}
+
+				if (liltimer == null)
+				{
+					misstimer = new FlxTimer().start(1.26, function(tmr:FlxTimer)
+						{
+							onCombo = false;
+							comboFalling = true;
+	
+							if (tween3 == null && comboFalling)
+							{
+								tween3 = FlxTween.tween(goofyRating, {y: goofyRating.y + 80, alpha: 0}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+									{
+										tween3 = null;
+										comboFalling = false;
+									},
+									startDelay: Conductor.crochet * 0.001
+								});
+							}
+	
+							if (tween4 == null && comboFalling)
+							{
+								tween4 = FlxTween.tween(goofyCounter, {y: goofyCounter.y + 80, alpha: 0}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+									{
+										tween4 = null;
+										comboFalling = false;
+									},
+									startDelay: Conductor.crochet * 0.001
+								});
+							}
+						}
+					);
+				}
+			}
+
+			if (leScaleTwene != null)
+			{
+				leScaleTwene.cancel();
+			}
+
+			goofyRating.scale.set(0.8, 0.8);
+
+			leScaleTwene = FlxTween.tween(goofyRating.scale, {x: 1, y: 1}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				{
+					leScaleTwene = null;
+				}
+			});
+		}
+	}
+
 	private function onKeyPress(event:KeyboardEvent):Void
 	{
 		var eventKey:FlxKey = event.keyCode;
@@ -4721,7 +5008,12 @@ class PlayState extends MusicBeatState
 
 		if (!isPixelStage && !daNote.isSustainNote)
 		{
-			popUpMiss();
+			if (ClientPrefs.comboType == "OG Combo")
+			{
+				popUpMiss();
+			} else if (ClientPrefs.comboType == "GoofyAAHText") {
+				setUpGoofyText(true);
+			}
 		}
 		
 		if(instakillOnMiss)
@@ -4766,6 +5058,13 @@ class PlayState extends MusicBeatState
 			{
 				vocals.volume = 0;
 				doDeathCheck(true);
+			}
+
+			if (ClientPrefs.comboType == "OG Combo")
+			{
+				popUpMiss();
+			} else if (ClientPrefs.comboType == "GoofyAAHText") {
+				setUpGoofyText(true);
 			}
 
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
@@ -4964,7 +5263,12 @@ class PlayState extends MusicBeatState
 			{
 				combo += 1;
 				if(combo > 9999) combo = 9999;
-				popUpScore(note);
+				if (ClientPrefs.comboType == "OG Combo")
+				{
+					popUpScore(note);
+				} else if (ClientPrefs.comboType == "GoofyAAHText") {
+					setUpGoofyText(false, note);
+				}
 
 				/*
 

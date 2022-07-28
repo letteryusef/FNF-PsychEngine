@@ -54,6 +54,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			false);
 		addOption(option);
+
+		var option:Option = new Option('Combo Style',
+			"What Combo Style you want to display?",
+			'comboType',
+			'string',
+			'OG Combo',
+			['OG Combo', 'GoofyAAHText']);
+		addOption(option);
 		
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",

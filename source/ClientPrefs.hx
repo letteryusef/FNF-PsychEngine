@@ -26,6 +26,7 @@ class ClientPrefs {
 	public static var imagesPersist:Bool = false;
 	public static var ghostTapping:Bool = true;
 	public static var followChars:Bool = true;
+	public static var comboType:String = 'OG Combo';
 	public static var timeBarType:String = 'Time Left';
 	public static var scoreZoom:Bool = true;
 	public static var noReset:Bool = false;
@@ -119,6 +120,7 @@ class ClientPrefs {
 		FlxG.save.data.imagesPersist = imagesPersist;
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.followChars = followChars;
+		FlxG.save.data.comboType = comboType;
 		FlxG.save.data.timeBarType = timeBarType;
 		FlxG.save.data.scoreZoom = scoreZoom;
 		FlxG.save.data.noReset = noReset;
@@ -215,6 +217,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.followChars != null) {
 			followChars = FlxG.save.data.followChars;
+		}
+		if(FlxG.save.data.comboType != null) {
+			comboType = FlxG.save.data.comboType;
 		}
 		if(FlxG.save.data.timeBarType != null) {
 			timeBarType = FlxG.save.data.timeBarType;
