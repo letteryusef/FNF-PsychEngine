@@ -49,7 +49,7 @@ class SecretOptionsState extends BaseOptionsMenu
 		addOption(option);
 		option.scrollSpeed = 1.4;
 		option.minValue = 1.0;
-		option.maxValue = 10.0;
+		option.maxValue = 20.0;
 		option.changeValue = 0.1;
 
 		super();
