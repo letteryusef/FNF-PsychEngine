@@ -4616,7 +4616,7 @@ class PlayState extends MusicBeatState
 
 			if (tween1 == null && !onCombo && !comboFalling)
 			{
-				goofyRating.x = 1600;
+				goofyRating.x = 1200;
 				goofyRating.y = 280;
 				tween1 = FlxTween.tween(goofyRating, {x: 1000, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 					{
@@ -4628,7 +4628,7 @@ class PlayState extends MusicBeatState
 
 			if (tween2 == null && !onCombo && !comboFalling)
 			{
-				goofyCounter.x = 1600;
+				goofyCounter.x = 1200;
 				goofyCounter.y = goofyCounterLocY;
 				tween2 = FlxTween.tween(goofyCounter, {x: goofyCounterLocX, alpha: 1}, 0.6, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 					{

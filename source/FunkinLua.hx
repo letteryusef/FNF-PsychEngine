@@ -2499,8 +2499,11 @@ class FunkinLua {
 			haxeInterp.variables.set('FlxG', FlxG);
 			haxeInterp.variables.set('FlxSprite', FlxSprite);
 			haxeInterp.variables.set('FlxCamera', FlxCamera);
+			haxeInterp.variables.set('FlxMath', FlxMath);
 			haxeInterp.variables.set('FlxTween', FlxTween);
 			haxeInterp.variables.set('FlxEase', FlxEase);
+			haxeInterp.variables.set('PINGPONG', FlxTweenType.PINGPONG);
+			haxeInterp.variables.set('PERSIST', FlxTweenType.PERSIST);
 			haxeInterp.variables.set('PlayState', PlayState);
 			haxeInterp.variables.set('game', PlayState.instance);
 			haxeInterp.variables.set('Paths', Paths);
