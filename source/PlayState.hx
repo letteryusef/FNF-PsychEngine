@@ -4697,9 +4697,9 @@ class PlayState extends MusicBeatState
 		} else 
 		{
 			goofyRating.text = 'Miss!';
-			if (goofyRating.color != 0xFFA41313)
+			if (goofyRating.color != 0xFFE35858)
 			{
-				goofyRating.color = 0xFFA41313;
+				goofyRating.color = 0xFFE35858;
 			}
 			goofyCounter.text = '';
 
