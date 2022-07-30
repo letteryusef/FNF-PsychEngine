@@ -20,6 +20,7 @@ class Alphabet extends FlxSpriteGroup
 	public var paused:Bool = false;
 
 	// for menu shit
+	public var forceX:Float = Math.NEGATIVE_INFINITY;
 	public var targetY:Float = 0;
 	public var yMult:Float = 120;
 	public var xAdd:Float = 0;
@@ -50,6 +51,7 @@ class Alphabet extends FlxSpriteGroup
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, ?typingSpeed:Float = 0.05, ?textSize:Float = 1)
 	{
 		super(x, y);
+		forceX = Math.NEGATIVE_INFINITY;
 		this.textSize = textSize;
 
 		_finalText = text;
@@ -358,7 +360,12 @@ class Alphabet extends FlxSpriteGroup
 			if (wentToTargetY) 
 			{
 				y = FlxMath.lerp(y, leFloatY, lerpVal);
-				x = FlxMath.lerp(x, leFloatX, lerpVal);
+				if (forceX != Math.NEGATIVE_INFINITY)
+				{
+					x = forceX;
+				} else {
+					x = FlxMath.lerp(x, leFloatX, lerpVal);
+				}
 			} else {
 				x = leFloatX - FlxG.width + 60;
 				y = leFloatY;
