@@ -50,7 +50,6 @@ class Alphabet extends FlxSpriteGroup
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, ?typingSpeed:Float = 0.05, ?textSize:Float = 1)
 	{
 		super(x, y);
-		forceX = Math.NEGATIVE_INFINITY;
 		this.textSize = textSize;
 
 		_finalText = text;
