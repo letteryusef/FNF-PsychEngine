@@ -354,8 +354,11 @@ class NoteOffsetState extends MusicBeatState
 			persistentUpdate = false;
 			CustomFadeTransition.nextCamera = camOther;
 			MusicBeatState.switchState(new options.OptionsState());
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
-			FlxG.mouse.visible = false;
+			if (!MainMenuState.instance.stinkypoopoo)
+			{
+				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
+			}
+			CoolUtil.destroyMouse();
 		}
 
 		Conductor.songPosition = FlxG.sound.music.time;
@@ -471,6 +474,11 @@ class NoteOffsetState extends MusicBeatState
 			changeModeText.text = '< Note/Beat Delay (Press Accept to Switch) >';
 
 		changeModeText.text = changeModeText.text.toUpperCase();
-		FlxG.mouse.visible = onComboMenu;
+		if (onComboMenu)
+		{
+			CoolUtil.setupMouse('leMouse');
+		} else {
+			CoolUtil.destroyMouse();
+		}
 	}
 }
