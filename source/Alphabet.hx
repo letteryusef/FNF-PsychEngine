@@ -367,7 +367,7 @@ class Alphabet extends FlxSpriteGroup
 					x = FlxMath.lerp(x, leFloatX, lerpVal);
 				}
 			} else {
-				x = leFloatX - FlxG.width + 60;
+				x = leFloatX - FlxG.width;
 				y = leFloatY;
 				wentToTargetY = true;
 			}
