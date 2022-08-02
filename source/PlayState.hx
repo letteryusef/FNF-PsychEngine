@@ -423,6 +423,8 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camOther);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
+		FlxCamera.defaultCameras = [camGame];
+
 		if (ClientPrefs.mosaicMode && ClientPrefs.secretActivated)
 		{
 			mosaicShit.setStrength(ClientPrefs.mosaicStrength, ClientPrefs.mosaicStrength);
