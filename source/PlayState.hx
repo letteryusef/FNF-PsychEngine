@@ -349,7 +349,7 @@ class PlayState extends MusicBeatState
 		PauseSubState.songName = null; //Reset to default
 
 		#if desktop
-		imageKey = 'funkyicon-' + FlxG.random.int(1,3);
+		imageKey = 'funkyicon-' + FlxG.random.int(1,5);
 		#end
 
 		keysArray = [
