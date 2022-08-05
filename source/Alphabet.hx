@@ -25,6 +25,7 @@ class Alphabet extends FlxSpriteGroup
 	public var yMult:Float = 120;
 	public var xAdd:Float = 0;
 	public var yAdd:Float = 0;
+	public var additionalOffset:Float = 0;
 	public var isMenuItem:Bool = false;
 	public var wentToTargetY:Bool = false; // took from YoshiEngine lol
 	public var textSize:Float = 1.0;
@@ -367,7 +368,7 @@ class Alphabet extends FlxSpriteGroup
 					x = FlxMath.lerp(x, leFloatX, lerpVal);
 				}
 			} else {
-				x = leFloatX - FlxG.width;
+				x = leFloatX - FlxG.width + additionalOffset;
 				y = leFloatY;
 				wentToTargetY = true;
 			}
