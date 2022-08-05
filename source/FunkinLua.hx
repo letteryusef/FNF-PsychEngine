@@ -1672,12 +1672,18 @@ class FunkinLua {
 			}
 			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
-		Lua_helper.add_callback(lua, "flickerEliminate", function(obj:String, duration:Float, interval:Float = 0.1) {
+		Lua_helper.add_callback(lua, "flickerSprite", function(obj:String, duration:Float, interval:Float = 0.1, type:String = "none") {
 			if(PlayState.instance.getLuaObject(obj)!=null) {
 				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
 				FlxFlicker.flicker(shit, duration, interval, false, false, function(flick:FlxFlicker)
 				{
-					shit.kill();
+					switch(type.trim().toLowerCase()) {
+						case "none": shit.visible = true;
+						case "alpha": shit.alpha = 0;
+						case "visible": shit.visible = false;
+						case "kill": shit.kill();
+						case "destroy": shit.destroy();
+					}
 				});
 				return;
 			}
@@ -1691,7 +1697,13 @@ class FunkinLua {
 			if(poop != null) {
 				FlxFlicker.flicker(poop, duration, interval, false, false, function(flick:FlxFlicker)
 				{
-					poop.kill();
+					switch(type.trim().toLowerCase()) {
+						case "none": poop.visible = true;
+						case "alpha": poop.alpha = 0;
+						case "visible": poop.visible = false;
+						case "kill": poop.kill();
+						case "destroy": poop.destroy();
+					}
 				});
 				return;
 			}

@@ -1273,13 +1273,13 @@ class PlayState extends MusicBeatState
 		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(ouchUI);
 
-		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
+		iconP1 = new HealthIcon(boyfriend.healthIcon, true, boyfriend.winningIcon);
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP1.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP1);
 
-		iconP2 = new HealthIcon(dad.healthIcon, false);
+		iconP2 = new HealthIcon(dad.healthIcon, false, dad.winningIcon);
 		iconP2.y = healthBar.y - 75;
 		iconP2.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP2.alpha = ClientPrefs.healthBarAlpha;
@@ -3159,13 +3159,17 @@ class PlayState extends MusicBeatState
 
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
-		else
+		else if (healthBar.percent > 80 && boyfriend.winningIcon)
+			iconP1.animation.curAnim.curFrame = 2;
+	    else
 			iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80)
 	    {
 			iconP2.animation.curAnim.curFrame = 1;
 			botPlayx = botPlayLeft;
+		} else if (healthBar.percent < 20 && dad.winningIcon) {
+			iconP2.animation.curAnim.curFrame = 2;
 		} else {
 			iconP2.animation.curAnim.curFrame = 0;
 		    botPlayx = botPlayRight;
@@ -4304,6 +4308,11 @@ class PlayState extends MusicBeatState
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
+	// for source and especially lua!!
+	public var extraRating:String = "";
+	public var extraCombo:String = "";
+	public var extraNum:String = "";
+
 	/*
 
 	public var lastNote:Bool = false;
@@ -4324,14 +4333,14 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
-		Paths.image(pixelShitPart1 + "sick" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "good" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "bad" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "shit" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "combo" + pixelShitPart2);
+		Paths.image(pixelShitPart1 + "sick" + pixelShitPart2 + extraRating);
+		Paths.image(pixelShitPart1 + "good" + pixelShitPart2 + extraRating);
+		Paths.image(pixelShitPart1 + "bad" + pixelShitPart2 + extraRating);
+		Paths.image(pixelShitPart1 + "shit" + pixelShitPart2 + extraRating);
+		Paths.image(pixelShitPart1 + "combo" + pixelShitPart2 + extraCombo);
 		
 		for (i in 0...10) {
-			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
+			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2 + extraNum);
 		}
 	}
 
@@ -4386,7 +4395,7 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
-		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
+		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2 + extraRating));
 		rating.cameras = [camHUD];
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
@@ -4398,7 +4407,7 @@ class PlayState extends MusicBeatState
 		rating.x += ClientPrefs.comboOffset[0];
 		rating.y -= ClientPrefs.comboOffset[1];
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2 + extraCombo));
 		comboSpr.cameras = [camHUD];
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
@@ -4445,7 +4454,7 @@ class PlayState extends MusicBeatState
 		}
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
+			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2 + extraNum));
 			numScore.cameras = [camHUD];
 			numScore.screenCenter();
 			numScore.x = coolText.x + (43 * daLoop) - 90;
@@ -4625,7 +4634,7 @@ class PlayState extends MusicBeatState
 			goofyRating.scale.set(1.3, 1.3);
 			goofyCounter.scale.set(1.3, 1.3);
 
-			if (tween1 == null && !onCombo && !comboFalling)
+			if (tween1 == null && !onCombo && !comboFalling && showRating)
 			{
 				goofyRating.x = 1200;
 				goofyRating.y = 280;
@@ -4637,7 +4646,7 @@ class PlayState extends MusicBeatState
 				});
 			}
 
-			if (tween2 == null && !onCombo && !comboFalling)
+			if (tween2 == null && !onCombo && !comboFalling && showComboNum)
 			{
 				goofyCounter.x = 1200;
 				goofyCounter.y = goofyCounterLocY;
@@ -4712,7 +4721,7 @@ class PlayState extends MusicBeatState
 			}
 			goofyCounter.text = '';
 
-			if (tween1 == null && !onCombo && !comboFalling)
+			if (tween1 == null && !onCombo && !comboFalling && showRating)
 			{
 				goofyRating.x = 1600;
 				goofyRating.y = 280;
@@ -4724,7 +4733,7 @@ class PlayState extends MusicBeatState
 				});
 			}
 	
-			if (tween2 == null && !onCombo && !comboFalling)
+			if (tween2 == null && !onCombo && !comboFalling && showComboNum)
 			{
 				goofyCounter.x = 1600;
 				goofyCounter.y = goofyCounterLocY;

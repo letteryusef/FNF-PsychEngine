@@ -8,15 +8,17 @@ using StringTools;
 class HealthIcon extends FlxSprite
 {
 	public var sprTracker:FlxSprite;
+	public var hasWinning:Bool = false;
 	private var isOldIcon:Bool = false;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
+	public function new(char:String = 'bf', isPlayer:Bool = false, hasWinning:Bool = false)
 	{
 		super();
 		isOldIcon = (char == 'bf-old');
 		this.isPlayer = isPlayer;
+		this.hasWinning = hasWinning;
 		changeIcon(char);
 		scrollFactor.set();
 	}
@@ -43,12 +45,20 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Load stupidly first for getting the file size
-			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / 2;
-			iconOffsets[1] = (width - 150) / 2;
+			if (hasWinning)
+			{
+				loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
+			    iconOffsets[0] = (width - 150) / 3;
+			    iconOffsets[1] = (width - 150) / 3;
+				iconOffsets[2] = (width - 150) / 3;
+				animation.add(char, [0, 1, 2], 0, false, isPlayer);
+			} else {
+				loadGraphic(file, true, Math.floor(width / 2), Math.floor(height));
+			    iconOffsets[0] = (width - 150) / 2;
+			    iconOffsets[1] = (width - 150) / 2;
+				animation.add(char, [0, 1], 0, false, isPlayer);
+			}
 			updateHitbox();
-
-			animation.add(char, [0, 1], 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 
