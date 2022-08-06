@@ -774,15 +774,6 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.addGroup(tab_group);
 	}
 
-	function rebuildIcon()
-	{
-		leHealthIcon.destroy();
-		leHealthIcon = new HealthIcon(char.healthIcon, false, char.winningIcon);
-		leHealthIcon.y = FlxG.height - 150;
-		add(leHealthIcon);
-		leHealthIcon.cameras = [camHUD];
-	}
-
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == healthIconInputText) {
