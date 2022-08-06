@@ -549,7 +549,8 @@ class CharacterEditorState extends MusicBeatState
 				char.winningIcon = false;
 			}
 
-			rebuildIcon();
+			leHealthIcon.hasWinning = char.winningIcon;
+			leHealthIcon.changeIcon(healthIconInputText.text);
 		};
 
 		singDurationStepper = new FlxUINumericStepper(15, healthIconInputText.y + 45, 0.1, 4, 0, 999, 1);
@@ -1013,8 +1014,9 @@ class CharacterEditorState extends MusicBeatState
 			flipXCheckBox.checked = char.originalFlipX;
 			noAntialiasingCheckBox.checked = char.noAntialiasing;
 			winningIconCheckBox.checked = char.winningIcon;
+			leHealthIcon.hasWinning = char.winningIcon;
+			leHealthIcon.changeIcon(healthIconInputText.text);
 			resetHealthBarColor();
-			rebuildIcon();
 			positionXStepper.value = char.positionArray[0];
 			positionYStepper.value = char.positionArray[1];
 			positionCameraXStepper.value = char.cameraPosition[0];

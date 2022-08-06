@@ -38,34 +38,33 @@ class HealthIcon extends FlxSprite
 
 	private var iconOffsets:Array<Float> = [0, 0];
 	public function changeIcon(char:String) {
-		if(this.char != char) {
-			var name:String = 'icons/' + char;
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-			var file:Dynamic = Paths.image(name);
+		var name:String = 'icons/' + char;
 
-			loadGraphic(file); //Load stupidly first for getting the file size
-			if (hasWinning)
-			{
-				loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
-			    iconOffsets[0] = (width - 150) / 3;
-			    iconOffsets[1] = (width - 150) / 3;
-				iconOffsets[2] = (width - 150) / 3;
-				animation.add(char, [0, 1, 2], 0, false, isPlayer);
-			} else {
-				loadGraphic(file, true, Math.floor(width / 2), Math.floor(height));
-			    iconOffsets[0] = (width - 150) / 2;
-			    iconOffsets[1] = (width - 150) / 2;
-				animation.add(char, [0, 1], 0, false, isPlayer);
-			}
-			updateHitbox();
-			animation.play(char);
-			this.char = char;
+		if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
+		if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
+		
+		var file:Dynamic = Paths.image(name);
 
-			antialiasing = ClientPrefs.globalAntialiasing;
-			if(char.endsWith('-pixel')) {
-				antialiasing = false;
-			}
+		loadGraphic(file); //Load stupidly first for getting the file size
+		if (hasWinning)
+		{
+			loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
+		    iconOffsets[0] = (width - 150) / 3;
+		    iconOffsets[1] = (width - 150) / 3;
+			animation.add(char, [0, 1, 2], 0, false, isPlayer);
+		} else {
+			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height));
+		    iconOffsets[0] = (width - 150) / 2;
+		    iconOffsets[1] = (width - 150) / 2;
+			animation.add(char, [0, 1], 0, false, isPlayer);
+		}
+		updateHitbox();
+		animation.play(char);
+		this.char = char;
+
+		antialiasing = ClientPrefs.globalAntialiasing;
+		if(char.endsWith('-pixel')) {
+			antialiasing = false;
 		}
 	}
 
