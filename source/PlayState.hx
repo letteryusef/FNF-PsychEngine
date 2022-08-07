@@ -3453,12 +3453,7 @@ class PlayState extends MusicBeatState
 		curCam.alpha = camHUD.alpha;
 		curCam.visible = camHUD.visible;
 	}
-
-	function miniPlayAnimation(object:FlxSprite, anim:String)
-	{
-		object.animation.play(anim);
-	}
-
+	
 	function openPauseMenu()
 	{
 		persistentUpdate = false;
