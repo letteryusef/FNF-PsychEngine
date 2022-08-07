@@ -3454,15 +3454,6 @@ class PlayState extends MusicBeatState
 		curCam.visible = camHUD.visible;
 	}
 
-	function syncCurObject(a:FlxSprite, b:FlxSprite, ?exclusions:Array<String>)
-	{
-		if (!exclusions.contains('x')) a.x = b.x;
-		if (!exclusions.contains('y')) a.y = b.y;
-		if (!exclusions.contains('angle')) a.angle = b.angle;
-		if (!exclusions.contains('alpha')) a.alpha = b.alpha;
-		if (!exclusions.contains('visible')) a.visible = b.visible;
-	}
-
 	function miniPlayAnimation(object:FlxSprite, anim:String)
 	{
 		object.animation.play(anim);
