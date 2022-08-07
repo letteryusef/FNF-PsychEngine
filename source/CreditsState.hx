@@ -115,7 +115,6 @@ class CreditsState extends MusicBeatState
 			var optionText:Alphabet = new Alphabet(0, 1 * i, creditsStuff[i][0], !isSelectable, false);
 			optionText.isMenuItem = true;
 			optionText.screenCenter(X);
-			optionText.yAdd -= 70;
 			if(isSelectable) {
 				optionText.x -= 70;
 			}

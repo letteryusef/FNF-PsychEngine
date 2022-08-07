@@ -3416,7 +3416,7 @@ class PlayState extends MusicBeatState
 				if (fuckinBool2)
 				{
 					miniPlayAnimation(noteShit, "fosh");
-					noteShit.x += 90;
+					noteShit.offset.x -= 150;
 					fuckinBool2 = false;
 				}
 			}
@@ -3425,7 +3425,7 @@ class PlayState extends MusicBeatState
 			{
 				noteShit.visible = false;
 				noteShit.active = false;
-				noteShit.x -= 90;
+				noteShit.offset.x = 0;
 	
 				lastNote = false;
 			}
