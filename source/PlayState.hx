@@ -3436,15 +3436,22 @@ class PlayState extends MusicBeatState
 
 		*/
 
-		camStrum.x = camHUD.x;
-		camNote.x = camHUD.x;
-		camStrum.y = camHUD.y;
-		camNote.y = camHUD.y;
+		updateOtherCamsToHud(camNote);
+		updateOtherCamsToHud(camStrum);
 
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
 		callOnLuas('onUpdatePost', [elapsed]);
+	}
+
+	function updateOtherCamsToHud(curCam:FlxCamera)
+    {
+		curCam.x = camHUD.x;
+		curCam.y = camHUD.y;
+		curCam.angle = camHUD.angle;
+		curCam.alpha = camHUD.alpha;
+		curCam.visible = camHUD.visible;
 	}
 
 	function miniPlayAnimation(object:FlxSprite, anim:String)
