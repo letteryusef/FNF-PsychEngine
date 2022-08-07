@@ -1273,13 +1273,13 @@ class PlayState extends MusicBeatState
 		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(ouchUI);
 
-		iconP1 = new HealthIcon(boyfriend.healthIcon, true, boyfriend.winningIcon);
+		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP1.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP1);
 
-		iconP2 = new HealthIcon(dad.healthIcon, false, dad.winningIcon);
+		iconP2 = new HealthIcon(dad.healthIcon, false);
 		iconP2.y = healthBar.y - 75;
 		iconP2.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP2.alpha = ClientPrefs.healthBarAlpha;
@@ -3154,26 +3154,12 @@ class PlayState extends MusicBeatState
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 
-		if (health > 2)
-			health = 2;
+		if (health > 2) health = 2;
 
-		if (healthBar.percent < 20)
-			iconP1.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent > 80 && boyfriend.winningIcon)
-			iconP1.animation.curAnim.curFrame = 2;
-	    else
-			iconP1.animation.curAnim.curFrame = 0;
+		if (healthBar.percent > 80) botPlayx = botPlayLeft; else botPlayx = botPlayRight;
 
-		if (healthBar.percent > 80)
-	    {
-			iconP2.animation.curAnim.curFrame = 1;
-			botPlayx = botPlayLeft;
-		} else if (healthBar.percent < 20 && dad.winningIcon) {
-			iconP2.animation.curAnim.curFrame = 2;
-		} else {
-			iconP2.animation.curAnim.curFrame = 0;
-		    botPlayx = botPlayRight;
-		}
+		iconP1.healthIconUpdate(healthBar);
+		iconP2.healthIconUpdate(healthBar);
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			persistentUpdate = false;
@@ -3875,7 +3861,6 @@ class PlayState extends MusicBeatState
 							boyfriend.alpha = 0.00001;
 							boyfriend = boyfriendMap.get(value2);
 							boyfriend.alpha = lastAlpha;
-							iconP1.hasWinning = boyfriend.winningIcon;
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
 						setOnLuas('boyfriendName', boyfriend.curCharacter);
@@ -3898,7 +3883,6 @@ class PlayState extends MusicBeatState
 								gf.visible = false;
 							}
 							dad.alpha = lastAlpha;
-							iconP2.hasWinning = dad.winningIcon;
 							iconP2.changeIcon(dad.healthIcon);
 						}
 						setOnLuas('dadName', dad.curCharacter);

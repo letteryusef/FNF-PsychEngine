@@ -1,6 +1,8 @@
 package;
 
+import flixel.ui.FlxBar;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
@@ -8,17 +10,16 @@ using StringTools;
 class HealthIcon extends FlxSprite
 {
 	public var sprTracker:FlxSprite;
-	public var hasWinning:Bool = false;
 	private var isOldIcon:Bool = false;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
+	private var leWidth:Float;
 
-	public function new(char:String = 'bf', isPlayer:Bool = false, hasWinning:Bool = false)
+	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
 		isOldIcon = (char == 'bf-old');
 		this.isPlayer = isPlayer;
-		this.hasWinning = hasWinning;
 		changeIcon(char);
 		scrollFactor.set();
 	}
@@ -38,33 +39,40 @@ class HealthIcon extends FlxSprite
 
 	private var iconOffsets:Array<Float> = [0, 0];
 	public function changeIcon(char:String) {
-		var name:String = 'icons/' + char;
-
-		if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
-		if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-		
-		var file:Dynamic = Paths.image(name);
-
-		loadGraphic(file); //Load stupidly first for getting the file size
-		if (hasWinning)
+		if (this.char != char)
 		{
-			loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
-		    iconOffsets[0] = (width - 150) / 3;
-		    iconOffsets[1] = (width - 150) / 3;
-			animation.add(char, [0, 1, 2], 0, false, isPlayer);
-		} else {
-			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height));
-		    iconOffsets[0] = (width - 150) / 2;
-		    iconOffsets[1] = (width - 150) / 2;
-			animation.add(char, [0, 1], 0, false, isPlayer);
-		}
-		updateHitbox();
-		animation.play(char);
-		this.char = char;
+			var name:String = 'icons/' + char;
 
-		antialiasing = ClientPrefs.globalAntialiasing;
-		if(char.endsWith('-pixel')) {
-			antialiasing = false;
+		 	if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
+			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
+		
+			var iconGraphic:FlxGraphic = Paths.image(name);
+
+			switch (iconGraphic.width)
+		    {
+				case 450: leWidth = 3;
+				case 300: leWidth = 2;
+				case 150: leWidth = 1;
+			}
+
+			loadGraphic(iconGraphic); //Load stupidly first for getting the file size
+			if (leWidth != 1)
+			{
+				loadGraphic(iconGraphic, true, Math.floor(width / leWidth), Math.floor(height)); //Then load it fr
+			    iconOffsets[0] = (width - 150) / leWidth;
+			    iconOffsets[1] = (width - 150) / leWidth;
+			}
+			animation.add('idle', [0], 0, false, isPlayer);
+			animation.add('losing', leWidth >= 2 ? [1] : [0], 0, false, isPlayer);
+			animation.add('winning', leWidth == 3 ? [2] : [0], 0, false, isPlayer);
+			updateHitbox();
+			animation.play('idle');
+			this.char = char;
+
+			antialiasing = ClientPrefs.globalAntialiasing;
+			if(char.endsWith('-pixel')) {
+				antialiasing = false;
+			}
 		}
 	}
 
@@ -73,6 +81,26 @@ class HealthIcon extends FlxSprite
 		super.updateHitbox();
 		offset.x = iconOffsets[0];
 		offset.y = iconOffsets[1];
+	}
+
+	public dynamic function healthIconUpdate(healthBar:FlxBar)
+	{
+		if (isPlayer)
+		{
+			if (healthBar.percent < 20)
+				animation.play('losing');
+			else if (healthBar.percent > 80)
+				animation.play('winning');
+			else
+				animation.play('idle');
+		} else {
+			if (healthBar.percent > 80)
+				animation.play('losing');
+			else if (healthBar.percent < 20) 
+				animation.play('winning');
+			else
+				animation.play('idle');
+		}
 	}
 
 	public function getCharacter():String {

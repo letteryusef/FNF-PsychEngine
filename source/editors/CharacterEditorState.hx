@@ -119,7 +119,7 @@ class CharacterEditorState extends MusicBeatState
 		add(healthBarBG);
 		healthBarBG.cameras = [camHUD];
 
-		leHealthIcon = new HealthIcon(char.healthIcon, false, char.winningIcon);
+		leHealthIcon = new HealthIcon(char.healthIcon, false);
 		leHealthIcon.y = FlxG.height - 150;
 		add(leHealthIcon);
 		leHealthIcon.cameras = [camHUD];
@@ -397,7 +397,6 @@ class CharacterEditorState extends MusicBeatState
 				0
 			],
 			"healthicon": "face",
-			"hasWinning": false,
 			"flip_x": false,
 			"healthbar_colors": [
 				161,
@@ -469,8 +468,6 @@ class CharacterEditorState extends MusicBeatState
 				character.jsonScale = parsedJson.scale;
 				character.noAntialiasing = parsedJson.no_antialiasing;
 				character.originalFlipX = parsedJson.flip_x;
-				character.healthIcon = parsedJson.healthicon;
-				character.winningIcon = parsedJson.hasWinning;
 				character.healthColorArray = parsedJson.healthbar_colors;
 				character.setPosition(character.positionArray[0] + OFFSET_X + 100, character.positionArray[1]);
 			}
@@ -506,7 +503,6 @@ class CharacterEditorState extends MusicBeatState
 
 	var flipXCheckBox:FlxUICheckBox;
 	var noAntialiasingCheckBox:FlxUICheckBox;
-	var winningIconCheckBox:FlxUICheckBox;
 
 	var healthColorStepperR:FlxUINumericStepper;
 	var healthColorStepperG:FlxUINumericStepper;
@@ -538,20 +534,6 @@ class CharacterEditorState extends MusicBeatState
 			});
 
 		healthIconInputText = new FlxUIInputText(15, imageInputText.y + 35, 75, leHealthIcon.getCharacter(), 8);
-
-		winningIconCheckBox = new FlxUICheckBox(healthIconInputText.x + 100, healthIconInputText.y, null, null, "Winning Icon", 0);
-		winningIconCheckBox.checked = char.winningIcon;
-		winningIconCheckBox.callback = function() {
-			if (winningIconCheckBox.checked)
-			{
-				char.winningIcon = true;
-			} else {
-				char.winningIcon = false;
-			}
-
-			leHealthIcon.hasWinning = char.winningIcon;
-			leHealthIcon.changeIcon(healthIconInputText.text);
-		};
 
 		singDurationStepper = new FlxUINumericStepper(15, healthIconInputText.y + 45, 0.1, 4, 0, 999, 1);
 
@@ -608,7 +590,6 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.add(scaleStepper);
 		tab_group.add(flipXCheckBox);
 		tab_group.add(noAntialiasingCheckBox);
-		tab_group.add(winningIconCheckBox);
 		tab_group.add(positionXStepper);
 		tab_group.add(positionYStepper);
 		tab_group.add(positionCameraXStepper);
@@ -1004,8 +985,6 @@ class CharacterEditorState extends MusicBeatState
 			scaleStepper.value = char.jsonScale;
 			flipXCheckBox.checked = char.originalFlipX;
 			noAntialiasingCheckBox.checked = char.noAntialiasing;
-			winningIconCheckBox.checked = char.winningIcon;
-			leHealthIcon.hasWinning = char.winningIcon;
 			leHealthIcon.changeIcon(healthIconInputText.text);
 			resetHealthBarColor();
 			positionXStepper.value = char.positionArray[0];
@@ -1300,7 +1279,6 @@ class CharacterEditorState extends MusicBeatState
 			"scale": char.jsonScale,
 			"sing_duration": char.singDuration,
 			"healthicon": char.healthIcon,
-			"hasWinning": char.winningIcon,
 
 			"position":	char.positionArray,
 			"camera_position": char.cameraPosition,

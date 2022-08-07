@@ -408,13 +408,12 @@ class WeekEditorState extends MusicBeatState
 
 				for (i in 0...splittedText.length) {
 					if(i >= weekFile.songs.length) { //Add new song
-						weekFile.songs.push([splittedText[i], 'dad', [146, 113, 253], false]);
+						weekFile.songs.push([splittedText[i], 'dad', [146, 113, 253]]);
 					} else { //Edit song
 						weekFile.songs[i][0] = splittedText[i];
 						if(weekFile.songs[i][1] == null || weekFile.songs[i][1]) {
 							weekFile.songs[i][1] = 'dad';
 							weekFile.songs[i][2] = [146, 113, 253];
-							weekFile.songs[i][3] = false;
 						}
 					}
 				}
@@ -626,7 +625,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			songText.targetY = i;
 			grpSongs.add(songText);
 
-			var icon:HealthIcon = new HealthIcon(weekFile.songs[i][1], false, weekFile.songs[i][3]);
+			var icon:HealthIcon = new HealthIcon(weekFile.songs[i][1], false);
 			icon.sprTracker = songText;
 
 			// using a FlxGroup is too much fuss!
@@ -700,7 +699,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 	var bgColorStepperG:FlxUINumericStepper;
 	var bgColorStepperB:FlxUINumericStepper;
 	var iconInputText:FlxUIInputText;
-	var winCheck:FlxUICheckBox;
 	function addFreeplayUI() {
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Freeplay";
@@ -736,20 +734,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
-		winCheck = new FlxUICheckBox(iconInputText.x + 120, iconInputText.y - 1, null, null, "Winning Icon", 100);
-		winCheck.checked = weekFile.songs[curSelected][3];
-		winCheck.callback = function()
-		{
-			if (winCheck.checked)
-			{
-				iconArray[curSelected].hasWinning = true;
-			} else {
-				iconArray[curSelected].hasWinning = false;
-			}
-
-			iconArray[curSelected].changeIcon(iconInputText.text);
-		};
-
 		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
 		hideFreeplayCheckbox.callback = function()
@@ -766,7 +750,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 		tab_group.add(pasteColor);
 		tab_group.add(iconInputText);
 		tab_group.add(hideFreeplayCheckbox);
-		tab_group.add(winCheck);
 		UI_box.addGroup(tab_group);
 	}
 
@@ -814,7 +797,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 		bgColorStepperR.value = Math.round(weekFile.songs[curSelected][2][0]);
 		bgColorStepperG.value = Math.round(weekFile.songs[curSelected][2][1]);
 		bgColorStepperB.value = Math.round(weekFile.songs[curSelected][2][2]);
-		winCheck.checked = weekFile.songs[curSelected][3];
 		updateBG();
 	}
 
