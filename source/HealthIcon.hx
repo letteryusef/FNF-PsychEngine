@@ -53,6 +53,7 @@ class HealthIcon extends FlxSprite
 				case 450: leWidth = 3;
 				case 300: leWidth = 2;
 				case 150: leWidth = 1;
+				default: leWidth = 2;
 			}
 
 			loadGraphic(iconGraphic); //Load stupidly first for getting the file size
