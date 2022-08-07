@@ -176,7 +176,7 @@ class PlayState extends MusicBeatState
 	private var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
-	// public var noteShit:FlxSprite;
+	public var noteShit:FlxSprite;
 	// public var noteShitNum:FlxSprite;
 
 	public var ratingsData:Array<Rating> = [];
@@ -1293,8 +1293,6 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(scoreTxt);
 
-		/*
-
 		noteShit = new FlxSprite(120, 240, Paths.image('noteCombo'));
 		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
 		noteShit.animation.addByPrefix("boom", "appear", 30, false);
@@ -1308,7 +1306,9 @@ class PlayState extends MusicBeatState
 		noteShit.setGraphicSize(Std.int(noteShit.width * 0.74));
 		noteShit.updateHitbox();
 
-		for (i in 1...3)
+		/*
+
+		for (i in 0...2)
 		{
 			noteShitNum = new FlxSprite(0, 0, Paths.image('noteComboNumbers'));
 
@@ -1329,7 +1329,7 @@ class PlayState extends MusicBeatState
 			noteShitNum.setGraphicSize(Std.int(noteShitNum.width * 0.74));
 			noteShitNum.updateHitbox();
 		}
-		
+
 		*/
 
 		CoolUtil.precacheSound('noteComboSound');
@@ -3397,9 +3397,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		/*
-
-		if (lastNote && !SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished)
+		if (lastNote && !SONG.notes[curSection].mustHitSection)
 		{
 			if (fuckinBool)
 			{
@@ -3433,8 +3431,6 @@ class PlayState extends MusicBeatState
 			}
 	
 		}
-
-		*/
 
 		updateOtherCamsToHud(camNote);
 		updateOtherCamsToHud(camStrum);
@@ -4306,15 +4302,11 @@ class PlayState extends MusicBeatState
 	public var extraCombo:String = "";
 	public var extraNum:String = "";
 
-	/*
-
 	public var lastNote:Bool = false;
 	public var showNoteCombo:Bool = true;
+	public var noteComboNumberlol:Int = 0;
 	var fuckinBool:Bool = false;
 	var fuckinBool2:Bool = false;
-	var noteComboNumberlol:Int = 0;
-
-    */
 
 	private function cachePopUpScore()
 	{
@@ -5288,9 +5280,7 @@ class PlayState extends MusicBeatState
 					setUpGoofyText(false, note);
 				}
 
-				/*
-
-				if (!lastNote && SONG.notes[Math.floor(curStep / 16)].mustHitSection && countdownFinished && showNoteCombo)
+				if (!lastNote && showNoteCombo && SONG.notes[curSection].mustHitSection && noteComboNumberlol > 5)
 				{
 					lastNote = true;
 					fuckinBool = true;
@@ -5298,7 +5288,6 @@ class PlayState extends MusicBeatState
 
 				noteComboNumberlol++;
 
-				*/
 			}
 			health += note.hitHealth * healthGain;
 
