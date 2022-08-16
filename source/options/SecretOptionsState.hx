@@ -41,6 +41,13 @@ class SecretOptionsState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
+		var option:Option = new Option('Fight Mode',
+			"f-fight??",
+			'fightMode',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Mosaic Strength',
 			'How pixelated you want your screen to be. (ONLY WORKS WITH MOSAIC MODE)',
 			'mosaicStrength',

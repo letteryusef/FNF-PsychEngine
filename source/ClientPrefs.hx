@@ -93,6 +93,7 @@ class ClientPrefs {
 
 	// secret stuff!!
 	public static var mosaicMode:Bool = false;
+	public static var fightMode:Bool = false;
 	public static var mosaicStrength:Float = 3.0;
 
 	public static function loadDefaultKeys() {
@@ -143,6 +144,7 @@ class ClientPrefs {
 
 		FlxG.save.data.mosaicMode = mosaicMode;
 		FlxG.save.data.mosaicStrength = mosaicStrength;
+		FlxG.save.data.fightMode = fightMode;
 	
 		FlxG.save.flush();
 
@@ -278,6 +280,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.mosaicStrength != null) {
 			mosaicStrength = FlxG.save.data.mosaicStrength;
+		}
+		if(FlxG.save.data.fightMode != null) {
+			fightMode = FlxG.save.data.fightMode;
 		}
 		
 		// flixel automatically saves your volume!

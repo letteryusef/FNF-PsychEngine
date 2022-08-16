@@ -43,6 +43,7 @@ import openfl.Lib;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.display.Shader;
+import openfl.display.GraphicsShader;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 import openfl.utils.Assets as OpenFlAssets;
@@ -61,8 +62,10 @@ import StageData;
 import FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
+
 #if sys
 import sys.FileSystem;
+import sys.io.File;
 #end
 
 #if VIDEOS_ALLOWED
@@ -331,6 +334,9 @@ class PlayState extends MusicBeatState
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
+	//???
+	var fightMode:Bool = false;
+
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -541,6 +547,40 @@ class PlayState extends MusicBeatState
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+
+	    /*
+		 * SHADERS
+		 *
+		 * This is a highly experimental code by gedehari to support runtime shader parsing.
+		 * Usually, to add a shader, you would make it a class, but now, I modified it so
+		 * you can parse it from a file.
+		 *
+		 * This feature is planned to be used for modcharts
+		 * (at this time of writing, it's not available yet).
+		 *
+		 * This example below shows that you can apply shaders as a FlxCamera filter.
+		 * the GraphicsShader class accepts two arguments, one is for vertex shader, and
+		 * the second is for fragment shader.
+		 * Pass in an empty string to use the default vertex/fragment shader.
+		 *
+		 * Next, the Shader is passed to a new instance of ShaderFilter, neccesary to make
+		 * the filter work. And that's it!
+		 *
+		 * To access shader uniforms, just reference the `data` property of the GraphicsShader
+		 * instance.
+		 *
+		 * Thank you for reading! -gedehari
+		 *
+		 * Uncomment the code below to apply the effect
+		 *
+		 */
+        
+		/*
+		    #if sys
+		    var shader:GraphicsShader = new GraphicsShader(File.getContent(Paths.shaderFragment('test')));  // YOU CAN ALSO PUT VERTEX FILES, I'M NOT SURE IF IT WORKS!!
+		    FlxG.camera.setFilters([new ShaderFilter(shader)]);
+		    #end
+		*/
 
 		switch (curStage)
 		{
@@ -1293,6 +1333,33 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(scoreTxt);
 
+		botplayTxt = new FlxText(-20, 632, FlxG.width - 800, "BOTPLAY", 32);
+		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayTxt.scrollFactor.set();
+		botplayTxt.borderSize = 1.25;
+		botplayTxt.visible = cpuControlled;
+		add(botplayTxt);
+		if(ClientPrefs.downScroll) {
+			botplayTxt.y = FlxG.width * 0.054;
+		}
+
+		botPlayx = botplayTxt.x;
+		botPlayRight = FlxG.width - 1280;
+		botPlayLeft = FlxG.width - 1380;
+
+		nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
+		nowPlayingBG.alpha = 0.6;
+		add(nowPlayingBG);
+
+		nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
+		nowPlaying.setFormat("VCR OSD Mono", 18);
+		add(nowPlaying);
+
+		nowPlayingBG.scale.x = nowPlaying.width * 2.16;
+
+		nowPlayingBG.y -= 400;
+		nowPlaying.y -= 400;
+
 		noteShit = new FlxSprite(120, 240, Paths.image('noteCombo'));
 		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
 		noteShit.animation.addByPrefix("boom", "appear", 30, false);
@@ -1334,33 +1401,6 @@ class PlayState extends MusicBeatState
 
 		CoolUtil.precacheSound('noteComboSound');
 
-		botplayTxt = new FlxText(-20, 632, FlxG.width - 800, "BOTPLAY", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		botplayTxt.scrollFactor.set();
-		botplayTxt.borderSize = 1.25;
-		botplayTxt.visible = cpuControlled;
-		add(botplayTxt);
-		if(ClientPrefs.downScroll) {
-			botplayTxt.y = FlxG.width * 0.054;
-		}
-
-		botPlayx = botplayTxt.x;
-		botPlayRight = FlxG.width - 1280;
-		botPlayLeft = FlxG.width - 1380;
-
-		nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
-		nowPlayingBG.alpha = 0.6;
-		add(nowPlayingBG);
-
-		nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
-		nowPlaying.setFormat("VCR OSD Mono", 18);
-		add(nowPlaying);
-
-		nowPlayingBG.scale.x = nowPlaying.width * 2.16;
-
-		nowPlayingBG.y -= 400;
-		nowPlaying.y -= 400;
-
 		FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
 			{
 				FlxTween.tween(nowPlaying, {y: nowPlaying.y + 400}, 0.6, {ease: FlxEase.quintOut});
@@ -1398,9 +1438,8 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		nowPlayingBG.cameras = [camOther];
 		nowPlaying.cameras = [camOther];
+		noteShit.cameras = [camHUD];
 		doof.cameras = [camHUD];
-
-		// noteShit.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
