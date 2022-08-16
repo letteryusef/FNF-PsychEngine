@@ -44,6 +44,7 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.display.Shader;
 import openfl.display.GraphicsShader;
+import openfl.display.ShaderParameter;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 import openfl.utils.Assets as OpenFlAssets;
@@ -576,15 +577,16 @@ class PlayState extends MusicBeatState
 		 */
         
 		/*
-		    #if sys
-		    var shader:GraphicsShader = new GraphicsShader(File.getContent(Paths.shaderFragment('test')));  // YOU CAN ALSO PUT VERTEX FILES, I'M NOT SURE IF IT WORKS!!
-		    FlxG.camera.setFilters([new ShaderFilter(shader)]);
-		    #end
 		*/
 
 		switch (curStage)
 		{
 			case 'stage': //Week 1
+
+			    #if sys
+		        var shader:GraphicsShader = new GraphicsShader(File.getContent(Paths.shaderFragment('vhs')));  // YOU CAN ALSO PUT VERTEX FILES, I'M NOT SURE IF IT WORKS!!
+		        camGame.setFilters([new ShaderFilter(shader)]);
+		        #end
 				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
 				add(bg);
 
