@@ -341,6 +341,7 @@ class PlayState extends MusicBeatState
 
 	//???
 	var fightMode:Bool = false;
+	var leShader:FlxRuntimeShader; // le shader tutorial yeaha
 
 	override public function create()
 	{
@@ -553,40 +554,6 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
-	    /*
-		 * SHADERS
-		 *
-		 * This is a highly experimental code by gedehari to support runtime shader parsing.
-		 * Usually, to add a shader, you would make it a class, but now, I modified it so
-		 * you can parse it from a file.
-		 *
-		 * This feature is planned to be used for modcharts
-		 * (at this time of writing, it's not available yet).
-		 *
-		 * This example below shows that you can apply shaders as a FlxCamera filter.
-		 * the GraphicsShader class accepts two arguments, one is for vertex shader, and
-		 * the second is for fragment shader.
-		 * Pass in an empty string to use the default vertex/fragment shader.
-		 *
-		 * Next, the Shader is passed to a new instance of ShaderFilter, neccesary to make
-		 * the filter work. And that's it!
-		 *
-		 * To access shader uniforms, just reference the `data` property of the GraphicsShader
-		 * instance.
-		 *
-		 * Thank you for reading! -gedehari
-		 *
-		 * Uncomment the code below to apply the effect
-		 *
-		 */
-        
-		/*
-		    #if sys
-		    var shader:GraphicsShader = new GraphicsShader("", File.getContent(Paths.shaderFragment('vhs')));  // YOU CAN ALSO PUT VERTEX FILES, I'M NOT SURE IF IT WORKS!!
-		    camGame.setFilters([new ShaderFilter(shader)]);
-		    #end
-		*/
-
 		switch (curStage)
 		{
 			case 'stage': //Week 1
@@ -612,6 +579,24 @@ class PlayState extends MusicBeatState
 					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 					stageCurtains.updateHitbox();
 					add(stageCurtains);
+
+					/*
+        
+					- TUTORIAL: making a shader: if you want to make a shader, welp, it's simple i guess
+
+					to do it, just take the code down below as an example:
+
+					!ALSO YOU NEED TO CREATE A SHADER VAR NOT HERE, BUT ON THE TOP WHERE YOU CAN FIND THE
+					VARIANTS, SO YOU CAN MAKE THEM UPDATED!
+
+					#if (!flash && sys)
+		            leShader = new FlxRuntimeShader(File.getContent(Paths.shaderFragment('static')));
+		            camGame.setFilters([new ShaderFilter(leShader)]);
+					leShader.setFloat('u_elapsed', 0);
+					leShader.setFloat('u_alpha', 1);
+		            #end
+
+					*/
 				}
 				dadbattleSmokes = new FlxSpriteGroup(); //troll'd
 
@@ -1631,7 +1616,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function initLuaShader(name:String, onModsFolder:Bool = true, ?glslVersion:Int = 120)
+	public function initLuaShader(name:String, ?glslVersion:Int = 120)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -3547,6 +3532,18 @@ class PlayState extends MusicBeatState
 			}
 	
 		}
+
+		/*
+        
+		- TUTORIAL: running the goddamn shader: to make the shader animated, it's necessary to update them
+
+		to do it, just take the code down below as an example:
+
+		#if (!flash && sys)
+        leShader.setFloat('u_elapsed', leShader.getFloat('u_elapsed') + elapsed);
+		#end
+
+		*/
 
 		updateOtherCamsToHud(camNote);
 		updateOtherCamsToHud(camStrum);
