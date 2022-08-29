@@ -5706,17 +5706,18 @@ class PlayState extends MusicBeatState
 		}
 		luaArray = [];
 
-		CoolUtil.destroyMouse();
-
 		if(!ClientPrefs.controllerMode)
 		{
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
+
 		#if hscript
 		FunkinLua.haxeInterp = null;
 		#end
 
+		CoolUtil.destroyMouse();
+		
 		super.destroy();
 	}
 
