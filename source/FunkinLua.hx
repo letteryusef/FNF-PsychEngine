@@ -3349,8 +3349,10 @@ class HScript
 		interp.variables.set('FlxG', FlxG);
 		interp.variables.set('FlxSprite', FlxSprite);
 		interp.variables.set('FlxCamera', FlxCamera);
+		interp.variables.set('FlxMath', FlxMath);
 		interp.variables.set('FlxTimer', FlxTimer);
 		interp.variables.set('FlxTween', FlxTween);
+		interp.variables.set('PINGPONG', PINGPONG);
 		interp.variables.set('FlxEase', FlxEase);
 		interp.variables.set('PlayState', PlayState);
 		interp.variables.set('game', PlayState.instance);
