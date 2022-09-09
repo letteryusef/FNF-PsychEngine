@@ -37,6 +37,7 @@ class ClientPrefs {
 	public static var hitsoundVolume:Float = 0;
 	public static var pauseMusic:String = 'Tea Time';
 	public static var checkForUpdates:Bool = true;
+	public static var comboStacking = true;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -295,6 +296,16 @@ class ClientPrefs {
 			fightMode = FlxG.save.data.fightMode;
 		}
 		
+		if(FlxG.save.data.mosaicMode != null) {
+			mosaicMode = FlxG.save.data.mosaicMode;
+		}
+		if(FlxG.save.data.mosaicStrength != null) {
+			mosaicStrength = FlxG.save.data.mosaicStrength;
+		}
+		if(FlxG.save.data.fightMode != null) {
+			fightMode = FlxG.save.data.fightMode;
+		}
+		
 		// flixel automatically saves your volume!
 		if(FlxG.save.data.volume != null)
 		{
@@ -308,6 +319,8 @@ class ClientPrefs {
 		{
 			checkForUpdates = FlxG.save.data.checkForUpdates;
 		}
+		if (FlxG.save.data.comboStacking != null)
+			comboStacking = FlxG.save.data.comboStacking;
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', 'ninjamuffin99');
