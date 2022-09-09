@@ -26,9 +26,9 @@ class NoteSplash extends FlxSprite
 		antialiasing = ClientPrefs.globalAntialiasing;
 	}
 
-	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0, leSplashOffset:Float = 0.7) {
-		setPosition(x - Note.swagWidth * 0.95 * leSplashOffset, y - Note.swagWidth * leSplashOffset);
-		alpha = 0.6;
+	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0) {
+		setPosition(x - Note.swagWidth * 0.95 * PlayState.instance.leSplashOffsetX, y - Note.swagWidth * PlayState.instance.leSplashOffsetY);
+		alpha = PlayState.instance.splashAlpha;
 
 		if(texture == null) {
 			texture = 'noteSplashes';
@@ -43,18 +43,31 @@ class NoteSplash extends FlxSprite
 		colorSwap.brightness = brtColor;
 		offset.set(10, 10);
 
-		var animNum:Int = FlxG.random.int(1, 2);
-		animation.play('note' + note + '-' + animNum, true);
-		if(animation.curAnim != null)animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
+		if (PlayState.instance.splashRandom)
+		{
+			var animNum:Int = FlxG.random.int(1, 2);
+			animation.play('note' + note + '-' + animNum, true);
+		} else {
+			animation.play('note' + note, true);
+		}
+		if(animation.curAnim != null) animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 
 	function loadAnims(skin:String) {
 		frames = Paths.getSparrowAtlas(skin);
-		for (i in 1...3) {
-			animation.addByPrefix("note1-" + i, "note splash blue " + i, 24, false);
-			animation.addByPrefix("note2-" + i, "note splash green " + i, 24, false);
-			animation.addByPrefix("note0-" + i, "note splash purple " + i, 24, false);
-			animation.addByPrefix("note3-" + i, "note splash red " + i, 24, false);
+		if (PlayState.instance.splashRandom)
+		{
+			for (i in 1...3) {
+				animation.addByPrefix("note1-" + i, PlayState.instance.noteSplashName + " blue " + i, 24, false);
+				animation.addByPrefix("note2-" + i, PlayState.instance.noteSplashName + " green " + i, 24, false);
+				animation.addByPrefix("note0-" + i, PlayState.instance.noteSplashName + " purple " + i, 24, false);
+				animation.addByPrefix("note3-" + i, PlayState.instance.noteSplashName + " red " + i, 24, false);
+			}
+		} else {
+			animation.addByPrefix("note1", PlayState.instance.noteSplashName + " blue", 24, false);
+			animation.addByPrefix("note2", PlayState.instance.noteSplashName + " green", 24, false);
+			animation.addByPrefix("note0", PlayState.instance.noteSplashName + " purple", 24, false);
+			animation.addByPrefix("note3", PlayState.instance.noteSplashName + " red" , 24, false);
 		}
 	}
 

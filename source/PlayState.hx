@@ -178,7 +178,12 @@ class PlayState extends MusicBeatState
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
-	public var noteSplashOffset:Float = 0.7;
+	// notesplash settings for lua
+	public var leSplashOffsetX:Float = 0.7;
+	public var leSplashOffsetY:Float = 0.7;
+	public var splashRandom:Bool = true;
+	public var noteSplashName:String = "note splash";
+	public var splashAlpha:Float = 0.6;
 
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
@@ -5452,7 +5457,7 @@ class PlayState extends MusicBeatState
 
 		if (!note.isSustainNote)
 		{
-			moveCameraSection(0, true);
+			if (ClientPrefs.cameraMove == "Tween" && ClientPrefs.followChars) moveCameraSection(0, true);
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
@@ -5490,7 +5495,7 @@ class PlayState extends MusicBeatState
 				note.wasGoodHit = true;
 				if (!note.isSustainNote)
 				{
-					moveCameraSection(0, true);
+					if (ClientPrefs.cameraMove == "Tween" && ClientPrefs.followChars) moveCameraSection(0, true);
 					note.kill();
 					notes.remove(note, true);
 					note.destroy();
@@ -5592,6 +5597,7 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
+				moveCameraSection(0, true);
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
@@ -5631,7 +5637,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt, noteSplashOffset);
+		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
 		grpNoteSplashes.add(splash);
 	}
 
