@@ -152,4 +152,8 @@ class CoolUtil
 		FlxG.mouse.visible = false;
 		FlxG.mouse.unload();
 	}
+
+	public static function adjustFPS(num:Float):Float{ // from ANDROMEDA ENGINE
+		return FlxG.elapsed / (1/60) * num;
+	}
 }

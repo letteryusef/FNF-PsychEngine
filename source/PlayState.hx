@@ -103,6 +103,12 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 
+	public var camGameShaders:Array<ShaderFilter> = [];
+	public var camHUDShaders:Array<ShaderFilter> = [];
+	public var camStrumShaders:Array<ShaderFilter> = [];
+	public var camNoteShaders:Array<ShaderFilter> = [];
+	public var camOtherShaders:Array<ShaderFilter> = [];
+
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
 	#if (haxe >= "4.0.0")
@@ -450,7 +456,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
-
+		
 		persistentUpdate = true;
 		persistentDraw = true;
 
@@ -3025,6 +3031,8 @@ class PlayState extends MusicBeatState
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 	var limoSpeed:Float = 0;
+	var bfIdling:Bool = false;
+	var dadIdling:Bool = false;
 
 	override public function update(elapsed:Float)
 	{
@@ -3034,7 +3042,7 @@ class PlayState extends MusicBeatState
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
 
-		if (countdownFinished && generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos){
+		if (countdownFinished && generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos && ClientPrefs.cameraMove == 'Lerp'){
 			moveCameraSection(Std.int(curStep / 16), true);
 		}
 
@@ -3532,6 +3540,26 @@ class PlayState extends MusicBeatState
 			}
 	
 		}
+
+		/*
+
+		if (ClientPrefs.cameraMove == "Tween")
+		{
+			bfIdling = boyfriend.animation.curAnim.name.startsWith('idle');
+			dadIdling = dad.animation.curAnim.name.startsWith('idle');
+	
+			if (bfIdling && SONG.notes[curSection].mustHitSection)
+			{
+				moveCameraSection(0);
+			}
+	
+			if (dadIdling && !SONG.notes[curSection].mustHitSection)
+			{
+				moveCameraSection(0);
+			}
+		}
+
+		*/
 
 		/*
         
@@ -4090,9 +4118,25 @@ class PlayState extends MusicBeatState
 					xOffsetB = 0;
 				}
 			}
-			camFollow.set(gf.getMidpoint().x + xOffsetB, gf.getMidpoint().y + yOffsetB);
-			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
-			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+			if (ClientPrefs.cameraMove == 'Lerp')
+			{
+				camFollow.set(gf.getMidpoint().x + xOffsetB, gf.getMidpoint().y + yOffsetB);
+				camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
+				camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+			} else if (ClientPrefs.cameraMove == 'Tween') {
+				if (cameraMoveTwn != null)
+				{
+					cameraMoveTwn.cancel();
+				}
+				if(!isCameraOnForcedPos) {
+					cameraMoveTwn = FlxTween.tween(camFollow, {x: gf.getMidpoint().x + xOffsetB + gf.cameraPosition[0] + girlfriendCameraOffset[0], y: gf.getMidpoint().y + yOffsetB + gf.cameraPosition[1] + girlfriendCameraOffset[1]}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.quadOut,
+						onComplete: function(twn:FlxTween)
+						{
+							cameraMoveTwn = null;
+						}
+					});
+				}
+			}
 			tweenCamIn();
 			callOnLuas('onMoveCamera', ['gf']);
 			return;
@@ -4111,6 +4155,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var cameraTwn:FlxTween;
+	var cameraMoveTwn:FlxTween;
 	public function moveCamera(isDad:Bool, isNote:Bool = false, yOffsetB:Float = 0, xOffsetB:Float = 0, yOffsetD:Float = 0, xOffsetD:Float = 0) // took it from OURPLE GUY mod
 	{
 		if (isNote && ClientPrefs.followChars){
@@ -4159,16 +4204,48 @@ class PlayState extends MusicBeatState
 		
 		if(isDad)
 		{
-			camFollow.set(dad.getMidpoint().x + 150 + xOffsetD, dad.getMidpoint().y - 100 + yOffsetD);
-			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
-			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+			if (ClientPrefs.cameraMove == "Lerp")
+			{
+				camFollow.set(dad.getMidpoint().x + 150 + xOffsetD, dad.getMidpoint().y - 100 + yOffsetD);
+				camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
+				camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+			} else if (ClientPrefs.cameraMove == "Tween") {
+				if (cameraMoveTwn != null)
+				{
+					cameraMoveTwn.cancel();
+				}
+				if(!isCameraOnForcedPos) {
+					cameraMoveTwn = FlxTween.tween(camFollow, {x: dad.getMidpoint().x + 150 + xOffsetD + dad.cameraPosition[0] + opponentCameraOffset[0], y: dad.getMidpoint().y - 100 + yOffsetD + dad.cameraPosition[1] + opponentCameraOffset[1]}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.quadOut,
+						onComplete: function(twn:FlxTween)
+						{
+							cameraMoveTwn = null;
+						}
+					});
+				}
+			}
 			tweenCamIn();
 		}
 		else
 		{
-			camFollow.set(boyfriend.getMidpoint().x - 100 + xOffsetB, boyfriend.getMidpoint().y - 100 + yOffsetB);
-			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
-			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+			if (ClientPrefs.cameraMove == "Lerp")
+			{
+				camFollow.set(boyfriend.getMidpoint().x - 100 + xOffsetB, boyfriend.getMidpoint().y - 100 + yOffsetB);
+				camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
+				camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+			} else if (ClientPrefs.cameraMove == "Tween") {
+				if (cameraMoveTwn != null)
+				{
+					cameraMoveTwn.cancel();
+				}
+				if(!isCameraOnForcedPos) {
+					FlxTween.tween(camFollow, {x: boyfriend.getMidpoint().x - 100 + xOffsetB - boyfriend.cameraPosition[0] - boyfriendCameraOffset[0], y: boyfriend.getMidpoint().y - 100 + yOffsetB + boyfriend.cameraPosition[1] + boyfriendCameraOffset[1]}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.quadOut,
+						onComplete: function(twn:FlxTween)
+						{
+							cameraMoveTwn = null;
+						}
+					});
+				}
+			}
 
 			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
@@ -5338,6 +5415,7 @@ class PlayState extends MusicBeatState
 
 		if (!note.isSustainNote)
 		{
+			moveCameraSection(0, true);
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
@@ -5375,6 +5453,7 @@ class PlayState extends MusicBeatState
 				note.wasGoodHit = true;
 				if (!note.isSustainNote)
 				{
+					moveCameraSection(0, true);
 					note.kill();
 					notes.remove(note, true);
 					note.destroy();
@@ -5857,9 +5936,9 @@ class PlayState extends MusicBeatState
 
 		if (SONG.notes[curSection] != null)
 		{
-			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
+			if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.cameraMove != "Lerp")
 			{
-				moveCameraSection();
+				moveCameraSection(0);
 			}
 
 			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms)

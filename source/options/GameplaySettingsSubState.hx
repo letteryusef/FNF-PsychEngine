@@ -77,6 +77,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Camera Move Type:',
+			"Select the way that the camera moves",
+			'cameraMove',
+			'string',
+			'Lerp',
+			['Lerp', 'Tween']);
+		addOption(option);
+
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",
 			'noReset',

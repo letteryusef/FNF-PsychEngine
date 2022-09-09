@@ -35,6 +35,7 @@ import flixel.system.FlxAssets.FlxShader;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
+import openfl.filters.ShaderFilter;
 #end
 
 #if sys
@@ -299,8 +300,55 @@ class FunkinLua {
 			}
 			return false;
 		});
+		Lua_helper.add_callback(lua, "setCameraShader", function(cam:String, shader:String) { // WIP -lettery
+			if(!ClientPrefs.shaders) return false;
 
+			#if (!flash && MODS_ALLOWED && sys)
+			if(!PlayState.instance.runtimeShaders.exists(shader) && !initLuaShader(shader))
+			{
+				luaTrace('Shader $shader is missing!', false, false, FlxColor.RED);
+				return false;
+			}
 
+			var camTarget:FlxCamera = cameraFromString(cam);
+			var oi:Array<ShaderFilter> = cameraShaderFromString(cam);
+			
+			if (camTarget != null)
+			{
+				var arr:Array<String> = PlayState.instance.runtimeShaders.get(shader);
+				var cameraShading:FlxRuntimeShader = new FlxRuntimeShader(arr[0], arr[1]);
+				var killmeibeg:ShaderFilter = new ShaderFilter(cameraShading);
+				var alotofvarlol:Array<BitmapFilter> = [];
+				oi.push(killmeibeg);
+				for (i in oi)
+				{
+					alotofvarlol.push(i);
+				}
+				camTarget.setFilters(alotofvarlol);
+				return true;
+			}
+			#else
+			luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+			return false;
+		});
+		Lua_helper.add_callback(lua, "removeAllCameraShaders", function(cam:String) { // WIP -lettery
+			#if (!flash && MODS_ALLOWED && sys)
+			var camTarget:FlxCamera = cameraFromString(cam);
+			var oi:Array<ShaderFilter> = cameraShaderFromString(cam);
+			
+			if (camTarget != null)
+			{
+				oi = [];
+				var alotofvarlol:Array<BitmapFilter> = [];
+				camTarget.setFilters(alotofvarlol);
+				return true;
+			}
+			#else
+			luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+			return false;
+		});
 		Lua_helper.add_callback(lua, "getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
@@ -3056,9 +3104,21 @@ class FunkinLua {
 	function cameraFromString(cam:String):FlxCamera {
 		switch(cam.toLowerCase()) {
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
+			case 'camstrum' | 'strum': return PlayState.instance.camStrum;
+			case 'camnote' | 'note': return PlayState.instance.camNote;
 			case 'camother' | 'other': return PlayState.instance.camOther;
 		}
 		return PlayState.instance.camGame;
+	}
+
+	function cameraShaderFromString(cam:String):Array<ShaderFilter> {
+		switch(cam.toLowerCase()) {
+			case 'camhud' | 'hud': return PlayState.instance.camHUDShaders;
+			case 'camstrum' | 'strum': return PlayState.instance.camStrumShaders;
+			case 'camnote' | 'note': return PlayState.instance.camNoteShaders;
+			case 'camother' | 'other': return PlayState.instance.camOtherShaders;
+		}
+		return PlayState.instance.camGameShaders;
 	}
 
 	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
