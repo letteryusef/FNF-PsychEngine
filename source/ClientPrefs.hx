@@ -146,6 +146,7 @@ class ClientPrefs {
 		FlxG.save.data.hitsoundVolume = hitsoundVolume;
 		FlxG.save.data.pauseMusic = pauseMusic;
 		FlxG.save.data.checkForUpdates = checkForUpdates;
+		FlxG.save.data.comboStacking = comboStacking;
 
 		FlxG.save.data.mosaicMode = mosaicMode;
 		FlxG.save.data.mosaicStrength = mosaicStrength;
