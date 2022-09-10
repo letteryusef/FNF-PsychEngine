@@ -31,6 +31,7 @@ class FPS extends TextField
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
+	var peak:UInt = 0;
 
 	@:noCompletion private var cacheCount:Int;
 	@:noCompletion private var currentTime:Float;
@@ -46,10 +47,10 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat(string, 14, color);
+		defaultTextFormat = new TextFormat(string, 12, color);
 		autoSize = LEFT;
 		multiline = true;
-		text = "FPS: ";
+		text = "FPS: N/A";
 
 		cacheCount = 0;
 		currentTime = 0;
@@ -70,41 +71,45 @@ class FPS extends TextField
 	{
 		currentTime += deltaTime;
 		times.push(currentTime);
-
-		while (times[0] < currentTime - 1000)
-		{
-			times.shift();
-		}
-
+	
+		while (times[0] < currentTime - 1000) times.shift();
+	
 		var currentCount = times.length;
-		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		var mem = System.totalMemory;
+
+		currentFPS = Math.round((currentCount + cacheCount));
+		
+		if (mem > peak) peak = mem;
 		if (currentFPS > ClientPrefs.framerate) currentFPS = ClientPrefs.framerate;
 
 		if (currentCount != cacheCount /*&& visible*/)
 		{
-			text = "FPS: " + currentFPS;
-			var memoryMegas:Float = 0;
-			
-			#if openfl
-			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			text += "\nMemory: " + memoryMegas + " MB";
-			#end
-
-			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.framerate / 2)
-			{
-				textColor = 0xFFFF0000;
-			}
-
-			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
-			text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-			text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
-			#end
-
-			text += "\n";
+			text = "";
+	
+			if (ClientPrefs.showFPS) text += "FPS: " + currentFPS + "\n";
+		
+			if (ClientPrefs.showMEM) text += "MEM: " + getSizeLabel(System.totalMemory) + "\n";
+		
+			if (ClientPrefs.showMEMPEAK) text += "MEM peak: " + getSizeLabel(peak) + "\n";
 		}
-
-		cacheCount = currentCount;
+	}
+	
+	final dataTexts = ["B", "KB", "MB", "GB", "TB", "PB"];
+	
+	function getSizeLabel(num:UInt):String
+	{
+		var size:Float = num;
+		var data = 0;
+		while (size > 1000 && data < dataTexts.length - 1)
+		{
+			data++;
+			size = size / 1000;
+		}
+	
+		size = Math.round(size * 100) / 100;
+	
+		if (data <= 2) size = Math.round(size);
+	
+		return size + " " + dataTexts[data];
 	}
 }
