@@ -260,6 +260,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
 				case 'Options':
+					PlayState.seenCutscene = true;
 					LoadingState.loadAndSwitchState(new options.OptionsState());
 					MainMenuState.instance.stinkypoopoo = true;
 				case "Exit to menu":
