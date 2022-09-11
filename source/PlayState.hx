@@ -1375,18 +1375,23 @@ class PlayState extends MusicBeatState
 		nowPlayingBG.y -= 400;
 		nowPlaying.y -= 400;
 
-		noteShit = new FlxSprite(120, 240, Paths.image('noteCombo'));
+		noteShit = new FlxSprite(!ClientPrefs.comboCamera ? 120 : gf.getMidpoint().x - 480, !ClientPrefs.comboCamera ? 240 : 400, Paths.image('noteCombo'));
 		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
 		noteShit.animation.addByPrefix("boom", "appear", 30, false);
 		noteShit.animation.addByPrefix("fosh", "disappear", 60, false);
-		noteShit.scrollFactor.set();
 		noteShit.visible = false;
 		noteShit.active = false;
 		noteShit.antialiasing = ClientPrefs.globalAntialiasing;
-		add(noteShit);
-
 		noteShit.setGraphicSize(Std.int(noteShit.width * 0.74));
 		noteShit.updateHitbox();
+		if (!ClientPrefs.comboCamera)
+		{
+			noteShit.scrollFactor.set();
+			add(noteShit);
+		} else {
+            insert(members.indexOf(boyfriend), noteShit);
+		}
+        add(noteShit);
 
 		/*
 
@@ -1453,7 +1458,7 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		nowPlayingBG.cameras = [camOther];
 		nowPlaying.cameras = [camOther];
-		noteShit.cameras = [camHUD];
+		noteShit.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -4551,8 +4556,9 @@ class PlayState extends MusicBeatState
 
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.screenCenter();
-		coolText.x = FlxG.width * 0.35;
-		//
+		coolText.x = !ClientPrefs.comboCamera ? FlxG.width * 0.35 : gf.getMidpoint().x - 300; 
+
+		// score stuff
 
 		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
@@ -4591,7 +4597,7 @@ class PlayState extends MusicBeatState
 		}
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2 + extraRating));
-		rating.cameras = [camHUD];
+		rating.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
@@ -4603,7 +4609,7 @@ class PlayState extends MusicBeatState
 		rating.y -= ClientPrefs.comboOffset[1];
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2 + extraCombo));
-		comboSpr.cameras = [camHUD];
+		comboSpr.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
 		comboSpr.acceleration.y = FlxG.random.int(200, 300);
@@ -4669,7 +4675,7 @@ class PlayState extends MusicBeatState
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2 + extraNum));
-			numScore.cameras = [camHUD];
+			numScore.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 			numScore.screenCenter();
 			numScore.x = coolText.x + (43 * daLoop) - 90;
 			numScore.y += 80;
@@ -4739,9 +4745,9 @@ class PlayState extends MusicBeatState
 	private function popUpMiss():Void
 	{
 		var miss:FlxSprite = new FlxSprite().loadGraphic(Paths.image('miss'));
-		miss.cameras = [camHUD];
+		miss.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		miss.screenCenter();
-		miss.x = FlxG.width * 0.35 - 4;
+		miss.x = !ClientPrefs.comboCamera ? (FlxG.width * 0.35) - 4 : (gf.getMidpoint().x - 300) - 4;
 		miss.y -= 42;
 		miss.acceleration.y = 550;
 		miss.velocity.y -= FlxG.random.int(140, 175);
