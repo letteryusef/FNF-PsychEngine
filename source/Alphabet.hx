@@ -31,7 +31,7 @@ class Alphabet extends FlxSpriteGroup
 	public var changeX:Bool = true;
 	public var changeY:Bool = true;
 
-	public var wentToTargetY:Bool = false;
+	public var wentToTargetY:Bool = false; // yoshi shit again lolol!!
 
 	public var alignment(default, set):Alignment = LEFT;
 	public var scaleX(default, set):Float = 1;
@@ -162,6 +162,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		if (isMenuItem)
 		{
+			// yoshi shit again lolol!!
 			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 9.6, 0, 1);
 			if (wentToTargetY)
