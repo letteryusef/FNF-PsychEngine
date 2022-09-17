@@ -40,6 +40,9 @@ import flixel.util.FlxTimer;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.Lib;
+import openfl.geom.Matrix;
+import openfl.geom.Rectangle;
+import openfl.display.Sprite;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.display.Shader;
@@ -66,6 +69,15 @@ import Conductor.Rating;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
+#end
+
+#if windows
+import lime.app.Application;
+import lime.graphics.RenderContext;
+import lime.ui.MouseButton;
+import lime.ui.KeyCode;
+import lime.ui.KeyModifier;
+import lime.ui.Window;
 #end
 
 #if !flash 
@@ -203,7 +215,7 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var noteShit:FlxSprite;
-	// public var noteShitNum:FlxSprite;
+	public var noteShitNumGroup:FlxTypedGroup<FlxSprite>;
 
 	public var ratingsData:Array<Rating> = [];
 	public var sicks:Int = 0;
@@ -290,6 +302,8 @@ class PlayState extends MusicBeatState
 	var tankGround:BGSprite;
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
+
+	var transparentBG:FlxSprite;
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -582,6 +596,13 @@ class PlayState extends MusicBeatState
 		switch (curStage)
 		{
 			case 'stage': //Week 1
+
+			    /*
+				Tutorial: Set Transparent Windows: to set it, just use this code below first lol:
+			    #if (windows && !flash && sys) setTransparentWindow(false, true); #end
+				After that you comment all (or some of it if you want to :/) the bg sprites.
+				*/
+				
 				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
 				add(bg);
 
@@ -604,26 +625,26 @@ class PlayState extends MusicBeatState
 					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 					stageCurtains.updateHitbox();
 					add(stageCurtains);
-
-					/*
-        
-					- TUTORIAL: making a shader: if you want to make a shader, welp, it's simple i guess
-
-					to do it, just take the code down below as an example:
-
-					!ALSO YOU NEED TO CREATE A SHADER VAR NOT HERE, BUT ON THE TOP WHERE YOU CAN FIND THE
-					VARIANTS, SO YOU CAN MAKE THEM UPDATED!
-
-					#if (!flash && sys)
-		            leShader = new FlxRuntimeShader(File.getContent(Paths.shaderFragment('static')));
-		            camGame.setFilters([new ShaderFilter(leShader)]);
-					leShader.setFloat('u_elapsed', 0);
-					leShader.setFloat('u_alpha', 1);
-		            #end
-
-					*/
 				}
 				dadbattleSmokes = new FlxSpriteGroup(); //troll'd
+
+				/*
+        
+				- TUTORIAL: making a shader: if you want to make a shader, welp, it's simple i guess
+
+				to do it, just take the code down below as an example:
+
+				!ALSO YOU NEED TO CREATE A SHADER VAR NOT HERE, BUT ON THE TOP WHERE YOU CAN FIND THE
+				VARIANTS, SO YOU CAN MAKE THEM UPDATED!
+
+				#if (!flash && sys)
+		        leShader = new FlxRuntimeShader(File.getContent(Paths.shaderFragment('static')));
+		        camGame.setFilters([new ShaderFilter(leShader)]);
+				leShader.setFloat('u_elapsed', 0);
+				leShader.setFloat('u_alpha', 1);
+	            #end
+
+				*/
 
 			case 'spooky': //Week 2
 				if(!ClientPrefs.lowQuality) {
@@ -1384,6 +1405,7 @@ class PlayState extends MusicBeatState
 		noteShit.antialiasing = ClientPrefs.globalAntialiasing;
 		noteShit.setGraphicSize(Std.int(noteShit.width * 0.74));
 		noteShit.updateHitbox();
+		noteShit.offset.x = 0;
 		if (!ClientPrefs.comboCamera)
 		{
 			noteShit.scrollFactor.set();
@@ -1393,31 +1415,36 @@ class PlayState extends MusicBeatState
 		}
         add(noteShit);
 
-		/*
+		noteShitNumGroup = new FlxTypedGroup<FlxSprite>();
+		add(noteShitNumGroup);
 
-		for (i in 0...2)
+		for (i in 0...3)
 		{
-			noteShitNum = new FlxSprite(0, 0, Paths.image('noteComboNumbers'));
+			var noteShitNum = new FlxSprite(0, 0, Paths.image('noteComboNumbers'));
 
-			noteShitNum.x = noteShit.x;
-			noteShitNum.y = noteShit.y;
+			noteShitNum.x = (noteShit.x + 124) + (i * 114);
+			noteShitNum.y = (noteShit.y + 76) - (i * 40);
 
 			noteShitNum.frames = Paths.getSparrowAtlas('noteComboNumbers');
 
-			for (m in 0...9)
+			for (m in 0...10)
 			{
-				noteShitNum.animation.addByPrefix("boom", Std.string(m) + "_appear", 30, false);
-				noteShitNum.animation.addByPrefix("fosh", Std.string(m) + "_disappear", 60, false);
+				noteShitNum.animation.addByPrefix("boom-" + Std.string(m), Std.string(m) + "_appear", 30, false);
+				noteShitNum.animation.addByPrefix("fosh-" + Std.string(m), Std.string(m) + "_disappear", 60, false);
 			}
 			noteShitNum.scrollFactor.set();
 			noteShitNum.antialiasing = ClientPrefs.globalAntialiasing;
+			noteShitNum.ID = i;
+			noteShitNum.cameras = [camHUD];
+			noteShitNumGroup.add(noteShitNum);
 			add(noteShitNum);
 	
 			noteShitNum.setGraphicSize(Std.int(noteShitNum.width * 0.74));
 			noteShitNum.updateHitbox();
-		}
 
-		*/
+			noteShitNum.visible = false;
+			noteShitNum.active = false;
+		}
 
 		CoolUtil.precacheSound('noteComboSound');
 
@@ -1695,6 +1722,81 @@ class PlayState extends MusicBeatState
 		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
 		return false;
 	}
+	#end
+
+	#if windows
+	public function setTransparentWindow(remove:Bool = false, borderLess:Bool = true)
+	{
+		if (!remove)
+		{
+			transparentBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGB(1, 1, 1));
+			if (defaultCamZoom < 1)
+			{
+				transparentBG.scale.scale(1 / defaultCamZoom);
+			}
+			transparentBG.scrollFactor.set();
+			add(transparentBG);
+			FlxTransWindow.getWindowsTransparent();
+			if (borderLess) Application.current.window.borderless = true;
+		} else {
+			if (transparentBG != null) transparentBG.destroy();
+			FlxTransWindow.getWindowsbackward();
+			if (borderLess) Application.current.window.borderless = false;
+		}
+	}
+
+	/* please don't use this, PLEASE
+
+	public var windowObjects:Array<Window>;
+	public var objectsWin:Array<Sprite>;
+	public var objectsScrollWins:Array<Sprite>;
+	function popUpWindow(object:FlxSprite, customWidth:Int, customHeight:Int, transparent:Bool = false, customX:Int = -10, customName:String = 'FNF POP-UP (WaveNami)') {
+        @:privateAccess
+	    {
+		var display = Application.current.window.display.currentMode;
+		// PlayState.defaultCamZoom = 0.5;
+		var objectScrollWin:Sprite = new Sprite(); 
+		var windowObject:Window;
+		windowObject = Lib.application.createWindow({
+			title: customName,
+			width: customWidth,
+			height: customHeight,
+			borderless: transparent,
+			alwaysOnTop: true
+		});
+		windowObject.x = customX;
+		windowObject.y = Std.int(display.height / 2);
+		windowObject.stage.color = 0xFF010101;
+		if (transparent) FlxTransWindow.getWindowsTransparent();
+		windowObject.stage.addEventListener("keyDown", FlxG.keys.onKeyDown);
+		windowObject.stage.addEventListener("keyUp", FlxG.keys.onKeyUp);
+		// Application.current.window.x = Std.int(display.width / 2) - 640;
+		// Application.current.window.y = Std.int(display.height / 2);
+		// var bg = Paths.image(PUT YOUR IMAGE HERE!!!!).bitmap;
+		// var spr = new Sprite();
+		var m = new Matrix();
+		// spr.graphics.beginBitmapFill(bg, m);
+		// spr.graphics.drawRect(0, 0, bg.width, bg.height);
+		// spr.graphics.endFill();
+		FlxG.mouse.useSystemCursor = true;
+		// Application.current.window.resize(640, 480);
+		var objectWin:Sprite = new Sprite();
+		objectWin.graphics.beginBitmapFill(object.pixels, m);
+		objectWin.graphics.drawRect(0, 0, object.pixels.width, object.pixels.height);
+		objectWin.graphics.endFill();
+		objectScrollWin.scrollRect = new Rectangle();
+		// windowObject.stage.addChild(spr);
+		windowObject.stage.addChild(objectScrollWin);
+		objectScrollWin.addChild(objectWin);
+		objectScrollWin.scaleX = 0.7;
+		objectScrollWin.scaleY = 0.7;
+		// dadGroup.visible = false;
+		// uncomment the line above if you want it to hide the dad ingame and make it visible via the windoe
+		Application.current.window.focus();
+		}
+    }
+
+	*/
 	#end
 
 	function set_songSpeed(value:Float):Float
@@ -3056,8 +3158,11 @@ class PlayState extends MusicBeatState
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 	var limoSpeed:Float = 0;
-	var bfIdling:Bool = false;
-	var dadIdling:Bool = false;
+	// var bfIdling:Bool = false;
+	// var dadIdling:Bool = false;
+	var seperatedLastCombo:Array<Int> = [];
+	var noteComboFinished:Bool = false;
+	var noteNumFinished:Bool = false;
 
 	override public function update(elapsed:Float)
 	{
@@ -3238,6 +3343,31 @@ class PlayState extends MusicBeatState
 		}
 
 		super.update(elapsed);
+
+		/*
+
+		#if (windows && !flash && sys)
+		if (objectsScrollWins != null)
+		{
+			for (index in 0...objectsScrollWins.length)
+			{
+				@:privateAccess
+				{
+					var objectFrame = objectsWin[index]._frame;
+					
+					if (objectFrame == null || objectFrame.frame == null) return; // prevents crashes (i think???)
+							
+					var rect = new Rectangle(objectFrame.frame.x, objectFrame.frame.y, objectFrame.frame.width, objectFrame.frame.height);
+						
+					objectsScrollWins[index].scrollRect = rect;
+					objectsScrollWins[index].x = (((objectFrame.offset.x) - (objectsWin[index].offset.x / 2)) * objectsScrollWins[index].scaleX);
+					objectsScrollWins[index].y = (((objectFrame.offset.y) - (objectsWin[index].offset.y / 2)) * objectsScrollWins[index].scaleY); 
+				}
+			}
+		}
+		#end
+
+		*/
 
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
@@ -3535,24 +3665,91 @@ class PlayState extends MusicBeatState
 		{
 			if (fuckinBool)
 			{
+				noteComboFinished = false;
+				noteNumFinished = showNoteComboNum ? false : true;
 				noteShit.visible = true;
 				noteShit.active = true;
-				miniPlayAnimation(noteShit, "boom");
+				playAnimationAdvanced(noteShit, "boom");
 				FlxG.sound.play(Paths.sound('noteComboSound'));
+				if (showNoteComboNum)
+				{
+					seperatedLastCombo.push(Math.floor(noteComboNumberlol / 100) % 10);
+					seperatedLastCombo.push(Math.floor(noteComboNumberlol / 10) % 10);
+					seperatedLastCombo.push(noteComboNumberlol % 10);
+					noteShitNumGroup.forEach(function (noteShitNum:FlxSprite)
+					{
+						var comboID:Int = noteShitNum.ID;
+						var offsetShit:Float;
+	
+						if (seperatedLastCombo[comboID] == 1)
+						{
+							offsetShit = -40;
+						} else if (seperatedLastCombo[comboID] == 4)
+						{
+							offsetShit = 40;
+						} else {
+							offsetShit = 0;
+						}
+	
+						noteShitNum.visible = true;
+						noteShitNum.active = true;
+						/*
+						if (seperatedLastCombo[comboID] == 3 && noteComboNumberlol < 100)
+						{
+							noteShitNum.visible = false;
+							noteShitNum.active = false;
+						} else if (seperatedLastCombo[comboID] == 2 && noteComboNumberlol < 10)
+						{
+							noteShitNum.visible = false;
+							noteShitNum.active = false;
+						}
+						*/
+						playAnimationAdvanced(noteShitNum, "boom-" + seperatedLastCombo[comboID], offsetShit);
+					});
+				}
 				// trace(noteComboNumberlol);
 				noteComboNumberlol = 0;
 				fuckinBool2 = true;
 				fuckinBool = false;
 			}
 	
-			if (noteShit.animation.curAnim.finished && noteShit.animation.curAnim.name == "boom")
+			if (fuckinBool2 && noteShit.animation.curAnim.finished && noteShit.animation.curAnim.name == "boom")
 			{
-				if (fuckinBool2)
+				playAnimationAdvanced(noteShit, "fosh", -150);
+				if (showNoteComboNum)
 				{
-					miniPlayAnimation(noteShit, "fosh");
-					noteShit.offset.x -= 150;
-					fuckinBool2 = false;
+					noteShitNumGroup.forEach(function (noteShitNum:FlxSprite)
+					{
+						var comboID:Int = noteShitNum.ID;
+						var offsetShit:Float;
+		
+						if (seperatedLastCombo[comboID] == 1)
+						{
+							offsetShit = -40;
+						} else if (seperatedLastCombo[comboID] == 4)
+						{
+							offsetShit = 40;
+						} else {
+							offsetShit = 0;
+						}
+			
+						noteShitNum.visible = true;
+						noteShitNum.active = true;
+						/*
+						if (seperatedLastCombo[comboID] == 1 && noteComboNumberlol < 100)
+						{
+							noteShitNum.visible = false;
+							noteShitNum.active = false;
+						} else if (seperatedLastCombo[comboID] == 2 && noteComboNumberlol < 10)
+						{
+							noteShitNum.visible = false;
+							noteShitNum.active = false;
+						}
+						*/
+						playAnimationAdvanced(noteShitNum, "fosh-" + seperatedLastCombo[comboID]);
+					});
 				}
+				fuckinBool2 = false;
 			}
 	
 			if (noteShit.animation.curAnim.finished && noteShit.animation.curAnim.name == "fosh")
@@ -3560,7 +3757,31 @@ class PlayState extends MusicBeatState
 				noteShit.visible = false;
 				noteShit.active = false;
 				noteShit.offset.x = 0;
-	
+				noteComboFinished = true;
+			}
+
+			if (showNoteComboNum)
+			{
+				noteShitNumGroup.forEach(function (noteShitNum:FlxSprite)
+				{
+					var comboID:Int = noteShitNum.ID;
+					var animName:String = 'fosh-' + seperatedLastCombo[comboID];
+					
+					if (noteShitNum.animation.curAnim.finished && noteShitNum.animation.curAnim.name == animName)
+					{
+						noteShitNum.visible = false;
+						noteShitNum.active = false;
+						noteShitNum.offset.x = 0;
+						seperatedLastCombo = [];
+						noteNumFinished = true;
+					}
+				});
+			}
+
+			if (noteComboFinished && noteNumFinished)
+			{
+				noteComboFinished = false;
+				noteNumFinished = false;
 				lastNote = false;
 			}
 	
@@ -3616,8 +3837,10 @@ class PlayState extends MusicBeatState
 		curCam.visible = camHUD.visible;
 	}
 
-	function miniPlayAnimation(object:FlxSprite, anim:String)
+	function playAnimationAdvanced(object:FlxSprite, anim:String, offsetAddX:Float = 0, offsetAddY:Float = 0)
 	{
+		if (offsetAddX == 0) object.offset.x == 0 else object.offset.x += offsetAddX;
+		if (offsetAddY == 0) object.offset.y == 0 else object.offset.y += offsetAddY;
 		object.animation.play(anim);
 	}
 
@@ -4519,6 +4742,7 @@ class PlayState extends MusicBeatState
 
 	public var lastNote:Bool = false;
 	public var showNoteCombo:Bool = true;
+	public var showNoteComboNum:Bool = false; // do not activate, still wip cause the assets are broken for some reason lol
 	public var noteComboNumberlol:Int = 0;
 	var fuckinBool:Bool = false;
 	var fuckinBool2:Bool = false;
@@ -5511,7 +5735,9 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
+				noteComboNumberlol++;
 				combo += 1;
+				if(noteComboNumberlol > 999) noteComboNumberlol = 999;
 				if(combo > 9999) combo = 9999;
 				if (ClientPrefs.comboType == "OG Combo")
 				{
@@ -5525,8 +5751,6 @@ class PlayState extends MusicBeatState
 					lastNote = true;
 					fuckinBool = true;
 				}
-
-				noteComboNumberlol++;
 
 			}
 			health += note.hitHealth * healthGain;
@@ -5843,6 +6067,8 @@ class PlayState extends MusicBeatState
 		#if hscript
 		if(FunkinLua.hscript != null) FunkinLua.hscript = null;
 		#end
+
+		#if windows if (Application.current.window.borderless) setTransparentWindow(true, true); #end
 
 		CoolUtil.destroyMouse();
 		

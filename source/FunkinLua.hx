@@ -2787,7 +2787,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "setSongTime", function(time:Float) {
 			return PlayState.instance.setSongTime(time);
 		});
-		Lua_helper.add_callback(lua, "skipFoward", function(time:Float) { // doesn't work fine but meeeh whateverrr >:(
+		Lua_helper.add_callback(lua, "skipFoward", function(time:Float) {
 			PlayState.instance.setSongTime(Conductor.songPosition + time * 1000);
 			PlayState.instance.clearNotesBefore(Conductor.songPosition);
 			return;
