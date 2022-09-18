@@ -300,7 +300,7 @@ class FunkinLua {
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "setCameraShader", function(cam:String, shader:String) { // WIP -lettery
+		Lua_helper.add_callback(lua, "setCameraShader", function(cam:String, name:String, shader:String) { // WIP -lettery
 			if(!ClientPrefs.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
@@ -311,7 +311,7 @@ class FunkinLua {
 			}
 
 			var camTarget:FlxCamera = cameraFromString(cam);
-			var oi:Array<ShaderFilter> = cameraShaderFromString(cam);
+			var oi:Map<String, ShaderFilter> = cameraShaderFromString(cam);
 			
 			if (camTarget != null)
 			{
@@ -319,7 +319,7 @@ class FunkinLua {
 				var cameraShading:FlxRuntimeShader = new FlxRuntimeShader(arr[0], arr[1]);
 				var killmeibeg:ShaderFilter = new ShaderFilter(cameraShading);
 				var alotofvarlol:Array<BitmapFilter> = [];
-				oi.push(killmeibeg);
+				oi.set(name, killmeibeg);
 				for (i in oi)
 				{
 					alotofvarlol.push(i);
@@ -335,7 +335,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "removeAllCameraShaders", function(cam:String) { // WIP -lettery
 			#if (!flash && MODS_ALLOWED && sys)
 			var camTarget:FlxCamera = cameraFromString(cam);
-			var oi:Array<ShaderFilter> = cameraShaderFromString(cam);
+			var oi:Map<String, ShaderFilter> = cameraShaderFromString(cam);
 			
 			if (camTarget != null)
 			{
@@ -364,9 +364,39 @@ class FunkinLua {
 			return null;
 			#end
 		});
+		Lua_helper.add_callback(lua, "getCameraShaderBool", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getBool(prop);
+			#else
+			luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
 		Lua_helper.add_callback(lua, "getShaderBoolArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getBoolArray(prop);
+			#else
+			luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
+		Lua_helper.add_callback(lua, "getCameraShaderBoolArray", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
 			if (shader == null)
 			{
 				Lua.pushnil(lua);
@@ -394,9 +424,39 @@ class FunkinLua {
 			return null;
 			#end
 		});
+		Lua_helper.add_callback(lua, "getCameraShaderInt", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getInt(prop);
+			#else
+			luaTrace("getShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
 		Lua_helper.add_callback(lua, "getShaderIntArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getIntArray(prop);
+			#else
+			luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
+		Lua_helper.add_callback(lua, "getCameraShaderIntArray", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
 			if (shader == null)
 			{
 				Lua.pushnil(lua);
@@ -424,6 +484,21 @@ class FunkinLua {
 			return null;
 			#end
 		});
+		Lua_helper.add_callback(lua, "getCameraShaderFloat", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getFloat(prop);
+			#else
+			luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
 		Lua_helper.add_callback(lua, "getShaderFloatArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
@@ -439,11 +514,34 @@ class FunkinLua {
 			return null;
 			#end
 		});
-
-
+		Lua_helper.add_callback(lua, "getCameraShaderFloatArray", function(cam:String, name:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if (shader == null)
+			{
+				Lua.pushnil(lua);
+				return null;
+			}
+			return shader.getFloatArray(prop);
+			#else
+			luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
+			return null;
+			#end
+		});
 		Lua_helper.add_callback(lua, "setShaderBool", function(obj:String, prop:String, value:Bool) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
+			if(shader == null) return;
+
+			shader.setBool(prop, value);
+			#else
+			luaTrace("setShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
+		Lua_helper.add_callback(lua, "setCameraShaderBool", function(cam:String, name:String, prop:String, value:Bool) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
 			if(shader == null) return;
 
 			shader.setBool(prop, value);
@@ -461,9 +559,29 @@ class FunkinLua {
 			luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
+		Lua_helper.add_callback(lua, "setCameraShaderBoolArray", function(cam:String, name:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if(shader == null) return;
+
+			shader.setBoolArray(prop, values);
+			#else
+			luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
 		Lua_helper.add_callback(lua, "setShaderInt", function(obj:String, prop:String, value:Int) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
+			if(shader == null) return;
+
+			shader.setInt(prop, value);
+			#else
+			luaTrace("setShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
+		Lua_helper.add_callback(lua, "setCameraShaderInt", function(cam:String, name:String, prop:String, value:Int) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
 			if(shader == null) return;
 
 			shader.setInt(prop, value);
@@ -481,6 +599,16 @@ class FunkinLua {
 			luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
+		Lua_helper.add_callback(lua, "setCameraShaderIntArray", function(cam:String, name:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if(shader == null) return;
+
+			shader.setIntArray(prop, values);
+			#else
+			luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
 		Lua_helper.add_callback(lua, "setShaderFloat", function(obj:String, prop:String, value:Float) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
@@ -491,9 +619,29 @@ class FunkinLua {
 			luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
+		Lua_helper.add_callback(lua, "setCameraShaderFloat", function(cam:String, name:String, prop:String, value:Float) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
+			if(shader == null) return;
+
+			shader.setFloat(prop, value);
+			#else
+			luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
 		Lua_helper.add_callback(lua, "setShaderFloatArray", function(obj:String, prop:String, values:Dynamic) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
+			if(shader == null) return;
+
+			shader.setFloatArray(prop, values);
+			#else
+			luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
+		Lua_helper.add_callback(lua, "setCameraShaderFloatArray", function(cam:String, name:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getCameraShader(cam, name);
 			if(shader == null) return;
 
 			shader.setFloatArray(prop, values);
@@ -2924,6 +3072,18 @@ class FunkinLua {
 		}
 		return null;
 	}
+
+	public function getCameraShader(cam:String, name:String):FlxRuntimeShader
+	{
+		var cameraFromString:FlxCamera = cameraFromString(cam);
+		var shaderCam:ShaderFilter = cameraShaderFromString(cam).get(name);
+		if(cameraFromString != null) {
+			var shader:Dynamic = shaderCam;
+			var shader:FlxRuntimeShader = shader;
+			return shader;
+		}
+		return null;
+	}
 	
 	#if (!flash && sys)
 	function initLuaShader(name:String, ?glslVersion:Int = 120)
@@ -3158,7 +3318,7 @@ class FunkinLua {
 		return PlayState.instance.camGame;
 	}
 
-	function cameraShaderFromString(cam:String):Array<ShaderFilter> {
+	function cameraShaderFromString(cam:String):Map<String, ShaderFilter> {
 		switch(cam.toLowerCase()) {
 			case 'camhud' | 'hud': return PlayState.instance.camHUDShaders;
 			case 'camstrum' | 'strum': return PlayState.instance.camStrumShaders;

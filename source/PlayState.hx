@@ -109,12 +109,6 @@ class PlayState extends MusicBeatState
 		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
-	public var camGameShaders:Array<ShaderFilter> = [];
-	public var camHUDShaders:Array<ShaderFilter> = [];
-	public var camStrumShaders:Array<ShaderFilter> = [];
-	public var camNoteShaders:Array<ShaderFilter> = [];
-	public var camOtherShaders:Array<ShaderFilter> = [];
-
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
 
@@ -129,6 +123,11 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camNoteShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camOtherShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -140,6 +139,11 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map();
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
+	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camNoteShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camOtherShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	#end
 
 	public var BF_X:Float = 770;

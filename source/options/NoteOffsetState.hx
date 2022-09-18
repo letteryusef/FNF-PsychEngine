@@ -386,6 +386,11 @@ class NoteOffsetState extends MusicBeatState
 			if (!MainMenuState.instance.stinkypoopoo)
 			{
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
+			} else {
+				FlxTween.tween(FlxG.sound.music, {volume: 0}, 0.6, {ease: FlxEase.quintOut, onComplete: function (twn:FlxTween)
+				{
+					FlxG.sound.music = null;
+				}});
 			}
 			CoolUtil.destroyMouse();
 		}
