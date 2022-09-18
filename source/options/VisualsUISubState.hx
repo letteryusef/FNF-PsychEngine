@@ -24,6 +24,7 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
+import WindowsData;
 
 using StringTools;
 
@@ -33,6 +34,16 @@ class VisualsUISubState extends BaseOptionsMenu
 	{
 		title = 'Visuals and UI';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
+
+		#if (windows && cpp)
+		var option:Option = new Option('Dark Theme',
+			"If checked, the current window theme will be Dark.",
+			'darkTheme',
+			'bool',
+			false);
+		addOption(option);
+		option.onChange = onChangeTheme;
+		#end
 
 		var option:Option = new Option('Wavy Holds',
 			"If checked, hold sprites will have a wavy effect.",
@@ -165,6 +176,13 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		changedMusic = true;
 	}
+
+	#if (windows && cpp)
+	public static function onChangeTheme()
+	{
+		WindowsData.setWindowColorMode(ClientPrefs.darkTheme ? DARK : LIGHT);
+	}
+	#end
 
 	override function destroy()
 	{

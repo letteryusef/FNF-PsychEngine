@@ -69,8 +69,6 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
-		#if (windows && cpp)  WindowsData.setWindowColorMode(DARK); #end
-		
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
@@ -101,6 +99,8 @@ class Main extends Sprite
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+
+		#if (windows && cpp) WindowsData.setWindowColorMode(ClientPrefs.darkTheme ? DARK : LIGHT); #end
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

@@ -1748,59 +1748,6 @@ class PlayState extends MusicBeatState
 			if (borderLess) Application.current.window.borderless = false;
 		}
 	}
-
-	/* please don't use this, PLEASE
-
-	public var windowObjects:Array<Window>;
-	public var objectsWin:Array<Sprite>;
-	public var objectsScrollWins:Array<Sprite>;
-	function popUpWindow(object:FlxSprite, customWidth:Int, customHeight:Int, transparent:Bool = false, customX:Int = -10, customName:String = 'FNF POP-UP (WaveNami)') {
-        @:privateAccess
-	    {
-		var display = Application.current.window.display.currentMode;
-		// PlayState.defaultCamZoom = 0.5;
-		var objectScrollWin:Sprite = new Sprite(); 
-		var windowObject:Window;
-		windowObject = Lib.application.createWindow({
-			title: customName,
-			width: customWidth,
-			height: customHeight,
-			borderless: transparent,
-			alwaysOnTop: true
-		});
-		windowObject.x = customX;
-		windowObject.y = Std.int(display.height / 2);
-		windowObject.stage.color = 0xFF010101;
-		if (transparent) FlxTransWindow.getWindowsTransparent();
-		windowObject.stage.addEventListener("keyDown", FlxG.keys.onKeyDown);
-		windowObject.stage.addEventListener("keyUp", FlxG.keys.onKeyUp);
-		// Application.current.window.x = Std.int(display.width / 2) - 640;
-		// Application.current.window.y = Std.int(display.height / 2);
-		// var bg = Paths.image(PUT YOUR IMAGE HERE!!!!).bitmap;
-		// var spr = new Sprite();
-		var m = new Matrix();
-		// spr.graphics.beginBitmapFill(bg, m);
-		// spr.graphics.drawRect(0, 0, bg.width, bg.height);
-		// spr.graphics.endFill();
-		FlxG.mouse.useSystemCursor = true;
-		// Application.current.window.resize(640, 480);
-		var objectWin:Sprite = new Sprite();
-		objectWin.graphics.beginBitmapFill(object.pixels, m);
-		objectWin.graphics.drawRect(0, 0, object.pixels.width, object.pixels.height);
-		objectWin.graphics.endFill();
-		objectScrollWin.scrollRect = new Rectangle();
-		// windowObject.stage.addChild(spr);
-		windowObject.stage.addChild(objectScrollWin);
-		objectScrollWin.addChild(objectWin);
-		objectScrollWin.scaleX = 0.7;
-		objectScrollWin.scaleY = 0.7;
-		// dadGroup.visible = false;
-		// uncomment the line above if you want it to hide the dad ingame and make it visible via the windoe
-		Application.current.window.focus();
-		}
-    }
-
-	*/
 	#end
 
 	function set_songSpeed(value:Float):Float
@@ -3347,31 +3294,6 @@ class PlayState extends MusicBeatState
 		}
 
 		super.update(elapsed);
-
-		/*
-
-		#if (windows && cpp)
-		if (objectsScrollWins != null)
-		{
-			for (index in 0...objectsScrollWins.length)
-			{
-				@:privateAccess
-				{
-					var objectFrame = objectsWin[index]._frame;
-					
-					if (objectFrame == null || objectFrame.frame == null) return; // prevents crashes (i think???)
-							
-					var rect = new Rectangle(objectFrame.frame.x, objectFrame.frame.y, objectFrame.frame.width, objectFrame.frame.height);
-						
-					objectsScrollWins[index].scrollRect = rect;
-					objectsScrollWins[index].x = (((objectFrame.offset.x) - (objectsWin[index].offset.x / 2)) * objectsScrollWins[index].scaleX);
-					objectsScrollWins[index].y = (((objectFrame.offset.y) - (objectsWin[index].offset.y / 2)) * objectsScrollWins[index].scaleY); 
-				}
-			}
-		}
-		#end
-
-		*/
 
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
