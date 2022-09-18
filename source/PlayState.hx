@@ -603,7 +603,7 @@ class PlayState extends MusicBeatState
 
 			    /*
 				Tutorial: Set Transparent Windows: to set it, just use this code below first lol:
-			    #if (windows && !flash && sys) setTransparentWindow(false, true); #end
+			    #if (windows && cpp) setTransparentWindow(false, true); #end
 				After that you comment all (or some of it if you want to :/) the bg sprites.
 				*/
 				
@@ -1728,7 +1728,7 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	#if windows
+	#if (windows && cpp)
 	public function setTransparentWindow(remove:Bool = false, borderLess:Bool = true)
 	{
 		if (!remove)
@@ -1740,11 +1740,11 @@ class PlayState extends MusicBeatState
 			}
 			transparentBG.scrollFactor.set();
 			add(transparentBG);
-			FlxTransWindow.getWindowsTransparent();
+			WindowsData.getWindowsTransparent();
 			if (borderLess) Application.current.window.borderless = true;
 		} else {
 			if (transparentBG != null) transparentBG.destroy();
-			FlxTransWindow.getWindowsbackward();
+			WindowsData.getWindowsbackward();
 			if (borderLess) Application.current.window.borderless = false;
 		}
 	}
@@ -3350,7 +3350,7 @@ class PlayState extends MusicBeatState
 
 		/*
 
-		#if (windows && !flash && sys)
+		#if (windows && cpp)
 		if (objectsScrollWins != null)
 		{
 			for (index in 0...objectsScrollWins.length)
@@ -6072,7 +6072,7 @@ class PlayState extends MusicBeatState
 		if(FunkinLua.hscript != null) FunkinLua.hscript = null;
 		#end
 
-		#if windows if (Application.current.window.borderless) setTransparentWindow(true, true); #end
+		#if (windows && cpp) if (Application.current.window.borderless) setTransparentWindow(true, true); #end
 
 		CoolUtil.destroyMouse();
 		

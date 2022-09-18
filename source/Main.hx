@@ -69,6 +69,8 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
+		#if (windows && cpp)  WindowsData.setWindowColorMode(DARK); #end
+		
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
