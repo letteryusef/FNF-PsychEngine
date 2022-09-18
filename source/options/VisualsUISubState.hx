@@ -40,7 +40,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			"If checked, the current window theme will be Dark.",
 			'darkTheme',
 			'bool',
-			false);
+			true);
 		addOption(option);
 		option.onChange = onChangeTheme;
 		#end

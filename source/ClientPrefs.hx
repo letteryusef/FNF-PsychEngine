@@ -15,7 +15,7 @@ class ClientPrefs {
 	public static var showMEMPEAK:Bool = true;
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
-	public static var darkTheme:Bool = false;
+	public static var darkTheme:Bool = true;
 	public static var wavyHolds:Bool = false;
 	public static var noteSplashes:Bool = true;
 	public static var lowQuality:Bool = false;
