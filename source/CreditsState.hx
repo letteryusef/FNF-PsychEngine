@@ -117,6 +117,7 @@ class CreditsState extends MusicBeatState
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
+			optionText.wentToTargetY = true;
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
