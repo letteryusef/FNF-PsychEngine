@@ -166,6 +166,8 @@ class CreditsState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (persistentUpdate) CoolUtil.setWindowTitle('Credits: ' + creditsStuff[curSelected][0]);
+
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

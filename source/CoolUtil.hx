@@ -1,12 +1,15 @@
 package;
 
+import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import openfl.Lib;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.system.FlxSound;
+import flixel.util.FlxTimer;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -18,6 +21,9 @@ using StringTools;
 
 class CoolUtil
 {
+	public static var delayTimer:FlxTimer = null;
+	public static var delayTitleTimer:FlxTimer = null;
+
 	public static var defaultDifficulties:Array<String> = [
 		'Easy',
 		'Normal',
@@ -151,6 +157,89 @@ class CoolUtil
 	{
 		FlxG.mouse.visible = false;
 		FlxG.mouse.unload();
+	}
+
+	/* 
+	
+	- a quick tutorial of how to make a animated string by LetterY
+
+	public static function typeString(string:String, duration:Float) {
+		var delayTimer:FlxTimer;
+		var curLetter:Int = string.length;
+		var shownString:String = '';
+
+		delayTimer = new FlxTimer().start(duration, function(ass:FlxTimer)
+		{
+			shownString += string.charAt(string.length - curLetter);
+			curLetter--;
+			trace(shownString);
+		}, string.length);
+	}
+
+	- have fun!!, but pls when you use it, at least credit me, i lost braincells for this
+
+	*/
+
+	// WARNING, THIS CODE BELOW WORKS BUT NOT PROPERLY!!
+	public static function typeText(string:String, duration:Float, curText:FlxText, onCenter:Bool = true, clearBefore:Bool = true) {
+		var curLetter:Int = string.length;
+		var defaultHeight:Float = curText.height;
+
+		curText.offset.y = 0;
+
+		if (delayTimer != null)
+		{
+			delayTimer.cancel();
+			if (clearBefore) curText.text = '';
+		}
+
+		delayTimer = new FlxTimer().start(duration, function(ass:FlxTimer)
+		{
+			curText.text += string.charAt(string.length - curLetter);
+			curLetter--;
+			if (onCenter && curText.height != defaultHeight)
+			{
+				curText.offset.y += 6;
+				defaultHeight = curText.height;
+			} else if (onCenter && curText.height == defaultHeight){
+				curText.offset.y -= 0;
+			}
+		}, string.length);
+	}
+
+	public static function setWindowTitle(name:String = '')
+	{
+		if (delayTitleTimer != null) delayTitleTimer.cancel();
+		var gameName = "Friday Night Funkin': Psych Engine (WaveNami)";
+		
+		if (name != '')
+		{
+			Lib.application.window.title = gameName + " - " + name;
+		} else {
+			Lib.application.window.title = gameName;
+		}
+	}
+
+	public static function setWindowAnimatedTitle(string:String, duration:Float, beforeString:String = '', afterString:String = '', includesHyphen:Bool = true)
+	{
+		var gameName = "Friday Night Funkin': Psych Engine (WaveNami)";
+		var curLetter:Int = string.length;
+		var shownString:String = '';
+		var hyphenSucks:String = includesHyphen ? " - " : "";
+
+		if (delayTitleTimer != null) delayTitleTimer.cancel();
+
+		delayTitleTimer = new FlxTimer().start(duration, function(ass:FlxTimer)
+		{
+			shownString += string.charAt(string.length - curLetter);
+			curLetter--;
+			Lib.application.window.title = gameName + hyphenSucks + beforeString + shownString + afterString;
+		}, string.length);
+	}
+
+	public static function cancelDelayTitleTimer() // simple but worth it lol
+	{
+		if (delayTitleTimer != null) delayTitleTimer.cancel();
 	}
 
 	public static function adjustFPS(num:Float):Float{ // from ANDROMEDA ENGINE

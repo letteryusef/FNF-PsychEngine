@@ -38,6 +38,8 @@ class OptionsState extends MusicBeatState
 	var pauseMusicC:FlxSound;
 
 	function openSelectedSubstate(label:String) {
+		CoolUtil.setWindowTitle('Options: ' + label);
+
 		switch(label) {
 			case 'Controls':
 				openSubState(new options.ControlsSubState());
@@ -61,6 +63,8 @@ class OptionsState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
+
+		CoolUtil.setWindowTitle('Options');
 
 		if (ClientPrefs.secretActivated)
 		{
@@ -123,6 +127,7 @@ class OptionsState extends MusicBeatState
 	}
 
 	override function closeSubState() {
+		CoolUtil.setWindowTitle('Options');
 		super.closeSubState();
 		ClientPrefs.saveSettings();
 	}

@@ -196,6 +196,12 @@ class StoryMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		if (persistentUpdate)
+		{
+			var weekName:String = returnWeekName();
+			if (weekName != '') CoolUtil.setWindowTitle('Story Mode: ' + weekName) else CoolUtil.setWindowTitle('Story Mode');
+		}
+
 		// scoreText.setFormat('VCR OSD Mono', 32);
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 30, 0, 1)));
 		if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
@@ -365,6 +371,12 @@ class StoryMenuState extends MusicBeatState
 
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
+
+	function returnWeekName():String
+	{
+		var leWeek:WeekData = loadedWeeks[curWeek];
+		return leWeek.storyName;
+	}
 
 	function changeWeek(change:Int = 0):Void
 	{

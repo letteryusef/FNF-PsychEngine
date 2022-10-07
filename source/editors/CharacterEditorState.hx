@@ -1086,6 +1086,8 @@ class CharacterEditorState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		CoolUtil.setWindowTitle('Character Editing: ' + daAnim);
+
 		MusicBeatState.camBeat = FlxG.camera;
 		if(char.animationsArray[curAnim] != null) {
 			textAnim.text = char.animationsArray[curAnim].anim;

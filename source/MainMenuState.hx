@@ -55,7 +55,8 @@ class MainMenuState extends MusicBeatState
 	override function create()
 	{
 		instance = this;
-
+		
+		CoolUtil.setWindowTitle('Main Menu');
 		CoolUtil.setupMouse('leMouse');
 		
 		#if MODS_ALLOWED

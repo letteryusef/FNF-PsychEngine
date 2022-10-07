@@ -414,6 +414,7 @@ class PlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
 
+		CoolUtil.setWindowTitle();
 		CoolUtil.setupMouse('leMouse', false);
 		
 		controlArray = [
@@ -1461,6 +1462,7 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(nowPlaying, {x: nowPlaying.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
 						{
 							FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.6, {ease: FlxEase.quintOut});
+							CoolUtil.setWindowAnimatedTitle(' - ' + SONG.song.toUpperCase() + " [" + CoolUtil.difficulties[PlayState.storyDifficulty].toUpperCase() + "]", 0.06, '', '', false);
 							nowPlaying.destroy();
 						}
 					});
@@ -5614,6 +5616,7 @@ class PlayState extends MusicBeatState
 		if (!note.isSustainNote)
 		{
 			if (ClientPrefs.cameraMove == "Tween" && ClientPrefs.followChars) moveCameraSection(0, true);
+
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
@@ -5671,7 +5674,6 @@ class PlayState extends MusicBeatState
 				} else if (ClientPrefs.comboType == "GoofyAAHText") {
 					setUpGoofyText(false, note);
 				}
-
 				if (!lastNote && showNoteCombo && SONG.notes[curSection].mustHitSection && noteComboNumberlol > 5)
 				{
 					lastNote = true;

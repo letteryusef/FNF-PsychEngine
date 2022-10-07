@@ -120,6 +120,8 @@ class TitleState extends MusicBeatState
 		}
 		#end*/
 
+		CoolUtil.setWindowTitle('Title');
+
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;
 		FlxG.sound.volumeDownKeys = volumeDownKeys;

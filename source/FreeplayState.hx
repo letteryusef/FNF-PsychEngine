@@ -284,6 +284,8 @@ class FreeplayState extends MusicBeatState
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
+		if(persistentUpdate) CoolUtil.setWindowTitle('FreePlay: ' + songs[curSelected].songName.toUpperCase());
+
 		if(songs.length > 1)
 		{
 			if (upP)
@@ -399,6 +401,8 @@ class FreeplayState extends MusicBeatState
 				trace('Couldnt find file');
 			}*/
 			trace(poop);
+
+			CoolUtil.setWindowTitle('FreePlay: On Load!');
 
 			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 			PlayState.isStoryMode = false;
