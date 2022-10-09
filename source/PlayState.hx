@@ -3138,6 +3138,7 @@ class PlayState extends MusicBeatState
 
 	var hasMoreAnimationsBF:Bool = false;
 	var hasMoreAnimationsDAD:Bool = false;
+	var harmonyAlphaDuration:Float = 0.6;
 
 	override public function update(elapsed:Float)
 	{
@@ -3759,7 +3760,7 @@ class PlayState extends MusicBeatState
 				clonesDad.visible = dad.visible;
 				insert(members.indexOf(dadGroup) - 1, clonesDad);
 				clonesDad.playAnim(savedAnimationsDAD[i]);
-				FlxTween.tween(clonesDad, {alpha: 0}, 0.6, {onComplete: function(ass:FlxTween)
+				FlxTween.tween(clonesDad, {alpha: 0}, harmonyAlphaDuration, {onComplete: function(ass:FlxTween)
 				{
 					clonesDad.destroy();
 				}});
@@ -3780,7 +3781,7 @@ class PlayState extends MusicBeatState
 				clonesBF.visible = boyfriend.visible;
 				insert(members.indexOf(boyfriendGroup) - 1, clonesBF);
 				clonesBF.playAnim(savedAnimationsBF[i]);
-				FlxTween.tween(clonesBF, {alpha: 0}, 0.6, {onComplete: function(ass:FlxTween)
+				FlxTween.tween(clonesBF, {alpha: 0}, harmonyAlphaDuration, {onComplete: function(ass:FlxTween)
 				{
 					clonesBF.destroy();
 				}});
@@ -4626,7 +4627,7 @@ class PlayState extends MusicBeatState
 				if (storyPlaylist.length <= 0)
 				{
 					WeekData.loadTheFirstEnabledMod();
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 
 					cancelMusicFadeTween();
 					if(FlxTransitionableState.skipNextTransIn) {
@@ -4696,7 +4697,7 @@ class PlayState extends MusicBeatState
 					CustomFadeTransition.nextCamera = null;
 				}
 				MusicBeatState.switchState(new FreeplayState());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 				changedDifficulty = false;
 			}
 			transitioning = true;

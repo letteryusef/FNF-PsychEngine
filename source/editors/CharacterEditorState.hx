@@ -1122,7 +1122,7 @@ class CharacterEditorState extends MusicBeatState
 				} else {
 					CoolUtil.destroyMouse();
 					MusicBeatState.switchState(new editors.MasterEditorMenu());
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 				}
 				CoolUtil.destroyMouse();
 				return;

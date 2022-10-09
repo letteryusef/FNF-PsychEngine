@@ -455,7 +455,7 @@ class WeekEditorState extends MusicBeatState
 			if(FlxG.keys.justPressed.ESCAPE) {
 				CoolUtil.destroyMouse();
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 			}
 		}
 
@@ -824,7 +824,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 			if(FlxG.keys.justPressed.ESCAPE) {
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 			}
 
 			if(controls.UI_UP_P) changeSelection(-1);

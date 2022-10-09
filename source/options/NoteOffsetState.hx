@@ -385,7 +385,7 @@ class NoteOffsetState extends MusicBeatState
 			MusicBeatState.switchState(new options.OptionsState());
 			if (!MainMenuState.instance.stinkypoopoo)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
+				FlxG.sound.playMusic(Paths.music('klaskiMenu'), 1, true);
 			} else {
 				FlxTween.tween(FlxG.sound.music, {volume: 0}, 0.6, {ease: FlxEase.quintOut, onComplete: function (twn:FlxTween)
 				{

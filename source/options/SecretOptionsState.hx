@@ -75,7 +75,7 @@ class SecretOptionsState extends BaseOptionsMenu
 
 	override function destroy()
 	{
-		if(changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		if(changedMusic) FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 		super.destroy();
 	}
 }
