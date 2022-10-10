@@ -1,5 +1,7 @@
 package;
 
+import vlc.MP4Handler;
+import openfl.display.Sprite;
 #if desktop
 import Discord.DiscordClient;
 import sys.thread.Thread;
@@ -81,6 +83,11 @@ class TitleState extends MusicBeatState
 	var iconList2:Array<String> = ['gf', 'parents', 'senpai-pixel', 'spirit-pixel', 'monster'];
 	#end
 
+	#if VIDEOS_ALLOWED
+	var video:MP4Handler;
+	var videoSprite:FlxSprite;
+	#end
+
 	var iconGrid:FlxSprite;
 
 	var grpNotes:FlxTypedGroup<FlxSprite> = new FlxTypedGroup();
@@ -94,16 +101,12 @@ class TitleState extends MusicBeatState
 	
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
-
 	var curWacky:Array<String> = [];
-
 	var wackyImage:FlxSprite;
-
 	var mustUpdate:Bool = false;
-
 	var titleJSON:TitleData;
-
 	var allowCamBeat:Bool = false;
+
 	#if sys
 	var shaderTween:FlxTween;
 	#end
@@ -307,7 +310,7 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
-		startFNFCITYVideo();
+		setupVideo();
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
@@ -458,7 +461,7 @@ class TitleState extends MusicBeatState
 		// credGroup.add(credTextShit);
 	}
 
-	public function startFNFCITYVideo()
+	public function setupVideo()
 	{
 		#if VIDEOS_ALLOWED
 		var filepath:String = Paths.video('fnfcities');
@@ -471,11 +474,17 @@ class TitleState extends MusicBeatState
 			FlxG.log.warn('Couldnt find video file');
 			return;
 		}
-		var video:MP4Sprite = new MP4Sprite();
-		video.playVideo(filepath, true);
+		video = new MP4Handler(null, null, null, true);
+		video.alpha = 0;
+		videoSprite = new FlxSprite(0, 0);
+		video.readyCallback = function()
+		{
+			videoSprite.loadGraphic(video.bitmapData);
+		}
+		add(videoSprite);
+		video.playVideo(filepath);
 		#else
 		FlxG.log.warn('Platform not supported!');
-		startAndEnd();
 		return;
 		#end
 	}
@@ -546,6 +555,12 @@ class TitleState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
+
+		if (repeatBop == 44 && video != null)
+		{
+			video.seek(0);
+			repeatBop = 0;
+		}
 
 		if (ClientPrefs.shaders)
 		{
@@ -755,10 +770,13 @@ class TitleState extends MusicBeatState
 	}
 
 	private var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
+	private var repeatBop:Int = 0;
 	public static var closedState:Bool = false;
 	override function beatHit()
 	{
 		super.beatHit();
+		
+		repeatBop++;
 
 		if(allowCamBeat)
 		{
@@ -1072,6 +1090,9 @@ class TitleState extends MusicBeatState
 				skipTime();
 				hasBeenOnThisStage = true;
 			}
+			
+			video.seek(0);
+			repeatBop = 0;
 			skippedIntro = true;
 		}
 	}
