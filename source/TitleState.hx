@@ -91,12 +91,13 @@ class TitleState extends MusicBeatState
 
 	var grpNotes:FlxTypedGroup<FlxSprite> = new FlxTypedGroup();
 
-	var blackScreen:FlxSprite;
+	var roseVHS:FlxSprite;
 	var credGroup:FlxGroup;
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 	var fuckText:FlxText;
+	var logo:FlxSprite;
 	
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
@@ -376,7 +377,7 @@ class TitleState extends MusicBeatState
 		// titleText.screenCenter(X);
 		add(titleText);
 
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
+		logo = new FlxSprite().loadGraphic(Paths.image('logo'));
 		logo.screenCenter();
 		logo.antialiasing = ClientPrefs.globalAntialiasing;
 		// add(logo);
@@ -394,14 +395,14 @@ class TitleState extends MusicBeatState
 		add(credGroup);
 		textGroup = new FlxGroup();
 
-		blackScreen = new FlxSprite(FlxG.width, FlxG.height);
-		blackScreen.frames = Paths.getSparrowAtlas('roseVHS');
-		blackScreen.animation.addByPrefix('static', 'mask', 40, true);
-		blackScreen.animation.play('static');
-		blackScreen.setGraphicSize(Std.int(blackScreen.width * 1.2));
-		blackScreen.updateHitbox();
-		blackScreen.screenCenter(XY);
-		credGroup.add(blackScreen);
+		roseVHS = new FlxSprite(FlxG.width, FlxG.height);
+		roseVHS.frames = Paths.getSparrowAtlas('roseVHS');
+		roseVHS.animation.addByPrefix('static', 'mask', 40, true);
+		roseVHS.animation.play('static');
+		roseVHS.setGraphicSize(Std.int(roseVHS.width * 1.2));
+		roseVHS.updateHitbox();
+		roseVHS.screenCenter(XY);
+		credGroup.add(roseVHS);
 
 		credTextShit = new Alphabet(0, 0, "", true);
 		credTextShit.screenCenter();
@@ -479,6 +480,12 @@ class TitleState extends MusicBeatState
 		video.readyCallback = function()
 		{
 			videoSprite.loadGraphic(video.bitmapData);
+			videoSprite.alpha = 0.5;
+			var arrayFlxSprite:Array<FlxSprite> = [logoBl, gfDance, titleText, logo];
+			for (i in 0...arrayFlxSprite.length)
+			{
+				arrayFlxSprite[i].blend = LIGHTEN;
+			}
 		}
 		add(videoSprite);
 		video.playVideo(filepath);
@@ -1024,7 +1031,20 @@ class TitleState extends MusicBeatState
 						}});
 					}
 					#end
-					FlxFlicker.flicker(iconGroup.members[4], 0.8, 0.1, false);
+				case 27.25:
+					iconGroup.members[4].alpha = 0;
+				case 27.5:
+					iconGroup.members[4].alpha = 1;
+				case 27.75:
+					iconGroup.members[4].alpha = 0;
+				case 28:
+					iconGroup.members[4].alpha = 1;
+				case 28.25:
+					iconGroup.members[4].alpha = 0;
+				case 28.5:
+					iconGroup.members[4].alpha = 1;
+				case 28.75:
+					iconGroup.members[4].alpha = 0;
 				case 29:
 					grpNotes.members[0].visible = true;
 				case 29.5:
