@@ -1,6 +1,5 @@
 package;
 
-import vlc.MP4Handler;
 import openfl.display.Sprite;
 #if desktop
 import Discord.DiscordClient;
@@ -49,7 +48,7 @@ import lime.app.Application;
 import openfl.Assets;
 
 #if VIDEOS_ALLOWED
-import vlc.MP4Sprite;
+import vlc.MP4Handler;
 #end
 
 using StringTools;
