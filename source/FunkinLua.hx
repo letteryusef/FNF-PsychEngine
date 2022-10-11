@@ -1490,11 +1490,11 @@ class FunkinLua {
 			cancelTween(tag);
 		});
 
-		Lua_helper.add_callback(lua, "runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
+		Lua_helper.add_callback(lua, "runTimer", function(tag:String, time:Float = 1, loops:Int = 1, doNotRemove:Bool = false) {
 			cancelTimer(tag);
 			PlayState.instance.modchartTimers.set(tag, new FlxTimer().start(time, function(tmr:FlxTimer) {
 				if(tmr.finished) {
-					PlayState.instance.modchartTimers.remove(tag);
+					if (!doNotRemove) PlayState.instance.modchartTimers.remove(tag);
 				}
 				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft]);
 				//trace('Timer Completed: ' + tag);
@@ -1502,6 +1502,9 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "cancelTimer", function(tag:String) {
 			cancelTimer(tag);
+		});
+		Lua_helper.add_callback(lua, "resetTimer", function(tag:String, newTime:Float) {
+			resetTimer(tag, newTime);
 		});
 
 		/*Lua_helper.add_callback(lua, "getPropertyAdvanced", function(varsStr:String) {
@@ -3242,6 +3245,13 @@ class FunkinLua {
 			theTimer.cancel();
 			theTimer.destroy();
 			PlayState.instance.modchartTimers.remove(tag);
+		}
+	}
+
+	function resetTimer(tag:String, newTime:Float) {
+		if(PlayState.instance.modchartTimers.exists(tag)) {
+			var theTimer:FlxTimer = PlayState.instance.modchartTimers.get(tag);
+			theTimer.reset(newTime);
 		}
 	}
 

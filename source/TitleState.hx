@@ -310,7 +310,9 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
+		#if VIDEOS_ALLOWED
 		setupVideo();
+		#end
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
@@ -562,11 +564,13 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
+		#if VIDEOS_ALLOWED
 		if (repeatBop == 44 && video != null)
 		{
 			video.seek(0);
 			repeatBop = 0;
 		}
+		#end
 
 		if (ClientPrefs.shaders)
 		{
@@ -776,13 +780,15 @@ class TitleState extends MusicBeatState
 	}
 
 	private var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
-	private var repeatBop:Int = 0;
+	#if VIDEOS_ALLOWED private var repeatBop:Int = 0; #end
 	public static var closedState:Bool = false;
 	override function beatHit()
 	{
 		super.beatHit();
 		
+		#if VIDEOS_ALLOWED
 		repeatBop++;
+		#end
 
 		if(allowCamBeat)
 		{
@@ -1110,8 +1116,10 @@ class TitleState extends MusicBeatState
 				hasBeenOnThisStage = true;
 			}
 			
+			#if VIDEOS_ALLOWED
 			video.seek(0);
 			repeatBop = 0;
+			#end
 			skippedIntro = true;
 		}
 	}
