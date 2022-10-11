@@ -1674,10 +1674,9 @@ class ChartingState extends MusicBeatState
 
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
-				//if(onMasterEditor) {
-					MusicBeatState.switchState(new editors.MasterEditorMenu());
-					FlxG.sound.playMusic(Paths.music('klaskiMenu'));
-				//}
+				PlayState.chartingMode = false;
+				MusicBeatState.switchState(new editors.MasterEditorMenu());
+				FlxG.sound.playMusic(Paths.music('klaskiMenu'));
 				CoolUtil.destroyMouse();
 				return;
 			}
