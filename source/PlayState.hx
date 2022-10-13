@@ -123,6 +123,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var modchartTrails:Map<String, FlxTrail> = new Map<String, FlxTrail>();
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
@@ -139,6 +140,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map();
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
+	public var modchartTrails:Map<String, FlxTrail> = new Map();
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
@@ -198,6 +200,7 @@ class PlayState extends MusicBeatState
 
 	// for harmony notes
 	public var savedAnimationsBF:Array<String> = [];
+	public var savedAnimationsGF:Array<String> = [];
 	public var savedAnimationsDAD:Array<String> = [];
 	public var allowHarmonyEffect:Bool = true;
 
@@ -264,6 +267,7 @@ class PlayState extends MusicBeatState
 	public var camNote:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
+	public var normalHUDZoom:Float = 1;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
@@ -377,6 +381,7 @@ class PlayState extends MusicBeatState
 	var botPlayx:Float;
 	var botPlayLeft:Float;
 	var botPlayRight:Float;
+	public var showNowPlaying:Bool = true;
 	var nowPlayingBG:FlxSprite;
 	var nowPlaying:FlxText;
 
@@ -1342,18 +1347,21 @@ class PlayState extends MusicBeatState
 		botPlayRight = FlxG.width - 1280;
 		botPlayLeft = FlxG.width - 1380;
 
-		nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
-		nowPlayingBG.alpha = 0.6;
-		add(nowPlayingBG);
-
-		nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
-		nowPlaying.setFormat("VCR OSD Mono", 18);
-		add(nowPlaying);
-
-		nowPlayingBG.scale.x = nowPlaying.width * 2.16;
-
-		nowPlayingBG.y -= 400;
-		nowPlaying.y -= 400;
+		if (showNowPlaying)
+		{
+			nowPlayingBG = new FlxSprite(18, 0).makeGraphic(1, 40, 0xFF000000);
+			nowPlayingBG.alpha = 0.6;
+			add(nowPlayingBG);
+	
+			nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
+			nowPlaying.setFormat("VCR OSD Mono", 18);
+			add(nowPlaying);
+	
+			nowPlayingBG.scale.x = nowPlaying.width * 2.16;
+	
+			nowPlayingBG.y -= 400;
+			nowPlaying.y -= 400;
+		}
 
 		noteShit = new FlxSprite(!ClientPrefs.comboCamera ? 120 : gf.getMidpoint().x - 480, !ClientPrefs.comboCamera ? 240 : 400, Paths.image('noteCombo'));
 		noteShit.frames = Paths.getSparrowAtlas('noteCombo');
@@ -1407,28 +1415,31 @@ class PlayState extends MusicBeatState
 
 		CoolUtil.precacheSound('noteComboSound');
 
-		FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
-			{
-				FlxTween.tween(nowPlaying, {y: nowPlaying.y + 400}, 0.6, {ease: FlxEase.quintOut});
-				FlxTween.tween(nowPlayingBG, {y: nowPlayingBG.y + 400}, 0.6, {ease: FlxEase.quintOut});
-
-				new FlxTimer().start(2.8, function(tmr:FlxTimer) {
-					FlxTween.tween(nowPlaying, {x: nowPlaying.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
-						{
-							FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.6, {ease: FlxEase.quintOut});
-							CoolUtil.setWindowAnimatedTitle(' - ' + SONG.song.toUpperCase() + " [" + CoolUtil.difficulties[PlayState.storyDifficulty].toUpperCase() + "]", 0.06, '', '', false);
-							nowPlaying.destroy();
-						}
+		if (showNowPlaying)
+		{
+			FlxTween.tween(Main.fpsVar, {alpha: 0}, 0.8, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween)
+				{
+					FlxTween.tween(nowPlaying, {y: nowPlaying.y + 400}, 0.6, {ease: FlxEase.quintOut});
+					FlxTween.tween(nowPlayingBG, {y: nowPlayingBG.y + 400}, 0.6, {ease: FlxEase.quintOut});
+	
+					new FlxTimer().start(2.8, function(tmr:FlxTimer) {
+						FlxTween.tween(nowPlaying, {x: nowPlaying.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+							{
+								FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.6, {ease: FlxEase.quintOut});
+								CoolUtil.setWindowAnimatedTitle(' - ' + SONG.song.toUpperCase() + " [" + CoolUtil.difficulties[PlayState.storyDifficulty].toUpperCase() + "]", 0.06, '', '', false);
+								nowPlaying.destroy();
+							}
+						});
+	
+						FlxTween.tween(nowPlayingBG, {x: nowPlayingBG.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
+							{
+								nowPlayingBG.destroy();
+							}
+						});
 					});
-
-					FlxTween.tween(nowPlayingBG, {x: nowPlayingBG.x - 1000}, 0.6, {ease: FlxEase.quintIn, onComplete: function(twn:FlxTween)
-						{
-							nowPlayingBG.destroy();
-						}
-					});
-				});
-			}
-		});
+				}
+			});
+		}
 
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
@@ -1443,8 +1454,11 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
-		nowPlayingBG.cameras = [camOther];
-		nowPlaying.cameras = [camOther];
+		if (showNowPlaying)
+		{
+			nowPlayingBG.cameras = [camOther];
+			nowPlaying.cameras = [camOther];
+		}
 		noteShit.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		doof.cameras = [camHUD];
 
@@ -2413,6 +2427,7 @@ class PlayState extends MusicBeatState
 			else if (skipCountdown)
 			{
 				setSongTime(0);
+				countdownFinished = true;
 				return;
 			}
 
@@ -3138,6 +3153,7 @@ class PlayState extends MusicBeatState
 
 	var hasMoreAnimationsBF:Bool = false;
 	var hasMoreAnimationsDAD:Bool = false;
+	var hasMoreAnimationsGF:Bool = false;
 	var harmonyAlphaDuration:Float = 0.6;
 
 	override public function update(elapsed:Float)
@@ -3433,9 +3449,9 @@ class PlayState extends MusicBeatState
 		if (camZooming)
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
-			camStrum.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
-			camNote.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
+			camHUD.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
+			camStrum.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
+			camNote.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 		}
 
 		FlxG.watch.addQuick("secShit", curSection);
@@ -3752,9 +3768,11 @@ class PlayState extends MusicBeatState
 		{
 			for (i in 0...savedAnimationsDAD.length - 1)
 			{
-				var clonesDad:Character = new Character(dad.x, dad.y, SONG.player2);
+				var clonesDad:Character = new Character(0, 0, SONG.player2);
 				clonesDad.scrollFactor.set(dad.scrollFactor.x, dad.scrollFactor.y);
-				clonesDad.cameras = [camGame];
+				clonesDad.cameras = dad.cameras;
+				clonesDad.x = dad.x;
+				clonesDad.y = dad.y;
 				clonesDad.singDuration = 16;
 				clonesDad.alpha = 0.6;
 				clonesDad.visible = dad.visible;
@@ -3773,9 +3791,11 @@ class PlayState extends MusicBeatState
 		{
 			for (i in 0...savedAnimationsBF.length - 1)
 			{
-				var clonesBF:Boyfriend = new Boyfriend(boyfriend.x, boyfriend.y, SONG.player1);
+				var clonesBF:Boyfriend = new Boyfriend(0, 0, SONG.player1);
 				clonesBF.scrollFactor.set(boyfriend.scrollFactor.x, boyfriend.scrollFactor.y);
-				clonesBF.cameras = [camGame];
+				clonesBF.cameras = boyfriend.cameras;
+				clonesBF.x = boyfriend.x;
+				clonesBF.y = boyfriend.y;
 				clonesBF.singDuration = 16;
 				clonesBF.alpha = 0.6;
 				clonesBF.visible = boyfriend.visible;
@@ -3788,6 +3808,29 @@ class PlayState extends MusicBeatState
 			}
 			savedAnimationsBF = [];
 			hasMoreAnimationsBF = false;
+		}
+
+		if (allowHarmonyEffect && hasMoreAnimationsGF)
+		{
+			for (i in 0...savedAnimationsGF.length - 1)
+			{
+				var clonesGF:Character = new Character(0, 0, SONG.gfVersion);
+				clonesGF.scrollFactor.set(gf.scrollFactor.x, gf.scrollFactor.y);
+				clonesGF.cameras = gf.cameras;
+				clonesGF.x = gf.x;
+				clonesGF.y = gf.y;
+				clonesGF.singDuration = 16;
+				clonesGF.alpha = 0.6;
+				clonesGF.visible = gf.visible;
+				insert(members.indexOf(gfGroup) - 1, clonesGF);
+				clonesGF.playAnim(savedAnimationsGF[i]);
+				FlxTween.tween(clonesGF, {alpha: 0}, harmonyAlphaDuration, {onComplete: function(ass:FlxTween)
+				{
+					clonesGF.destroy();
+				}});
+			}
+			savedAnimationsGF = [];
+			hasMoreAnimationsGF = false;
 		}
 
 		/*
@@ -5654,7 +5697,13 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + altAnim;
 			if (allowHarmonyEffect && !note.isSustainNote)
 			{
-				savedAnimationsDAD.insert(savedAnimationsDAD.length + 1, animToPlay);
+				if (!note.gfNote)
+				{
+					savedAnimationsDAD.insert(savedAnimationsDAD.length + 1, animToPlay);
+				} else if (note.gfNote && gf != null)
+				{
+					savedAnimationsGF.insert(savedAnimationsGF.length + 1, animToPlay);
+				}
 			}
 			if(note.gfNote) {
 				char = gf;
@@ -5702,6 +5751,9 @@ class PlayState extends MusicBeatState
 			if (allowHarmonyEffect && savedAnimationsDAD.length >= 2)
 			{
 				hasMoreAnimationsDAD = true;
+			} else if (allowHarmonyEffect && savedAnimationsGF.length >= 2)
+			{
+				hasMoreAnimationsGF = true;
 			}
 			note.kill();
 			notes.remove(note, true);
@@ -5773,7 +5825,13 @@ class PlayState extends MusicBeatState
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
 				if (allowHarmonyEffect && !note.isSustainNote)
 				{
-					savedAnimationsBF.insert(savedAnimationsBF.length + 1, animToPlay);
+					if (!note.gfNote)
+					{
+						savedAnimationsBF.insert(savedAnimationsBF.length + 1, animToPlay + note.animSuffix);
+					} else if (note.gfNote && gf != null)
+					{
+						savedAnimationsGF.insert(savedAnimationsGF.length + 1, animToPlay + note.animSuffix);
+					}
 				}
 
 				if(note.gfNote)
@@ -5849,6 +5907,9 @@ class PlayState extends MusicBeatState
 				if (allowHarmonyEffect && savedAnimationsBF.length >= 2)
 				{
 					hasMoreAnimationsBF = true;
+				} else if (allowHarmonyEffect && savedAnimationsGF.length >= 2)
+				{
+					hasMoreAnimationsGF = true;
 				}
 				note.kill();
 				notes.remove(note, true);
@@ -6122,6 +6183,7 @@ class PlayState extends MusicBeatState
 		if (allowHarmonyEffect)
 		{
 			savedAnimationsDAD = [];
+			savedAnimationsGF = [];
 			savedAnimationsBF = [];
 		}
 
@@ -6245,7 +6307,7 @@ class PlayState extends MusicBeatState
 				moveCameraSection(0);
 			}
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms)
+			if (camZooming && ClientPrefs.camZooms)
 			{
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;

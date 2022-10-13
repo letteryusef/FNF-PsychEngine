@@ -1302,7 +1302,30 @@ class FunkinLua {
 		});
 
 		// gay ass tweens
+		Lua_helper.add_callback(lua, "doTween", function(tag:String, variable:String, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			var penisExam:Dynamic = tweenShit(tag, variable);
+			if(penisExam != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}else{
+				luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "doTweenPlayState", function(tag:String, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(getInstance(), fieldsNValues, duration, {ease: getFlxEaseByString(ease),
+				onComplete: function(twn:FlxTween) {
+					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+					PlayState.instance.modchartTweens.remove(tag);
+				}
+			}));
+		});
 		Lua_helper.add_callback(lua, "doTweenX", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("doTweenX is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {x: value}, duration, {ease: getFlxEaseByString(ease),
@@ -1316,6 +1339,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenY", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("doTweenY is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {y: value}, duration, {ease: getFlxEaseByString(ease),
@@ -1329,6 +1353,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenAngle", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("doTweenAngle is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {angle: value}, duration, {ease: getFlxEaseByString(ease),
@@ -1342,6 +1367,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenAlpha", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("doTweenAlpha is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {alpha: value}, duration, {ease: getFlxEaseByString(ease),
@@ -1355,6 +1381,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenZoom", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("doTweenZoom is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {zoom: value}, duration, {ease: getFlxEaseByString(ease),
@@ -1368,6 +1395,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String) {
+			luaTrace("doTweenColor is deprecated! Use doTween instead", false, true);
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
 				var color:Int = Std.parseInt(targetColor);
@@ -1387,7 +1415,22 @@ class FunkinLua {
 		});
 
 		//Tween shit, but for strums
+		Lua_helper.add_callback(lua, "noteTween", function(tag:String, note:Int, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, fieldsNValues, duration, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
 		Lua_helper.add_callback(lua, "noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenX is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -1402,6 +1445,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "noteTweenY", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenY is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -1416,6 +1460,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenAngle is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -1430,6 +1475,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "noteTweenDirection", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenDirection is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -1476,6 +1522,7 @@ class FunkinLua {
 			return boobs;
 		});
 		Lua_helper.add_callback(lua, "noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenAngle is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -1490,6 +1537,7 @@ class FunkinLua {
 			}
 		});
 		Lua_helper.add_callback(lua, "noteTweenAlpha", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+			luaTrace("noteTweenAlpha is deprecated! Use noteTween instead", false, true);
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -2192,6 +2240,52 @@ class FunkinLua {
 			if(destroy) {
 				pee.destroy();
 				PlayState.instance.modchartSprites.remove(tag);
+			}
+		});
+		Lua_helper.add_callback(lua, "trailSprite", function(tag:String, obj:String, length:Int = 4, delay:Int = 24, alpha:Float = 0.3, diff:Float = 0.069) {
+
+			var ass:ModchartSprite = PlayState.instance.modchartSprites.get(obj);
+			var assFromPlayState:FlxSprite = Reflect.getProperty(getInstance(), obj);
+			
+			if (ass != null)
+			{
+				var leTrail:FlxTrail = new FlxTrail(ass, null, length, delay, alpha, diff);
+				PlayState.instance.modchartTrails.set(tag, leTrail);
+				PlayState.instance.insert(PlayState.instance.members.indexOf(ass) - 1, leTrail);
+			}
+
+			if (assFromPlayState != null)
+			{
+				var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+
+				if (obj == 'dad')
+				{
+					position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+				} else if (obj == 'boyfriend')
+				{
+					position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+				} else if (obj == 'gf')
+				{
+					position = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+				}
+
+				var leTrail:FlxTrail = new FlxTrail(assFromPlayState, null, length, delay, alpha, diff);
+				PlayState.instance.modchartTrails.set(tag, leTrail);
+				PlayState.instance.insert(position, leTrail);
+			} else
+			{
+				luaTrace('trailSprite: Couldnt find object: ' + obj, false, false, FlxColor.RED);
+			}
+		});
+
+		Lua_helper.add_callback(lua, "removeTrailSprite", function(tag:String) {
+
+			var ass:FlxTrail = PlayState.instance.modchartTrails.get(tag);
+
+			if (ass != null)
+			{
+				ass.destroy();
+				PlayState.instance.modchartTrails.remove(tag);
 			}
 		});
 

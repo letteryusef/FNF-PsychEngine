@@ -242,6 +242,27 @@ class CoolUtil
 		if (delayTitleTimer != null) delayTitleTimer.cancel();
 	}
 
+	public static function pixelTween(target:Dynamic, dynamicValue:Dynamic, changeTimes:Float, interval:Float)
+	{
+		if (target != dynamicValue)
+		{
+			target += dynamicValue / changeTimes;
+			new FlxTimer().start(interval, function(ass:FlxTimer)
+			{
+				target += dynamicValue / changeTimes;
+				if (target < dynamicValue)
+				{
+					ass.reset(interval);
+				} else {
+					target = dynamicValue;
+				}
+			});
+		} else {
+			trace('mate, the thing is already on the wished value >:(');
+			target += dynamicValue;
+		}
+	}
+
 	public static function adjustFPS(num:Float):Float{ // from ANDROMEDA ENGINE
 		return FlxG.elapsed / (1/60) * num;
 	}
