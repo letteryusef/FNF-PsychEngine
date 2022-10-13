@@ -2277,7 +2277,6 @@ class FunkinLua {
 				luaTrace('trailSprite: Couldnt find object: ' + obj, false, false, FlxColor.RED);
 			}
 		});
-
 		Lua_helper.add_callback(lua, "removeTrailSprite", function(tag:String) {
 
 			var ass:FlxTrail = PlayState.instance.modchartTrails.get(tag);
@@ -2299,6 +2298,75 @@ class FunkinLua {
 			return PlayState.instance.modchartSounds.exists(tag);
 		});
 
+		Lua_helper.add_callback(lua, "createIconSprite", function(char:String, isPlayer:Bool = false) {
+			var icon:HealthIcon = new HealthIcon(char, isPlayer);
+			icon.cameras = [PlayState.instance.camHUD];
+			PlayState.instance.modchartIcons.set(char, icon);
+			if (isPlayer)
+			{
+				PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.iconP1) + 1, icon);
+			} else
+			{
+				PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.iconP2) + 1, icon);
+			}
+		});
+		Lua_helper.add_callback(lua, "removeIconSprite", function(char:String) {
+
+			var icon:HealthIcon = PlayState.instance.modchartIcons.get(char);
+
+			if (icon != null)
+			{
+				icon.destroy();
+				PlayState.instance.modchartIcons.remove(char);
+			}
+		});
+		Lua_helper.add_callback(lua, "updateIconFace", function(char:String) {
+			var icon:HealthIcon = PlayState.instance.modchartIcons.get(char);
+			if (icon != null)
+			{
+				return icon.healthIconUpdate(PlayState.instance.healthBar);
+			} else {
+				luaTrace('updateIconFace: Couldnt find icon: ' + char, false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "updateIconLocation", function(char:String, additionalX:Float = 0, additionalY:Float = 0) {
+			var icon:HealthIcon = PlayState.instance.modchartIcons.get(char);
+			if (icon != null)
+			{
+				@:privateAccess
+				{
+					if (icon.isPlayer)
+					{
+						icon.x = PlayState.instance.iconP1.x + additionalX;
+						icon.y = PlayState.instance.iconP1.y + additionalY;
+					} else {
+						icon.x = PlayState.instance.iconP2.x + additionalX;
+						icon.y = PlayState.instance.iconP2.y + additionalY;
+					}
+				}
+			} else {
+				luaTrace('updateIconLocation: Couldnt find icon: ' + char, false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "updateIconBeat", function(char:String, additionalScaleX:Float = 0, additionalScaleY:Float = 0) {
+			var icon:HealthIcon = PlayState.instance.modchartIcons.get(char);
+			if (icon != null)
+			{
+				@:privateAccess
+				{
+					if (icon.isPlayer)
+					{
+						icon.scale.x = PlayState.instance.iconP1.scale.x + additionalScaleX;
+						icon.scale.y = PlayState.instance.iconP1.scale.y + additionalScaleY;
+					} else {
+						icon.scale.x = PlayState.instance.iconP2.scale.x + additionalScaleX;
+						icon.scale.y = PlayState.instance.iconP2.scale.y + additionalScaleY;
+					}
+				}
+			} else {
+				luaTrace('updateIconBeat: Couldnt find icon: ' + char, false, false, FlxColor.RED);
+			}
+		});
 		Lua_helper.add_callback(lua, "setHealthBarColors", function(leftHex:String, rightHex:String) {
 			var left:FlxColor = Std.parseInt(leftHex);
 			if(!leftHex.startsWith('0x')) left = Std.parseInt('0xff' + leftHex);

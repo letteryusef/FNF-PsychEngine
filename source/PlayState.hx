@@ -124,6 +124,7 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var modchartTrails:Map<String, FlxTrail> = new Map<String, FlxTrail>();
+	public var modchartIcons:Map<String, HealthIcon> = new Map<String, HealthIcon>();
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
@@ -141,6 +142,7 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartTrails:Map<String, FlxTrail> = new Map();
+	public var modchartIcons:Map<String, HealthIcon> = new Map();
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
