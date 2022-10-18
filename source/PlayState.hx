@@ -125,6 +125,7 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var modchartTrails:Map<String, FlxTrail> = new Map<String, FlxTrail>();
 	public var modchartIcons:Map<String, HealthIcon> = new Map<String, HealthIcon>();
+	public var modchartCameras:Map<String, FlxCamera> = new Map<String, FlxCamera>(); // beta
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
@@ -143,6 +144,7 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartTrails:Map<String, FlxTrail> = new Map();
 	public var modchartIcons:Map<String, HealthIcon> = new Map();
+	public var modchartCameras:Map<String, FlxCamera> = new Map();
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
@@ -1441,6 +1443,8 @@ class PlayState extends MusicBeatState
 					});
 				}
 			});
+		} else {
+			CoolUtil.setWindowAnimatedTitle(' - ' + SONG.song.toUpperCase() + " [" + CoolUtil.difficulties[PlayState.storyDifficulty].toUpperCase() + "]", 0.06, '', '', false);
 		}
 
 		strumLineNotes.cameras = [camHUD];
@@ -4176,7 +4180,7 @@ class PlayState extends MusicBeatState
 				killHenchmen();
 
 			case 'Add Camera Zoom':
-				if(ClientPrefs.camZooms && FlxG.camera.zoom < 1.35) {
+				if(ClientPrefs.camZooms) {
 					var camZoom:Float = Std.parseFloat(value1);
 					var hudZoom:Float = Std.parseFloat(value2);
 					if(Math.isNaN(camZoom)) camZoom = 0.015;

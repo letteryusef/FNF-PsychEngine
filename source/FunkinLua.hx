@@ -1871,6 +1871,22 @@ class FunkinLua {
 					PlayState.instance.boyfriendGroup.y = value;
 			}
 		});
+
+		Lua_helper.add_callback(lua, "makeCamera", function(tag:String) {
+			var cam:FlxCamera = new FlxCamera();
+			cam.bgColor.alpha = 0;
+			PlayState.instance.modchartCameras.set(tag, cam);
+		});
+		Lua_helper.add_callback(lua, "addCamera", function(tag:String) {
+			var cam:FlxCamera = PlayState.instance.modchartCameras.get(tag);
+			FlxG.cameras.add(cam);
+		});
+		Lua_helper.add_callback(lua, "removeCamera", function(tag:String, destroy:Bool = true) {
+			var cam:FlxCamera = PlayState.instance.modchartCameras.get(tag);
+			FlxG.cameras.remove(cam, destroy);
+			if (destroy) PlayState.instance.modchartCameras.remove(tag);
+		});
+
 		Lua_helper.add_callback(lua, "cameraSetTarget", function(target:String) {
 			var isDad:Bool = false;
 			if(target == 'dad') {
@@ -2298,16 +2314,16 @@ class FunkinLua {
 			return PlayState.instance.modchartSounds.exists(tag);
 		});
 
-		Lua_helper.add_callback(lua, "createIconSprite", function(char:String, isPlayer:Bool = false) {
+		Lua_helper.add_callback(lua, "createIconSprite", function(char:String, addBehindOtherIcon:Bool = false, isPlayer:Bool = false) {
 			var icon:HealthIcon = new HealthIcon(char, isPlayer);
 			icon.cameras = [PlayState.instance.camHUD];
 			PlayState.instance.modchartIcons.set(char, icon);
 			if (isPlayer)
 			{
-				PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.iconP1) + 1, icon);
+				PlayState.instance.insert(!addBehindOtherIcon ? PlayState.instance.members.indexOf(PlayState.instance.iconP1) + 1 : PlayState.instance.members.indexOf(PlayState.instance.iconP1) - 1, icon);
 			} else
 			{
-				PlayState.instance.insert(PlayState.instance.members.indexOf(PlayState.instance.iconP2) + 1, icon);
+				PlayState.instance.insert(!addBehindOtherIcon ? PlayState.instance.members.indexOf(PlayState.instance.iconP2) + 1 : PlayState.instance.members.indexOf(PlayState.instance.iconP1) - 1, icon);
 			}
 		});
 		Lua_helper.add_callback(lua, "removeIconSprite", function(char:String) {
@@ -2367,13 +2383,13 @@ class FunkinLua {
 				luaTrace('updateIconBeat: Couldnt find icon: ' + char, false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setHealthBarColors", function(leftHex:String, rightHex:String) {
+		Lua_helper.add_callback(lua, "setHealthBarColors", function(?leftHex:String, ?rightHex:String) {
 			var left:FlxColor = Std.parseInt(leftHex);
 			if(!leftHex.startsWith('0x')) left = Std.parseInt('0xff' + leftHex);
 			var right:FlxColor = Std.parseInt(rightHex);
 			if(!rightHex.startsWith('0x')) right = Std.parseInt('0xff' + rightHex);
 
-			PlayState.instance.healthBar.createFilledBar(left, right);
+			PlayState.instance.healthBar.createFilledBar(leftHex == null ? FlxColor.fromRGB(PlayState.instance.dad.healthColorArray[0], PlayState.instance.dad.healthColorArray[1], PlayState.instance.dad.healthColorArray[2]) : left, rightHex == null ? FlxColor.fromRGB(PlayState.instance.boyfriend.healthColorArray[0], PlayState.instance.boyfriend.healthColorArray[1], PlayState.instance.boyfriend.healthColorArray[2]) : right);
 			PlayState.instance.healthBar.updateBar();
 		});
 		Lua_helper.add_callback(lua, "setTimeBarColors", function(leftHex:String, rightHex:String) {
@@ -2789,6 +2805,25 @@ class FunkinLua {
 				return true;
 			}
 			luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setTextBorderStyle", function(tag:String, style:String = 'left') {
+			var obj:FlxText = getTextObject(tag);
+			if(obj != null)
+			{
+				obj.borderStyle = NONE;
+				switch(style.trim().toLowerCase())
+				{
+					case 'shadow':
+						obj.borderStyle = SHADOW;
+					case 'outline':
+						obj.borderStyle = OUTLINE;
+					case 'outline-fast':
+						obj.borderStyle = OUTLINE_FAST;
+				}
+				return true;
+			}
+			luaTrace("setTextBorderStyle: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 
@@ -3500,12 +3535,19 @@ class FunkinLua {
 
 	function cameraFromString(cam:String):FlxCamera {
 		switch(cam.toLowerCase()) {
+			case 'camgame' | 'game': return PlayState.instance.camGame;
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
 			case 'camstrum' | 'strum': return PlayState.instance.camStrum;
 			case 'camnote' | 'note': return PlayState.instance.camNote;
 			case 'camother' | 'other': return PlayState.instance.camOther;
+			default:
+				var modchartCam:FlxCamera = PlayState.instance.modchartCameras.get(cam);
+				if (modchartCam != null) return modchartCam else
+				{
+					luaTrace("Camera does not exists!", false, false, FlxColor.RED);
+					return null;
+				}
 		}
-		return PlayState.instance.camGame;
 	}
 
 	function cameraShaderFromString(cam:String):Map<String, ShaderFilter> {
