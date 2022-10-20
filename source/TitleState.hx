@@ -1097,6 +1097,15 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
+			for (i in 0...5)
+			{
+				if (iconGroup.members[i] != null) iconGroup.members[i].destroy();
+			}
+			for (i in 0...4)
+			{
+				if (grpNotes.members[i] != null) grpNotes.members[i].destroy();
+			}
+			iconGrid.destroy();
 			remove(ngSpr);
 			remove(credGroup);
 			remove(iconGroup);

@@ -260,6 +260,7 @@ class PlayState extends MusicBeatState
 	public var instakillOnMiss:Bool = false;
 	public var cpuControlled:Bool = false;
 	public var practiceMode:Bool = false;
+	public var inverse:Bool = false;
 
 	public var botplaySine:Float = 0;
 	public var botplayTxt:FlxText;
@@ -479,6 +480,7 @@ class PlayState extends MusicBeatState
 		instakillOnMiss = ClientPrefs.getGameplaySetting('instakill', false);
 		practiceMode = ClientPrefs.getGameplaySetting('practice', false);
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay', false);
+		inverse = ClientPrefs.getGameplaySetting('inverse', false);
 
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
@@ -491,6 +493,7 @@ class PlayState extends MusicBeatState
 		camNote.bgColor.alpha = 0;
 		camStrum.bgColor.alpha = 0;
 
+		callOnLuas('onAddingCameraBefore', []);
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camStrum);
@@ -1313,9 +1316,10 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 		healthBarBG.sprTracker = healthBar;
 
-		ouchUI = new FlxSprite(healthBarBG.x + 387, healthBarBG.y + 4.5, Paths.image('ouch'));
+		ouchUI = new FlxSprite(!inverse ? healthBarBG.x + 387 : healthBarBG.x + 4, healthBarBG.y + 4.5, Paths.image('ouch'));
 		ouchUI.scale.y = 1.08;
 		ouchUI.alpha = 0;
+		ouchUI.angle = !inverse ? 0 : 180;
 		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(ouchUI);
 
@@ -2806,7 +2810,7 @@ class PlayState extends MusicBeatState
 					oldNote = null;
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
-				swagNote.mustPress = gottaHitNote;
+				swagNote.mustPress = inverse ? !gottaHitNote : gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
 				swagNote.noteType = songNotes[3];
@@ -2827,7 +2831,7 @@ class PlayState extends MusicBeatState
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(songSpeed, 2)), daNoteData, oldNote, true);
-						sustainNote.mustPress = gottaHitNote;
+						sustainNote.mustPress = inverse ? !gottaHitNote : gottaHitNote;
 						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
@@ -3028,7 +3032,7 @@ class PlayState extends MusicBeatState
 
 			if (player == 1)
 			{
-				playerStrums.add(babyArrow);
+				if (!inverse) playerStrums.add(babyArrow) else opponentStrums.add(babyArrow);
 			}
 			else
 			{
@@ -3039,7 +3043,7 @@ class PlayState extends MusicBeatState
 						babyArrow.x += FlxG.width / 2 + 25;
 					}
 				}
-				opponentStrums.add(babyArrow);
+				if (!inverse) opponentStrums.add(babyArrow) else playerStrums.add(babyArrow);
 			}
 
 			strumLineNotes.add(babyArrow);
@@ -3471,7 +3475,7 @@ class PlayState extends MusicBeatState
 		// RESET = Quick Game Over Screen
 		if (!ClientPrefs.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
 		{
-			health = 0;
+			health = !inverse ? 0 : 2;
 			trace("RESET = True");
 		}
 		doDeathCheck();
@@ -3941,7 +3945,7 @@ class PlayState extends MusicBeatState
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
-		if (((skipHealthCheck && instakillOnMiss) || health <= 0) && !practiceMode && !isDead)
+		if ((!inverse && ((skipHealthCheck && instakillOnMiss) || health <= 0) && !practiceMode && !isDead) || (inverse && ((skipHealthCheck && instakillOnMiss) || health >= 2) && !practiceMode && !isDead))
 		{
 			var ret:Dynamic = callOnLuas('onGameOver', [], false);
 			if(ret != FunkinLua.Function_Stop) {
@@ -5536,7 +5540,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		combo = 0;
-		health -= daNote.missHealth * healthLoss;
+		if (!inverse) health -= daNote.missHealth * healthLoss else health += daNote.missHealth * healthLoss;
 
 		if (!isPixelStage && !daNote.isSustainNote)
 		{
@@ -5563,7 +5567,7 @@ class PlayState extends MusicBeatState
 		totalPlayed++;
 		RecalculateRating(true);
 
-		var char:Character = boyfriend;
+		var char:Character = !inverse ? boyfriend : dad;
 		if(daNote.gfNote) {
 			char = gf;
 		}
@@ -5624,8 +5628,10 @@ class PlayState extends MusicBeatState
 				boyfriend.stunned = false;
 			});*/
 
-			if(boyfriend.hasMissAnimations) {
-				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
+			var char:Character = !inverse ? boyfriend : dad;
+
+			if(char.hasMissAnimations) {
+				char.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
 			}
 			vocals.volume = 0;
 		}
@@ -5707,9 +5713,12 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + altAnim;
 			if (allowHarmonyEffect && !note.isSustainNote)
 			{
-				if (!note.gfNote)
+				if (!inverse && !note.gfNote)
 				{
 					savedAnimationsDAD.insert(savedAnimationsDAD.length + 1, animToPlay);
+				} else if (inverse && !note.gfNote)
+				{
+					savedAnimationsBF.insert(savedAnimationsBF.length + 1, animToPlay);
 				} else if (note.gfNote && gf != null)
 				{
 					savedAnimationsGF.insert(savedAnimationsGF.length + 1, animToPlay);
@@ -5721,10 +5730,9 @@ class PlayState extends MusicBeatState
 
 			if (!isStoryMode)
 			{
-				/*
-				if (FreeplayState.inverse)
+				if (inverse)
 				{
-					boyfriend.playAnim(animToPlay + note.animSuffix, true);
+					boyfriend.playAnim(animToPlay, true);
 					boyfriend.holdTimer = 0;
 				} else {
 					if(char != null)
@@ -5732,13 +5740,6 @@ class PlayState extends MusicBeatState
 						char.playAnim(animToPlay, true);
 						char.holdTimer = 0;
 					}
-				}
-				*/
-
-				if(char != null)
-				{
-					char.playAnim(animToPlay, true);
-					char.holdTimer = 0;
 				}
 			}
 		}
@@ -5758,9 +5759,12 @@ class PlayState extends MusicBeatState
 		if (!note.isSustainNote)
 		{
 			if (ClientPrefs.cameraMove == "Tween" && ClientPrefs.followChars) moveCameraSection(0, true);
-			if (allowHarmonyEffect && savedAnimationsDAD.length >= 2)
+			if (allowHarmonyEffect && !inverse && savedAnimationsDAD.length >= 2)
 			{
 				hasMoreAnimationsDAD = true;
+			} else if (allowHarmonyEffect && inverse && savedAnimationsBF.length >= 2)
+			{
+				hasMoreAnimationsBF = true;
 			} else if (allowHarmonyEffect && savedAnimationsGF.length >= 2)
 			{
 				hasMoreAnimationsGF = true;
@@ -5829,21 +5833,23 @@ class PlayState extends MusicBeatState
 				}
 
 			}
-			health += note.hitHealth * healthGain;
+			if (!inverse) health += note.hitHealth * healthGain else health -= note.hitHealth * healthGain;
 
 			if(!note.noAnimation) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
 				if (allowHarmonyEffect && !note.isSustainNote)
 				{
-					if (!note.gfNote)
+					if (!inverse && !note.gfNote)
 					{
 						savedAnimationsBF.insert(savedAnimationsBF.length + 1, animToPlay + note.animSuffix);
+					} else if (inverse && !note.gfNote)
+					{
+						savedAnimationsDAD.insert(savedAnimationsDAD.length + 1, animToPlay + note.animSuffix);
 					} else if (note.gfNote && gf != null)
 					{
 						savedAnimationsGF.insert(savedAnimationsGF.length + 1, animToPlay + note.animSuffix);
 					}
 				}
-
 				if(note.gfNote)
 				{
 					if(gf != null)
@@ -5856,22 +5862,17 @@ class PlayState extends MusicBeatState
 				{
 					if (!isStoryMode)
 					{
-						/*
-						if (!FreeplayState.inverse)
+						if (!inverse)
 						{
 							boyfriend.playAnim(animToPlay + note.animSuffix, true);
 							boyfriend.holdTimer = 0;
 						} else {
 							if (dad != null)
 							{
-								dad.playAnim(animToPlay, true);
+								dad.playAnim(animToPlay + note.animSuffix, true);
 								dad.holdTimer = 0;
 							}
 						}
-						*/
-
-						boyfriend.playAnim(animToPlay + note.animSuffix, true);
-						boyfriend.holdTimer = 0;
 					}
 				}
 
@@ -5914,9 +5915,12 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				moveCameraSection(0, true);
-				if (allowHarmonyEffect && savedAnimationsBF.length >= 2)
+				if (allowHarmonyEffect && !inverse && savedAnimationsBF.length >= 2)
 				{
 					hasMoreAnimationsBF = true;
+				} else if (allowHarmonyEffect && inverse && savedAnimationsDAD.length >= 2)
+				{
+					hasMoreAnimationsDAD = true;
 				} else if (allowHarmonyEffect && savedAnimationsGF.length >= 2)
 				{
 					hasMoreAnimationsGF = true;
@@ -6376,7 +6380,7 @@ class PlayState extends MusicBeatState
 	function StrumPlayAnim(isDad:Bool, id:Int, time:Float) {
 		var spr:StrumNote = null;
 		if(isDad) {
-			spr = strumLineNotes.members[id];
+			spr = opponentStrums.members[id];
 		} else {
 			spr = playerStrums.members[id];
 		}

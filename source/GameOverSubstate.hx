@@ -55,16 +55,19 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
 
+		boyfriend.visible = !PlayState.instance.inverse;
+
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
-		FlxG.sound.play(Paths.sound(deathSoundName));
+		if ((!PlayState.instance.inverse) || (PlayState.instance.inverse && deathSoundName != 'fnf_loss_sfx')) FlxG.sound.play(Paths.sound(deathSoundName)) else if (PlayState.instance.inverse) FlxG.sound.play(Paths.sound('opponentDeath'));
+		
 		Conductor.changeBPM(100);
 		// FlxG.camera.followLerp = 1;
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
 
-		boyfriend.playAnim('firstDeath');
+		boyfriend.playAnim('firstDeath', false, false, !PlayState.instance.inverse ? 0 : 42);
 
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
@@ -163,17 +166,28 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		if (!isEnding)
 		{
-			isEnding = true;
-			boyfriend.playAnim('deathConfirm', true);
-			FlxG.sound.music.stop();
-			FlxG.sound.play(Paths.music(endSoundName));
-			new FlxTimer().start(0.7, function(tmr:FlxTimer)
+			if (!PlayState.instance.inverse)
 			{
+				isEnding = true;
+				boyfriend.playAnim('deathConfirm', true);
+				FlxG.sound.music.stop();
+				FlxG.sound.play(Paths.music(endSoundName));
+				new FlxTimer().start(0.7, function(tmr:FlxTimer)
+				{
+					FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
+					{
+						MusicBeatState.resetState();
+					});
+				});
+			} else
+			{
+				FlxTween.tween(FlxG.sound.music, {volume: 0}, 2);
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
 					MusicBeatState.resetState();
 				});
-			});
+			}
+			
 			PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
 		}
 	}

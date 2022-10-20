@@ -174,6 +174,7 @@ class FunkinLua {
 		set('instakillOnMiss', PlayState.instance.instakillOnMiss);
 		set('botPlay', PlayState.instance.cpuControlled);
 		set('practice', PlayState.instance.practiceMode);
+		set('playAsOpponent', PlayState.instance.inverse);
 
 		for (i in 0...4) {
 			set('defaultPlayerStrumX' + i, 0);
@@ -1877,7 +1878,7 @@ class FunkinLua {
 			cam.bgColor.alpha = 0;
 			PlayState.instance.modchartCameras.set(tag, cam);
 		});
-		Lua_helper.add_callback(lua, "addCamera", function(tag:String) {
+		Lua_helper.add_callback(lua, "addCamera", function(tag:String, who:String, inFront:Bool = false) {
 			var cam:FlxCamera = PlayState.instance.modchartCameras.get(tag);
 			FlxG.cameras.add(cam);
 		});
