@@ -175,6 +175,9 @@
 
 	<!--Allow working memory greater than 1 Gig-->
 	<!--haxedef name="HXCPP_GC_BIG_BLOCKS"-->
+
+	<!-- No deprecation warnings. -->
+	<haxedef name="no-deprecation-warnings"/>
 	
 	<!-- Show debug traces for hxCodec -->
 	<haxedef name="HXC_DEBUG_TRACE" if="debug" />
@@ -188,6 +191,10 @@
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
 	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER" />
+
+	<!--Tooked from Hope-Engine, it's actually useful :troooollllll-->
+	<!-- I was trying to make it so it'd give you an error if your not using NebulaZoruas fork of linc_luajit but I couldn't figure it out. -->
+	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

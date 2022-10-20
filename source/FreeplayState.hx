@@ -254,6 +254,11 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+		#if !switch
+		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+		intendedFC = Highscore.getFC(songs[curSelected].songName, curDifficulty);
+		#end
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
@@ -463,12 +468,6 @@ class FreeplayState extends MusicBeatState
 
 		lastDifficultyName = CoolUtil.difficulties[curDifficulty];
 
-		#if !switch
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-		intendedFC = Highscore.getFC(songs[curSelected].songName, curDifficulty);
-		#end
-
 		PlayState.storyDifficulty = curDifficulty;
 		diffText.text = '< ' + CoolUtil.difficultyString() + ' >';
 		positionHighscore();
@@ -499,12 +498,6 @@ class FreeplayState extends MusicBeatState
 		}
 
 		// selector.y = (70 * curSelected) + 30;
-
-		#if !switch
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getFC(songs[curSelected].songName, curDifficulty);
-		#end
 
 		var bullShit:Int = 0;
 
