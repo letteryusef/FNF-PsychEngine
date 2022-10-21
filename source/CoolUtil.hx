@@ -282,6 +282,17 @@ class CoolUtil
 		return xArray;
 	}
 
+	/**
+		Classic equation to resolve Quadratic Function Math.
+	**/
+	public static inline function vertexQuad(a:Float, b:Float, c:Float):Array<Float>
+	{
+		var xArray:Array<Float> = [];
+		xArray.insert(xArray.length + 1, -b / 2 * a);
+		xArray.insert(xArray.length + 1, -delta(a, b, c) / 4 * a);
+		return xArray;
+	}
+
 	public static function adjustFPS(num:Float):Float // from ANDROMEDA ENGINE
 	{
 		return FlxG.elapsed / (1 / 60) * num;
