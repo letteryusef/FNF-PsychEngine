@@ -263,7 +263,27 @@ class CoolUtil
 		}
 	}
 
-	public static function adjustFPS(num:Float):Float{ // from ANDROMEDA ENGINE
-		return FlxG.elapsed / (1/60) * num;
+	/**
+		Little equation used for Bhaskara Equation.
+	**/
+	public static inline function delta(a:Float, b:Float, c:Float):Float
+	{
+		return Math.pow(b, 2) - 4 * a * c;
+	}
+
+	/**
+		Classic equation to resolve 2° Degree Math.
+	**/
+	public static inline function bhaskara(a:Float, b:Float, c:Float):Array<Float>
+	{
+		var xArray:Array<Float> = [];
+		xArray.insert(xArray.length + 1, (-b + Math.sqrt(delta(a, b, c))) / 2 * a);
+		xArray.insert(xArray.length + 1, (-b - Math.sqrt(delta(a, b, c))) / 2 * a);
+		return xArray;
+	}
+
+	public static function adjustFPS(num:Float):Float // from ANDROMEDA ENGINE
+	{
+		return FlxG.elapsed / (1 / 60) * num;
 	}
 }

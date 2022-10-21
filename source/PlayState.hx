@@ -2412,8 +2412,9 @@ class PlayState extends MusicBeatState
 		if(ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
-			generateStaticArrows(0);
-			generateStaticArrows(1);
+			// changing the order of the shit
+			generateStaticArrows(!inverse ? 0 : 1);
+			generateStaticArrows(!inverse ? 1 : 0);
 			for (i in 0...playerStrums.length) {
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
@@ -3652,7 +3653,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		if (lastNote && !SONG.notes[curSection].mustHitSection)
+		if (lastNote && ((!inverse && !SONG.notes[curSection].mustHitSection) || (inverse && SONG.notes[curSection].mustHitSection)))
 		{
 			if (fuckinBool)
 			{
@@ -4663,7 +4664,7 @@ class PlayState extends MusicBeatState
 				#if !switch
 				var percent:Float = ratingPercent;
 				if(Math.isNaN(percent)) percent = 0;
-				Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent, curFC);
+				if(!inverse) Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent, curFC);
 				#end
 			}
 			playbackRate = 1;
@@ -4698,7 +4699,7 @@ class PlayState extends MusicBeatState
 
 						if (SONG.validScore)
 						{
-							Highscore.saveWeekScore(WeekData.getWeekFileName(), campaignScore, storyDifficulty);
+							if(!inverse) Highscore.saveWeekScore(WeekData.getWeekFileName(), campaignScore, storyDifficulty);
 						}
 
 						FlxG.save.data.weekCompleted = StoryMenuState.weekCompleted;
@@ -5532,7 +5533,7 @@ class PlayState extends MusicBeatState
 		});
 		if (!boyfriend.stunned)
 		{
-			ouchUI.alpha = 1 * ClientPrefs.healthBarAlpha;
+			ouchUI.alpha = 1 * healthBar.alpha;
 
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
 			{
@@ -5588,7 +5589,7 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			healthbarshake(0.6);
-			ouchUI.alpha = 1 * ClientPrefs.healthBarAlpha;
+			ouchUI.alpha = 1 * healthBar.alpha;
 			health -= 0.05 * healthLoss;
 			if(instakillOnMiss)
 			{
@@ -5693,7 +5694,12 @@ class PlayState extends MusicBeatState
 	function opponentNoteHit(note:Note):Void
 	{
 		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
-			camZooming = true;
+		{
+			if (!inverse)
+			{
+				camZooming = true;
+			}
+		}
 
 		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
@@ -5777,6 +5783,14 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
+		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
+		{
+			if (inverse)
+			{
+				camZooming = true;
+			}
+		}
+		
 		if (!note.wasGoodHit)
 		{
 			if(cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
@@ -5826,7 +5840,7 @@ class PlayState extends MusicBeatState
 				} else if (ClientPrefs.comboType == "GoofyAAHText") {
 					setUpGoofyText(false, note);
 				}
-				if (!lastNote && showNoteCombo && SONG.notes[curSection].mustHitSection && noteComboNumberlol > 5)
+				if (!lastNote && showNoteCombo && ((!inverse && SONG.notes[curSection].mustHitSection) || (inverse && !SONG.notes[curSection].mustHitSection)) && noteComboNumberlol > 5)
 				{
 					lastNote = true;
 					fuckinBool = true;
