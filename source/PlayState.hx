@@ -333,6 +333,8 @@ class PlayState extends MusicBeatState
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 
+	public var songScoreDisplay:Int = 0;
+
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
@@ -2620,11 +2622,6 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + ratingName
-		+ (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
-
 		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
 		{
 			if(scoreTxtTween != null) {
@@ -3399,6 +3396,10 @@ class PlayState extends MusicBeatState
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+
+		songScoreDisplay = Math.floor(FlxMath.lerp(songScore, songScoreDisplay, CoolUtil.boundTo(1 - (elapsed * 24), 0, 1)));
+
+		scoreTxt.text = 'Score: ' + songScoreDisplay + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
 
 		if (health > 2) health = 2;
 
@@ -5855,18 +5856,15 @@ class PlayState extends MusicBeatState
 				char = gf;
 			}
 
-			if (!isStoryMode)
+			if (inverse)
 			{
-				if (inverse)
+				boyfriend.playAnim(animToPlay, true);
+				boyfriend.holdTimer = 0;
+			} else {
+				if(char != null)
 				{
-					boyfriend.playAnim(animToPlay, true);
-					boyfriend.holdTimer = 0;
-				} else {
-					if(char != null)
-					{
-						char.playAnim(animToPlay, true);
-						char.holdTimer = 0;
-					}
+					char.playAnim(animToPlay, true);
+					char.holdTimer = 0;
 				}
 			}
 		}
@@ -6001,18 +5999,15 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					if (!isStoryMode)
+					if (!inverse)
 					{
-						if (!inverse)
+						boyfriend.playAnim(animToPlay + note.animSuffix, true);
+						boyfriend.holdTimer = 0;
+					} else {
+						if (dad != null)
 						{
-							boyfriend.playAnim(animToPlay + note.animSuffix, true);
-							boyfriend.holdTimer = 0;
-						} else {
-							if (dad != null)
-							{
-								dad.playAnim(animToPlay + note.animSuffix, true);
-								dad.holdTimer = 0;
-							}
+							dad.playAnim(animToPlay + note.animSuffix, true);
+							dad.holdTimer = 0;
 						}
 					}
 				}
