@@ -14,6 +14,7 @@ class InputTextFix extends FlxUIInputText
 {	
 	public static var isTyping:Bool = false;
 	public static var texts:Array<InputTextFix> = [];
+	public var onClick:Void->Void = null;
 	public var exclusions:String = null;
 	
 	public function new(X:Float = 0, Y:Float = 0, Width:Int = 150, ?Text:String, size:Int = 8, TextColor:Int = FlxColor.BLACK,
@@ -42,6 +43,7 @@ class InputTextFix extends FlxUIInputText
 				hasFocus = true;
 				if (!hadFocus && focusGained != null)
 					focusGained();
+					if(onClick != null) onClick();
 			}
 			else
 			{

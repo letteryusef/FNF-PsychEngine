@@ -7,8 +7,10 @@ import editors.ChartingState;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxObject;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
@@ -58,6 +60,7 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
+	var searchUIIcon:FlxSprite;
 	var searchUIGroup:FlxSpriteGroup;
 	var searchModInput:InputTextFix;
 	var inst:FlxText;
@@ -233,12 +236,18 @@ class FreeplayState extends MusicBeatState
 		searchModInput.offset.y = -2;
 		searchModInput.callback = updateSearch;
 		searchModInput.exclusions = "!@#$%¨&*()`{}[]~^;:+=§<>?°/,.|'§ªº";
+		searchModInput.onClick = tweenSearchIcon;
 		@:privateAccess
 		searchModInput.backgroundSprite.alpha = 0;
+
+		searchUIIcon = new FlxSprite(searchInputBG.x - 54, searchInputBG.y - 2, Paths.image('ui/search'));
+		searchUIIcon.offset.set(0, 0);
+		FlxMouseEventManager.add(searchUIIcon, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
 
 		searchUIGroup.add(searchInputBG);
 		searchUIGroup.add(inst);
 		searchUIGroup.add(searchModInput);
+		searchUIGroup.add(searchUIIcon);
 		add(searchUIGroup);
 
 		super.create();
@@ -276,18 +285,43 @@ class FreeplayState extends MusicBeatState
 		}
 	}*/
 
+	var mouseOn:Bool = false;
+	var searchIconTween:FlxTween;
+	function tweenSearchIcon():Void
+	{
+		if (searchIconTween != null) searchIconTween.cancel();
+		searchUIIcon.scale.set(1.16, 1.16);
+		searchIconTween = FlxTween.tween(searchUIIcon.scale, {x: 1, y: 1}, 0.8, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween)
+		{
+			searchIconTween = null;
+		}});
+	}
+
+	function onMouseDown(object:FlxObject){}
+
+	function onMouseUp(object:FlxObject){}
+
+	function onMouseOver(object:FlxObject){ mouseOn = true; }
+
+	function onMouseOut(object:FlxObject){ mouseOn = false; }
+
 	var leInputText:String = "";
+	var canCancel:Bool = false;
 	// FOR SEARCH FUNCTION
 	function updateSearch(_, _):Void
 	{
 		if (searchModInput.text.length < 1)
 		{
 			inst.visible = true;
+			searchUIIcon.loadGraphic(Paths.image('ui/search'));
+			canCancel = false;
 			regenerateLeSongs();
 			return;
 		}
 		else
 			inst.visible = false;
+			searchUIIcon.loadGraphic(Paths.image('ui/cancel'));
+			canCancel = true;
 			leInputText = searchModInput.text;
 			regenerateLeSongs(false);
 	}
@@ -313,7 +347,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (noneSongs) addSong('NONE', 0, 'face', Std.parseInt('0xFFD2D2D2'));
+		if (noneSongs) addSong('NONE', 0, 'unknown', Std.parseInt('0xFFD2D2D2'));
 
 		curSelected = 0;
 
@@ -349,6 +383,12 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (FlxG.mouse.justPressed && mouseOn && canCancel)
+		{
+			searchModInput.text = "";
+			updateSearch(null, null);
+		}
+
 		if ((FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN || FlxG.mouse.wheel != 0) && InputTextFix.isTyping)
 		{
 			InputTextFix.isTyping = false;
