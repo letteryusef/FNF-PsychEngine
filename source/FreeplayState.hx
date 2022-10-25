@@ -134,6 +134,7 @@ class FreeplayState extends MusicBeatState
 			songText.isMenuItem = true;
 			songText.targetY = i - curSelected;
 			grpSongs.add(songText);
+			FlxMouseEventManager.add(songText, onMouseDown, onMouseUp, onMouseOverFreeplay, onMouseOutFreeplay);
 
 			var maxWidth = 980;
 			if (songText.width > maxWidth)
@@ -149,6 +150,7 @@ class FreeplayState extends MusicBeatState
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
+			FlxMouseEventManager.add(icon, onMouseDown, onMouseUp, onMouseOverFreeplay, onMouseOutFreeplay);
 
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
@@ -259,9 +261,10 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int, ?targetArray:Array<SongMetadata>)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
+		var songArray:Array<SongMetadata> = targetArray != null ? targetArray : songs;
+		songArray.push(new SongMetadata(songName, weekNum, songCharacter, color));
 	}
 
 	function weekIsLocked(name:String):Bool {
@@ -286,6 +289,7 @@ class FreeplayState extends MusicBeatState
 	}*/
 
 	var mouseOn:Bool = false;
+	var mouseOnSong:Bool = false;
 	var searchIconTween:FlxTween;
 	function tweenSearchIcon():Void
 	{
@@ -305,25 +309,33 @@ class FreeplayState extends MusicBeatState
 
 	function onMouseOut(object:FlxObject){ mouseOn = false; }
 
+	function onMouseOverFreeplay(object:FlxObject){ mouseOnSong = true; }
+
+	function onMouseOutFreeplay(object:FlxObject){ mouseOnSong = false; }
+
 	var leInputText:String = "";
 	var canCancel:Bool = false;
 	// FOR SEARCH FUNCTION
 	function updateSearch(_, _):Void
 	{
-		if (searchModInput.text.length < 1)
+		if (!FlxG.keys.justPressed.ENTER || !FlxG.keys.justPressed.ESCAPE)
 		{
-			inst.visible = true;
-			searchUIIcon.loadGraphic(Paths.image('ui/search'));
-			canCancel = false;
-			regenerateLeSongs();
-			return;
+			if (searchModInput.text.length < 1)
+			{
+				inst.visible = true;
+				searchUIIcon.loadGraphic(Paths.image('ui/search'));
+				canCancel = false;
+				regenerateLeSongs();
+				return;
+			}
+			else
+				inst.visible = false;
+				searchUIIcon.loadGraphic(Paths.image('ui/cancel'));
+				canCancel = true;
+				leInputText = searchModInput.text;
+				regenerateLeSongs(false);
+				return;
 		}
-		else
-			inst.visible = false;
-			searchUIIcon.loadGraphic(Paths.image('ui/cancel'));
-			canCancel = true;
-			leInputText = searchModInput.text;
-			regenerateLeSongs(false);
 	}
 
 	var noneSongs:Bool = false;
@@ -336,18 +348,24 @@ class FreeplayState extends MusicBeatState
 		}
 		iconArray = [];
 		songs = [];
-		noneSongs = true;
-
-		for (i in 0...cacheSongs.length)
+		
+		if (!isNormal)
 		{
-			if ((!isNormal && cacheSongs[i].songName.toLowerCase().startsWith(leInputText.toLowerCase())) || (isNormal))
-			{
-				songs.push(cacheSongs[i]);
-				noneSongs = false;
-			}
-		}
+			noneSongs = true;
 
-		if (noneSongs) addSong('NONE', 0, 'unknown', Std.parseInt('0xFFD2D2D2'));
+			for (i in 0...cacheSongs.length)
+			{
+				if (cacheSongs[i].songName.toLowerCase().startsWith(leInputText.toLowerCase()))
+				{
+					songs.push(cacheSongs[i]);
+					noneSongs = false;
+				}
+			}
+
+			if (noneSongs) addSong('NONE', 0, 'unknown', Std.parseInt('0xFFD2D2D2'));
+		} else {
+			songs = cacheSongs;
+		}
 
 		curSelected = 0;
 
@@ -357,6 +375,7 @@ class FreeplayState extends MusicBeatState
 			songText.isMenuItem = true;
 			songText.targetY = i - curSelected;
 			grpSongs.add(songText);
+			FlxMouseEventManager.add(songText, onMouseDown, onMouseUp, onMouseOverFreeplay, onMouseOutFreeplay);
 			
 			var maxWidth = 980;
 			if (songText.width > maxWidth)
@@ -371,6 +390,7 @@ class FreeplayState extends MusicBeatState
 		
 			iconArray.push(icon);
 			insert(members.indexOf(grpSongs) + 1, icon);
+			FlxMouseEventManager.add(icon, onMouseDown, onMouseUp, onMouseOverFreeplay, onMouseOutFreeplay);
 		}
 		WeekData.setDirectoryFromWeek();
 
@@ -422,19 +442,19 @@ class FreeplayState extends MusicBeatState
 			scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%) - ' + ratingFC[Std.int(intendedFC)];
 			positionHighscore();
 		}
+
+		if(persistentUpdate) CoolUtil.setWindowTitle('FreePlay: ' + songs[curSelected].songName.toUpperCase());
 		
 		if (!InputTextFix.isTyping)
 		{
 			var upP = controls.UI_UP_P;
 			var downP = controls.UI_DOWN_P;
-			var accepted = controls.ACCEPT;
+			var accepted = ((controls.ACCEPT) || (FlxG.mouse.justPressed && mouseOnSong));
 			var space = FlxG.keys.justPressed.SPACE;
 			var ctrl = FlxG.keys.justPressed.CONTROL;
 
 			var shiftMult:Int = 1;
 			if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
-
-			if(persistentUpdate) CoolUtil.setWindowTitle('FreePlay: ' + songs[curSelected].songName.toUpperCase());
 
 			if(songs.length > 1)
 			{
@@ -539,9 +559,6 @@ class FreeplayState extends MusicBeatState
 				PlayState.storyDifficulty = curDifficulty;
 
 				trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
 				
 				if (FlxG.sound.music != null) FlxTween.tween(FlxG.sound.music, {volume: 0, pitch: 0.92}, 1.4, {ease: FlxEase.expoOut});
 

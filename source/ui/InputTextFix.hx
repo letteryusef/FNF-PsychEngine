@@ -16,6 +16,7 @@ class InputTextFix extends FlxUIInputText
 	public static var texts:Array<InputTextFix> = [];
 	public var onClick:Void->Void = null;
 	public var exclusions:String = null;
+	public var allowFinishEnter:Bool = true;
 	
 	public function new(X:Float = 0, Y:Float = 0, Width:Int = 150, ?Text:String, size:Int = 8, TextColor:Int = FlxColor.BLACK,
 		BackgroundColor:Int = FlxColor.WHITE, EmbeddedFont:Bool = true)
@@ -32,11 +33,11 @@ class InputTextFix extends FlxUIInputText
 		var m = FlxG.mouse.getScreenPosition(camera);
 		var s = getScreenPosition(camera);
 
+		var hadFocus:Bool = hasFocus;
+
 		#if FLX_MOUSE
 		if (FlxG.mouse.justPressed)
-		{
-			var hadFocus:Bool = hasFocus;
-			
+		{	
 			if ((m.x >= x && m.x <= s.x + width) && (m.y >= s.y && m.y <= s.y + height))
 			{
 				caretIndex = getCharIndexAtPoint(m.x - s.x, m.y - s.x);
@@ -59,6 +60,13 @@ class InputTextFix extends FlxUIInputText
 		
 		// CTRL+SHIFT+ALT+B changes the text to crochet value in seconds
 		// CTRL+SHIFT+ALT+S changes the text to step crochet value in seconds
+
+		if (FlxG.keys.justPressed.ESCAPE || (FlxG.keys.justPressed.ENTER && allowFinishEnter))
+		{
+			hasFocus = false;
+			if (hadFocus && focusLost != null)
+				focusLost();
+		}
 		
 		if (FlxG.keys.pressed.CONTROL && hasFocus)
 		{
