@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
+import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
@@ -34,6 +35,8 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+	var canToggleFullscreen:Bool = false;
+	public static var fullscreenKeys:Array<Null<FlxKey>>;
 	public static var fpsVar:FPS;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -64,7 +67,12 @@ class Main extends Sprite
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 
+		ClientPrefs.loadDefaultKeys();
+		#if (windows && cpp) WindowsData.setWindowColorMode(ClientPrefs.darkTheme ? DARK : LIGHT); #end
+
 		setupGame();
+
+		addEventListener(Event.ENTER_FRAME, update);
 	}
 
 	private function setupGame():Void
@@ -80,8 +88,9 @@ class Main extends Sprite
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
-	
-		ClientPrefs.loadDefaultKeys();
+
+		canToggleFullscreen = true;
+
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
@@ -99,8 +108,32 @@ class Main extends Sprite
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+	}
 
-		#if (windows && cpp) WindowsData.setWindowColorMode(ClientPrefs.darkTheme ? DARK : LIGHT); #end
+	public function update(e:Event)
+	{
+		if (FlxG.keys == null)
+			return;
+
+		if (fullscreenKeys != null)
+		{
+			var lastPressed:FlxKey = FlxG.keys.firstJustPressed();
+
+			if (!fullscreenKeys.contains(lastPressed))
+				return;
+
+			for (key in fullscreenKeys)
+			{
+				if (key == null || key == FlxKey.NONE)
+					continue;
+
+				if (key == lastPressed)
+				{
+					FlxG.fullscreen = !FlxG.fullscreen;
+					break;
+				}
+			}
+		}
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

@@ -52,6 +52,9 @@ class ControlsSubState extends MusicBeatSubstate {
 		['Back', 'back'],
 		['Pause', 'pause'],
 		[''],
+		['FULLSCREEN'],
+		['Keybinds', 'fullscreen'],
+		[''],
 		['VOLUME'],
 		['Mute', 'volume_mute'],
 		['Up', 'volume_up'],
@@ -72,7 +75,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		super();
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xff764ad4;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
@@ -97,7 +100,6 @@ class ControlsSubState extends MusicBeatSubstate {
 				optionText.y -= 55;
 				optionText.startPosition.y -= 55;
 			}
-			optionText.changeX = false;
 			optionText.distancePerItem.y = 60;
 			optionText.targetY = i - curSelected;
 			optionText.snapToPosition();

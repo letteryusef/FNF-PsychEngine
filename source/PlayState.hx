@@ -3416,7 +3416,7 @@ class PlayState extends MusicBeatState
 
 		if (msTimingText.alpha > 0 && !cpuControlled)
 		{
-			msTimingText.alpha -= 0.04;
+			msTimingText.alpha -= 0.01;
 		}
 
 		if (health > 2) health = 2;
@@ -5045,11 +5045,11 @@ class PlayState extends MusicBeatState
 				msTimingText.color = FlxColor.CYAN;
 		}
 		msTimingText.x = (playerStrums.members[1].x + (playerStrums.members[2].x - playerStrums.members[1].x) - (msTimingText.width / 4)) - 18;
-		msTimingText.y = playerStrums.members[1].y - 28;
+		msTimingText.y = playerStrums.members[1].y - 32;
 		msTimingText.text = msTiming + 'ms';
 
 		if (msTween != null) msTween.cancel();
-		msTween = FlxTween.tween(msTimingText, {y: playerStrums.members[1].y - 24}, 0.2 / playbackRate, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween) {
+		msTween = FlxTween.tween(msTimingText, {y: playerStrums.members[1].y - 24}, 0.2 / playbackRate, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween) {
 			msTween = null;
 		}});
 

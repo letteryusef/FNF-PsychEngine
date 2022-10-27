@@ -87,6 +87,8 @@ class ClientPrefs {
 		'back'			=> [BACKSPACE, ESCAPE],
 		'pause'			=> [ENTER, ESCAPE],
 		'reset'			=> [R, NONE],
+
+		'fullscreen'	=> [F11, NONE],
 		
 		'volume_mute'	=> [ZERO, NONE],
 		'volume_up'		=> [NUMPADPLUS, PLUS],
@@ -361,6 +363,7 @@ class ClientPrefs {
 		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
 		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));
 		TitleState.volumeUpKeys = copyKey(keyBinds.get('volume_up'));
+		Main.fullscreenKeys = copyKey(keyBinds.get('fullscreen'));
 		FlxG.sound.muteKeys = TitleState.muteKeys;
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
