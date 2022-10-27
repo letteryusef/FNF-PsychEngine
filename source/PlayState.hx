@@ -500,11 +500,9 @@ class PlayState extends MusicBeatState
 		camHUD.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
 		camStrum.bgColor.alpha = 0;
-		camStrum.alpha = 0.8;
 		camHold.bgColor.alpha = 0;
 		camNote.bgColor.alpha = 0;
 
-		callOnLuas('onAddingCameraBefore', []);
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camStrum);
