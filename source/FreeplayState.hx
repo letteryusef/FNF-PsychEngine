@@ -39,6 +39,7 @@ class FreeplayState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
+	public static var savedSearch:String = '';
 	
 	public var ratingFC:Array<String> = ['N/A', 'SDCB', 'FC', 'GFC', 'SFC']; // for lua editing
 
@@ -239,6 +240,8 @@ class FreeplayState extends MusicBeatState
 		searchModInput.callback = updateSearch;
 		searchModInput.exclusions = "!@#$%¨&*()`{}[]~^;:+=§<>?°/,.|'§ªº";
 		searchModInput.onClick = tweenSearchIcon;
+		searchModInput.text = savedSearch;
+		if (savedSearch != '') updateSearch(null, null);
 		@:privateAccess
 		searchModInput.backgroundSprite.alpha = 0;
 
@@ -318,19 +321,20 @@ class FreeplayState extends MusicBeatState
 	// FOR SEARCH FUNCTION
 	function updateSearch(_, _):Void
 	{
-		if (!FlxG.keys.justPressed.ENTER || !FlxG.keys.justPressed.ESCAPE)
+		if (!FlxG.keys.pressed.ENTER || !FlxG.keys.pressed.ESCAPE)
 		{
+			savedSearch = searchModInput.text;
+			graphicAction = true;
+
 			if (searchModInput.text.length < 1)
 			{
 				inst.visible = true;
-				searchUIIcon.loadGraphic(Paths.image('ui/search'));
 				canCancel = false;
 				regenerateLeSongs();
 				return;
 			}
 			else
 				inst.visible = false;
-				searchUIIcon.loadGraphic(Paths.image('ui/cancel'));
 				canCancel = true;
 				leInputText = searchModInput.text;
 				regenerateLeSongs(false);
@@ -367,7 +371,9 @@ class FreeplayState extends MusicBeatState
 			songs = cacheSongs;
 		}
 
-		curSelected = 0;
+		if (curSelected >= songs.length) curSelected = 0;
+
+		bg.color = songs[curSelected].color;
 
 		for (i in 0...songs.length)
 		{
@@ -401,12 +407,23 @@ class FreeplayState extends MusicBeatState
 	var instPlaying:Int = -1;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
+	var graphicAction:Bool = false;
 	override function update(elapsed:Float)
 	{
 		if (FlxG.mouse.justPressed && mouseOn && canCancel)
 		{
 			searchModInput.text = "";
 			updateSearch(null, null);
+		}
+
+		// this prevents crash on updateSearch()
+		if (searchModInput.text.length < 1 && graphicAction)
+		{
+			searchUIIcon.loadGraphic(Paths.image('ui/search'));
+			graphicAction = false;
+		} else if (searchModInput.text.length >= 1 && graphicAction) {
+			searchUIIcon.loadGraphic(Paths.image('ui/cancel'));
+			graphicAction = false;
 		}
 
 		if ((FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN || FlxG.mouse.wheel != 0) && InputTextFix.isTyping)

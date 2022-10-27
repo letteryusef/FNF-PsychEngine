@@ -402,6 +402,9 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
+	// ms rating
+	var msTimingText:FlxText;
+
 	//???
 	var fightMode:Bool = false;
 	var leShader:FlxRuntimeShader; // le shader tutorial yeaha
@@ -1425,6 +1428,15 @@ class PlayState extends MusicBeatState
 			noteShitNum.active = false;
 		}
 
+		msTimingText = new FlxText(0, 0, 0, "0ms");
+		msTimingText.color = FlxColor.WHITE;
+		msTimingText.borderStyle = OUTLINE;
+		msTimingText.borderSize = 1;
+		msTimingText.borderColor = FlxColor.BLACK;
+		msTimingText.size = 20;
+		msTimingText.alpha = 0;
+		add(msTimingText);
+
 		CoolUtil.precacheSound('noteComboSound');
 
 		if (showNowPlaying)
@@ -1474,6 +1486,7 @@ class PlayState extends MusicBeatState
 			nowPlaying.cameras = [camOther];
 		}
 		noteShit.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
+		msTimingText.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -2415,8 +2428,8 @@ class PlayState extends MusicBeatState
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			// changing the order of the shit
-			generateStaticArrows(!inverse ? 0 : 1);
-			generateStaticArrows(!inverse ? 1 : 0);
+			generateStaticArrows(0);
+			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
@@ -3400,6 +3413,11 @@ class PlayState extends MusicBeatState
 		songScoreDisplay = Math.floor(FlxMath.lerp(songScore, songScoreDisplay, CoolUtil.boundTo(1 - (elapsed * 24), 0, 1)));
 
 		scoreTxt.text = 'Score: ' + songScoreDisplay + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
+
+		if (msTimingText.alpha > 0 && !cpuControlled)
+		{
+			msTimingText.alpha -= 0.04;
+		}
 
 		if (health > 2) health = 2;
 
@@ -4834,6 +4852,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	var msTween:FlxTween;
 	private function popUpScore(note:Note = null):Void
 	{
 		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
@@ -5013,6 +5032,26 @@ class PlayState extends MusicBeatState
 
 		coolText.text = Std.string(seperatedScore);
 		// add(coolText);
+
+		var msTiming:Int = Std.int(noteDiff / playbackRate);
+		if (cpuControlled) msTiming = 0 else msTimingText.alpha = 1;
+		switch(daRating.name)
+		{
+			case 'shit' | 'bad':
+				msTimingText.color = FlxColor.RED;
+			case 'good':
+				msTimingText.color = FlxColor.LIME;
+			case 'sick':
+				msTimingText.color = FlxColor.CYAN;
+		}
+		msTimingText.x = (playerStrums.members[1].x + (playerStrums.members[2].x - playerStrums.members[1].x) - (msTimingText.width / 4)) - 18;
+		msTimingText.y = playerStrums.members[1].y - 28;
+		msTimingText.text = msTiming + 'ms';
+
+		if (msTween != null) msTween.cancel();
+		msTween = FlxTween.tween(msTimingText, {y: playerStrums.members[1].y - 24}, 0.2 / playbackRate, {ease: FlxEase.quintOut, onComplete: function(twn:FlxTween) {
+			msTween = null;
+		}});
 
 		FlxTween.tween(rating, {alpha: 0}, 0.2 / playbackRate, {
 			startDelay: Conductor.crochet * 0.001 / playbackRate
