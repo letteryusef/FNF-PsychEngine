@@ -522,7 +522,7 @@ class PlayState extends MusicBeatState
 			camStrum.setFilters([effectMosaic]);
 			camHold.setFilters([effectMosaic]);
 			camNote.setFilters([effectMosaic]);
-			camOther.setFilters([effectMosaic]); // hi my name is carmen wistead, AAAAAAAAUUUGGGGH.
+			camOther.setFilters([effectMosaic]); // hi my name is carmen winstead, AAAAAAAAUUUGGGGH.
 		}
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
