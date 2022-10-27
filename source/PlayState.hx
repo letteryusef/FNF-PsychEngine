@@ -130,6 +130,7 @@ class PlayState extends MusicBeatState
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camHoldShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camNoteShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camOtherShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	#else
@@ -149,6 +150,7 @@ class PlayState extends MusicBeatState
 	public var camGameShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camHUDShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camStrumShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
+	public var camHoldShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camNoteShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	public var camOtherShaders:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 	#end
@@ -270,6 +272,7 @@ class PlayState extends MusicBeatState
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camStrum:FlxCamera;
+	public var camHold:FlxCamera;
 	public var camNote:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
@@ -490,18 +493,22 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
-		camNote = new FlxCamera();
 		camStrum = new FlxCamera();
+		camHold = new FlxCamera();
+		camNote = new FlxCamera();
 		camOther = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
-		camNote.bgColor.alpha = 0;
 		camStrum.bgColor.alpha = 0;
+		camStrum.alpha = 0.8;
+		camHold.bgColor.alpha = 0;
+		camNote.bgColor.alpha = 0;
 
 		callOnLuas('onAddingCameraBefore', []);
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camStrum);
+		FlxG.cameras.add(camHold);
 		FlxG.cameras.add(camNote);
 		FlxG.cameras.add(camOther);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
@@ -515,6 +522,7 @@ class PlayState extends MusicBeatState
 			camGame.setFilters([effectMosaic]);
 			camHUD.setFilters([effectMosaic]);
 			camStrum.setFilters([effectMosaic]);
+			camHold.setFilters([effectMosaic]);
 			camNote.setFilters([effectMosaic]);
 			camOther.setFilters([effectMosaic]); // hi my name is carmen wistead, AAAAAAAAUUUGGGGH.
 		}
@@ -1221,7 +1229,7 @@ class PlayState extends MusicBeatState
 		    wiggleShit.waveSpeed = 1.8; // fasto
 		    wiggleShit.shader.uTime.value = [(strumLine.y - Note.swagWidth * 4) / FlxG.height]; // from 4mbr0s3 2
 		    susWiggle = new ShaderFilter(wiggleShit.shader);
-		    camStrum.setFilters([susWiggle]); // only enable it for snake notes
+		    camHold.setFilters([susWiggle]); // only enable it for snake notes
 		}
 
 		if(ClientPrefs.timeBarType == 'Song Name')
@@ -1467,8 +1475,8 @@ class PlayState extends MusicBeatState
 			CoolUtil.setWindowAnimatedTitle(' - ' + SONG.song.toUpperCase() + " [" + CoolUtil.difficulties[PlayState.storyDifficulty].toUpperCase() + "]", 0.06, '', '', false);
 		}
 
-		strumLineNotes.cameras = [camHUD];
-		grpNoteSplashes.cameras = [camHUD];
+		strumLineNotes.cameras = [camStrum];
+		grpNoteSplashes.cameras = [camNote];
 		notes.cameras = [camNote];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -2846,7 +2854,7 @@ class PlayState extends MusicBeatState
 						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
-						sustainNote.cameras = [camStrum];
+						sustainNote.cameras = [camHold];
 						swagNote.tail.push(sustainNote);
 						sustainNote.parent = swagNote;
 						unspawnNotes.push(sustainNote);
@@ -3484,7 +3492,8 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 			camHUD.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
-			camStrum.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
+			camStrum.zoom = FlxMath.lerp(normalHUDZoom, camStrum.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
+			camHold.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 			camNote.zoom = FlxMath.lerp(normalHUDZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 		}
 
@@ -3899,8 +3908,9 @@ class PlayState extends MusicBeatState
 
 		*/
 
-		updateOtherCamsToHud(camNote);
 		updateOtherCamsToHud(camStrum);
+		updateOtherCamsToHud(camHold);
+		updateOtherCamsToHud(camNote);
 
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
@@ -3913,7 +3923,12 @@ class PlayState extends MusicBeatState
 		curCam.x = camHUD.x;
 		curCam.y = camHUD.y;
 		curCam.angle = camHUD.angle;
-		curCam.alpha = camHUD.alpha;
+		if (curCam == camStrum)
+		{
+			if (curCam.alpha > 0) curCam.alpha = camHUD.alpha - 0.4;
+		} else {
+			curCam.alpha = camHUD.alpha;
+		}
 		curCam.visible = camHUD.visible;
 	}
 
@@ -4124,6 +4139,7 @@ class PlayState extends MusicBeatState
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 								camStrum.zoom += 0.1;
+								camHold.zoom += 0.1;
 			                    camNote.zoom += 0.1;
 							}
 
@@ -4152,6 +4168,7 @@ class PlayState extends MusicBeatState
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 								camStrum.zoom += 0.1;
+								camHold.zoom += 0.1;
 			                    camNote.zoom += 0.1;
 							}
 
@@ -4217,6 +4234,7 @@ class PlayState extends MusicBeatState
 					FlxG.camera.zoom += camZoom;
 					camHUD.zoom += hudZoom;
 					camStrum.zoom += hudZoom;
+					camHold.zoom += hudZoom;
 					camNote.zoom += hudZoom;
 				}
 
@@ -4307,6 +4325,7 @@ class PlayState extends MusicBeatState
 						if (value2 != null)
 						{
 							camStrum.shake(intensity, duration);
+							camHold.shake(intensity, duration);
 							camNote.shake(intensity, duration);
 						}
 					}
@@ -6256,12 +6275,14 @@ class PlayState extends MusicBeatState
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 			camStrum.zoom += 0.03;
+			camHold.zoom += 0.03;
 			camNote.zoom += 0.03;
 
 			if(!camZooming) { //Just a way for preventing it to be permanently zoomed until Skid & Pump hits a note
 				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.5);
 				FlxTween.tween(camHUD, {zoom: 1}, 0.5);
 				FlxTween.tween(camStrum, {zoom: 1}, 0.5);
+				FlxTween.tween(camHold, {zoom: 1}, 0.5);
 				FlxTween.tween(camNote, {zoom: 1}, 0.5);
 			}
 		}
@@ -6507,6 +6528,7 @@ class PlayState extends MusicBeatState
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;
 				camStrum.zoom += 0.03 * camZoomingMult;
+				camHold.zoom += 0.03 * camZoomingMult;
 				camNote.zoom += 0.03 * camZoomingMult;
 			}
 

@@ -3544,7 +3544,7 @@ class FunkinLua {
 		switch(cam.toLowerCase()) {
 			case 'camgame' | 'game': return PlayState.instance.camGame;
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
-			case 'camstrum' | 'strum': return PlayState.instance.camStrum;
+			case 'camHold' | 'hold': return PlayState.instance.camHold;
 			case 'camnote' | 'note': return PlayState.instance.camNote;
 			case 'camother' | 'other': return PlayState.instance.camOther;
 			default:
@@ -3561,6 +3561,7 @@ class FunkinLua {
 		switch(cam.toLowerCase()) {
 			case 'camhud' | 'hud': return PlayState.instance.camHUDShaders;
 			case 'camstrum' | 'strum': return PlayState.instance.camStrumShaders;
+			case 'camhold' | 'hold': return PlayState.instance.camHoldShaders;
 			case 'camnote' | 'note': return PlayState.instance.camNoteShaders;
 			case 'camother' | 'other': return PlayState.instance.camOtherShaders;
 		}
