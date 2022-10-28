@@ -211,11 +211,13 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-		var size:Int = 16;
+		var arrayTextOptions:Array<Dynamic> = Language.uiTexts.get('downTextFreeplayPRELOAD');
+		var leText:String = arrayTextOptions[0];
+		var size:Int = arrayTextOptions[1];
 		#else
-		var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-		var size:Int = 18;
+		var arrayTextOptions:Array<Dynamic> = Language.uiTexts.get('downTextFreeplay');
+		var leText:String = arrayTextOptions[0];
+		var size:Int = arrayTextOptions[1];
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
@@ -227,7 +229,8 @@ class FreeplayState extends MusicBeatState
 		var searchInputBG = new FlxSprite(scoreText.x - 300, 74).makeGraphic(320, 24, 0xFF000000);
 		searchInputBG.alpha = 0.6;
 
-		inst = new FlxText(searchInputBG.x + 2, searchInputBG.y, "Click here to search...");
+		var stringInst:String = Language.uiTexts.get('searchInput');
+		inst = new FlxText(searchInputBG.x + 2, searchInputBG.y, stringInst);
 		inst.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, NONE);
 		inst.alpha = 0.5;
 		inst.offset.y = -2;
@@ -456,7 +459,7 @@ class FreeplayState extends MusicBeatState
 				ratingSplit[1] += '0';
 			}
 	
-			scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%) - ' + ratingFC[Std.int(intendedFC)];
+			scoreText.text = '${Language.uiTexts.get('bestScoreFreeplay')}: ' + lerpScore + ' (' + ratingSplit.join('.') + '%) - ' + ratingFC[Std.int(intendedFC)];
 			positionHighscore();
 		}
 
@@ -569,7 +572,7 @@ class FreeplayState extends MusicBeatState
 				}*/
 				trace(poop);
 
-				CoolUtil.setWindowTitle('FreePlay: On Load!');
+				CoolUtil.setWindowTitle(Language.titleWindow[3]);
 
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				PlayState.isStoryMode = false;

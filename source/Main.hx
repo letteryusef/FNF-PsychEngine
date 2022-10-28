@@ -92,6 +92,7 @@ class Main extends Sprite
 		canToggleFullscreen = true;
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		Language.reloadTextTranslation();
 
 		#if !mobile
 		fpsVar = new FPS(8, 6, "_sans", 0xFFFFFF);

@@ -169,7 +169,7 @@ class CreditsState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (persistentUpdate) CoolUtil.setWindowTitle('Credits: ' + creditsStuff[curSelected][0]);
+		if (persistentUpdate) CoolUtil.setWindowTitle('${Language.titleWindow[4]}: ' + creditsStuff[curSelected][0]);
 
 		if (FlxG.sound.music.volume < 0.7)
 		{

@@ -56,7 +56,7 @@ class MainMenuState extends MusicBeatState
 	{
 		instance = this;
 		
-		CoolUtil.setWindowTitle('Main Menu');
+		CoolUtil.setWindowTitle(Language.titleWindow[1]);
 		CoolUtil.setupMouse('leMouse');
 		
 		#if MODS_ALLOWED

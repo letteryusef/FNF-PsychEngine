@@ -30,7 +30,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Gameplay', 'Visuals and UI', 'Graphics', 'Controls', 'Adjust Delay and Combo']; // i removed note colors cause it's useless :/ (but the code still on the source)
+	var options:Array<String> = []; // i removed note colors cause it's useless :/ (but the code still on the source)
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -38,20 +38,20 @@ class OptionsState extends MusicBeatState
 	var pauseMusicC:FlxSound;
 
 	function openSelectedSubstate(label:String) {
-		CoolUtil.setWindowTitle('Options: ' + label);
+		CoolUtil.setWindowTitle('${Language.titleWindow[5]}: ' + label);
 
 		switch(label) {
-			case 'Controls':
+			case 'Controls' | 'Controles':
 				openSubState(new options.ControlsSubState());
-			case 'Graphics':
+			case 'Graphics' | 'Gráficos':
 				openSubState(new options.GraphicsSettingsSubState());
-			case 'Visuals and UI':
+			case 'Visuals and UI' | 'Visuais e UI':
 				openSubState(new options.VisualsUISubState());
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
-			case 'Adjust Delay and Combo':
+			case 'Adjust Delay and Combo' | 'Ajustar Delay e Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
-			case 'Secret Stuff':
+			case 'Secret Stuff' | 'Segredos Escondidos':
 				openSubState(new options.SecretOptionsState());
 		}
 	}
@@ -64,11 +64,13 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		CoolUtil.setWindowTitle('Options');
+		options = Language.uiTexts.get('optionsTitles');
+
+		CoolUtil.setWindowTitle(Language.titleWindow[5]);
 
 		if (ClientPrefs.secretActivated)
 		{
-			options.insert(6, 'Secret Stuff');
+			options.insert(6, Language.uiTexts.get('secretOptionTitle'));
 		}
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -127,7 +129,7 @@ class OptionsState extends MusicBeatState
 	}
 
 	override function closeSubState() {
-		CoolUtil.setWindowTitle('Options');
+		CoolUtil.setWindowTitle(Language.titleWindow[5]);
 		super.closeSubState();
 		ClientPrefs.saveSettings();
 	}

@@ -35,6 +35,15 @@ class VisualsUISubState extends BaseOptionsMenu
 		title = 'Visuals and UI';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
+		var option:Option = new Option('Language:',
+			"Self explaining isn't it?, select your preferred language.",
+			'language',
+			'string',
+			'English',
+			['English', 'PT-BR']);
+		addOption(option);
+		option.onChange = onChangeLanguage;
+
 		#if (windows && cpp)
 		var option:Option = new Option('Dark Theme',
 			"If checked, the current window theme will be Dark.",
@@ -175,6 +184,11 @@ class VisualsUISubState extends BaseOptionsMenu
 			FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.pauseMusic)));
 
 		changedMusic = true;
+	}
+
+	function onChangeLanguage()
+	{
+		Language.reloadTextTranslation();
 	}
 
 	#if (windows && cpp)

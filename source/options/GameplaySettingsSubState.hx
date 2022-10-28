@@ -31,69 +31,74 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Gameplay Settings';
+		var uiArray:Array<Dynamic> = [
+			Language.uiTexts.get('curTitleOption'),
+			Language.uiTexts.get('curOptionNames'),
+			Language.uiTexts.get('curOptionDescription')
+		];
+		title = uiArray[0][0];
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Controller Mode',
-			'Check this if you want to play with\na controller instead of using your Keyboard.',
+		var option:Option = new Option(uiArray[1][0],
+			uiArray[2][0],
 			'controllerMode',
 			'bool',
 			false);
 		addOption(option);
 
 		//I'd suggest using "Downscroll" as an example for making your own option since it is the simplest here
-		var option:Option = new Option('Downscroll', //Name
-			'If checked, notes go Down instead of Up, simple enough.', //Description
+		var option:Option = new Option(uiArray[1][1], //Name
+			uiArray[2][1], //Description
 			'downScroll', //Save data variable name
 			'bool', //Variable type
 			false); //Default value
 		addOption(option);
 
-		var option:Option = new Option('Middlescroll',
-			'If checked, your notes get centered.',
+		var option:Option = new Option(uiArray[1][2],
+			uiArray[2][2],
 			'middleScroll',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Opponent Notes',
-			'If unchecked, opponent notes get hidden.',
+		var option:Option = new Option(uiArray[1][3],
+			uiArray[2][3],
 			'opponentStrums',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Ghost Tapping',
-			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
+		var option:Option = new Option(uiArray[1][4],
+			uiArray[2][4],
 			'ghostTapping',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Camera Movement',
-			"If checked, camera will move if you hit a certain note.",
+		var option:Option = new Option(uiArray[1][5],
+			uiArray[2][5],
 			'followChars',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Camera Move Type:',
-			"Select the way that the camera moves",
+		var option:Option = new Option(uiArray[1][6],
+			uiArray[2][6],
 			'cameraMove',
 			'string',
 			'Lerp',
 			['Lerp', 'Tween']);
 		addOption(option);
 
-		var option:Option = new Option('Disable Reset Button',
-			"If checked, pressing Reset won't do anything.",
+		var option:Option = new Option(uiArray[1][7],
+			uiArray[2][7],
 			'noReset',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Hitsound Volume',
-			'Funny notes does \"Tick!\" when you hit them."',
+		var option:Option = new Option(uiArray[1][8],
+			uiArray[2][8],
 			'hitsoundVolume',
 			'percent',
 			0);
@@ -105,8 +110,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Rating Offset',
-			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',
+		var option:Option = new Option(uiArray[1][9],
+			uiArray[2][9],
 			'ratingOffset',
 			'int',
 			0);
@@ -116,8 +121,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Sick! Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.',
+		var option:Option = new Option(uiArray[1][10],
+			uiArray[2][10],
 			'sickWindow',
 			'int',
 			45);
@@ -127,8 +132,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 45;
 		addOption(option);
 
-		var option:Option = new Option('Good Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Good" in milliseconds.',
+		var option:Option = new Option(uiArray[1][11],
+			uiArray[2][11],
 			'goodWindow',
 			'int',
 			90);
@@ -138,8 +143,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 90;
 		addOption(option);
 
-		var option:Option = new Option('Bad Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Bad" in milliseconds.',
+		var option:Option = new Option(uiArray[1][12],
+			uiArray[2][12],
 			'badWindow',
 			'int',
 			135);
@@ -149,8 +154,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 135;
 		addOption(option);
 
-		var option:Option = new Option('Safe Frames',
-			'Changes how many frames you have for\nhitting a note earlier or late.',
+		var option:Option = new Option(uiArray[1][13],
+			uiArray[2][13],
 			'safeFrames',
 			'float',
 			10);

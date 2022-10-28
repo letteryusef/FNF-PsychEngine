@@ -97,18 +97,7 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
-	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['Bruh', 0.6], //From 50% to 59%
-		['Meh', 0.69], //From 60% to 68%
-		['Nice', 0.7], //69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
-		['Sick!', 1], //From 90% to 99%
-		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
-	];
+	public static var ratingStuff:Array<Dynamic> = [];
 
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
@@ -419,6 +408,19 @@ class PlayState extends MusicBeatState
 
 		// for lua
 		instance = this;
+
+		ratingStuff = [
+			[Language.uiTexts.get('ratingSuck'), 0.2], 	//From 0% to 19%
+			[Language.uiTexts.get('ratingShit'), 0.4], 	//From 20% to 39%
+			[Language.uiTexts.get('ratingBad'), 0.5], 	//From 40% to 49%
+			[Language.uiTexts.get('ratingBruh'), 0.6], 	//From 50% to 59%
+			[Language.uiTexts.get('ratingMeh'), 0.69], 	//From 60% to 68%
+			[Language.uiTexts.get('ratingNice'), 0.7], 	//69%
+			[Language.uiTexts.get('ratingGood'), 0.8], 	//From 70% to 79%
+			[Language.uiTexts.get('ratingGreat'), 0.9], //From 80% to 89%
+			[Language.uiTexts.get('ratingSick'), 1], 	//From 90% to 99%
+			[Language.uiTexts.get('ratingPerfect'), 1] 	//The value on this one isn't used actually, since Perfect is always "1"
+		];
 
 		if (!FlxG.autoPause && FlxG.sound.music != null)
 		{
@@ -3418,7 +3420,7 @@ class PlayState extends MusicBeatState
 
 		songScoreDisplay = Math.floor(FlxMath.lerp(songScore, songScoreDisplay, CoolUtil.boundTo(1 - (elapsed * 24), 0, 1)));
 
-		scoreTxt.text = 'Score: ' + songScoreDisplay + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
+		scoreTxt.text = '${Language.uiTexts.get('score')}: ' + songScoreDisplay + ' | ${Language.uiTexts.get('misses')}: ' + songMisses + ' | ${Language.uiTexts.get('accuracy')}: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
 
 		if (msTimingText.alpha > 0 && !cpuControlled)
 		{

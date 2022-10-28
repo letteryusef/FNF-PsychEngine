@@ -15,6 +15,7 @@ class ClientPrefs {
 	public static var showMEMPEAK:Bool = true;
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
+	public static var language:String = 'English';
 	public static var darkTheme:Bool = true;
 	public static var wavyHolds:Bool = false;
 	public static var noteSplashes:Bool = true;
@@ -119,6 +120,7 @@ class ClientPrefs {
 		FlxG.save.data.showMEM = showMEMPEAK;
 		FlxG.save.data.flashing = flashing;
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
+		FlxG.save.data.language = language;
 		FlxG.save.data.darkTheme = darkTheme;
 		FlxG.save.data.wavyHolds = wavyHolds;
 		FlxG.save.data.noteSplashes = noteSplashes;
@@ -195,6 +197,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.globalAntialiasing != null) {
 			globalAntialiasing = FlxG.save.data.globalAntialiasing;
+		}
+		if(FlxG.save.data.language != null) {
+			language = FlxG.save.data.language;
 		}
 		if(FlxG.save.data.darkTheme != null) {
 			darkTheme = FlxG.save.data.darkTheme;

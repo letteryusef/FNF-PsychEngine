@@ -20,7 +20,7 @@ class PauseSubState extends MusicBeatSubstate
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
+	var menuItemsOG:Array<String> = Language.pauseTranslation;
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -37,21 +37,21 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super();
 
-		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
+		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove(Language.pauseTranslation[2]); //No need to change difficulty if there is only one!
 
 		if(PlayState.chartingMode)
 		{
-			menuItemsOG.insert(2, 'Leave Charting Mode');
+			menuItemsOG.insert(2, Language.additionalPauseTranslation[0]);
 			
 			var num:Int = 0;
 			if(!PlayState.instance.startingSong)
 			{
 				num = 1;
-				menuItemsOG.insert(3, 'Skip Time');
+				menuItemsOG.insert(3, Language.additionalPauseTranslation[1]);
 			}
-			menuItemsOG.insert(3 + num, 'End Song');
-			menuItemsOG.insert(4 + num, 'Toggle Practice Mode');
-			menuItemsOG.insert(5 + num, 'Toggle Botplay');
+			menuItemsOG.insert(3 + num, Language.additionalPauseTranslation[2]);
+			menuItemsOG.insert(4 + num, Language.additionalPauseTranslation[3]);
+			menuItemsOG.insert(5 + num, Language.additionalPauseTranslation[4]);
 		}
 		menuItems = menuItemsOG;
 
@@ -92,13 +92,13 @@ class PauseSubState extends MusicBeatSubstate
 		add(levelDifficulty);
 
 		var blueballedTxt:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
-		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
+		blueballedTxt.text = '${Language.additionalPauseTranslation[5]}: ' + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
 		add(blueballedTxt);
 
-		practiceText = new FlxText(20, 15 + 101, 0, "PRACTICE MODE", 32);
+		practiceText = new FlxText(20, 15 + 101, 0, Language.additionalPauseTranslation[6], 32);
 		practiceText.scrollFactor.set();
 		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
 		practiceText.x = FlxG.width - (practiceText.width + 20);
@@ -106,7 +106,7 @@ class PauseSubState extends MusicBeatSubstate
 		practiceText.visible = PlayState.instance.practiceMode;
 		add(practiceText);
 
-		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, "CHARTING MODE", 32);
+		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, Language.additionalPauseTranslation[7], 32);
 		chartingText.scrollFactor.set();
 		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
 		chartingText.x = FlxG.width - (chartingText.width + 20);
@@ -194,7 +194,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			if (Main.fpsVar.alpha == 0)
 			{
-				if (daSelected == "Restart Song" || daSelected == "Leave Charting Mode" || daSelected == "End Song" || daSelected == "Options" || daSelected == "Exit to menu") // that's a lot :/
+				if (daSelected == Language.pauseTranslation[1] || daSelected == Language.additionalPauseTranslation[0] || daSelected == Language.additionalPauseTranslation[2] || daSelected == Language.pauseTranslation[3] || daSelected == Language.pauseTranslation[4]) // that's a lot :/
 				{
 					FlxTween.tween(Main.fpsVar, {alpha: 1}, 0.8, {ease: FlxEase.quintOut});
 				}
@@ -220,22 +220,22 @@ class PauseSubState extends MusicBeatSubstate
 
 			switch (daSelected)
 			{
-				case "Resume":
+				case "Resume" | "Resumir":
 					close();
-				case 'Change Difficulty':
+				case 'Change Difficulty' | "Mudar a Dificuldade":
 					menuItems = difficultyChoices;
 					deleteSkipTimeText();
 					regenMenu();
-				case 'Toggle Practice Mode':
+				case 'Toggle Practice Mode' | "Mudar Modo Prática":
 					PlayState.instance.practiceMode = !PlayState.instance.practiceMode;
 					PlayState.changedDifficulty = true;
 					practiceText.visible = PlayState.instance.practiceMode;
-				case "Restart Song":
+				case "Restart Song" | "Reniciar a Música":
 					restartSong();
-				case "Leave Charting Mode":
+				case "Leave Charting Mode" | "Sair do Modo Charting":
 					restartSong();
 					PlayState.chartingMode = false;
-				case 'Skip Time':
+				case 'Skip Time' | "Pular Tempo":
 					if(curTime < Conductor.songPosition)
 					{
 						PlayState.startOnTime = curTime;
@@ -250,20 +250,20 @@ class PauseSubState extends MusicBeatSubstate
 						}
 						close();
 					}
-				case "End Song":
+				case "End Song" | "Acabar a Música":
 					close();
 					PlayState.instance.finishSong(true);
-				case 'Toggle Botplay':
+				case 'Toggle Botplay' | 'Mudar Modo Botplay':
 					PlayState.instance.cpuControlled = !PlayState.instance.cpuControlled;
 					PlayState.changedDifficulty = true;
 					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
-				case 'Options':
+				case 'Options' | 'Ajustes':
 					PlayState.seenCutscene = true;
 					LoadingState.loadAndSwitchState(new options.OptionsState());
 					MainMenuState.instance.stinkypoopoo = true;
-				case "Exit to menu":
+				case "Exit to menu" | 'Sair para o Menu':
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
 
@@ -366,7 +366,7 @@ class PauseSubState extends MusicBeatSubstate
 			item.targetY = i;
 			grpMenuShit.add(item);
 
-			if(menuItems[i] == 'Skip Time')
+			if(menuItems[i] == Language.additionalPauseTranslation[1])
 			{
 				skipTimeText = new FlxText(0, 0, 0, '', 64);
 				skipTimeText.setFormat(Paths.font("vcr.ttf"), 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
