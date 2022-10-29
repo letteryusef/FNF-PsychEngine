@@ -13,9 +13,9 @@ import flixel.util.FlxTimer;
 
 class WarnState extends MusicBeatState
 {
-	public static var leftState:Bool = false;
-
 	var warnText:FlxText;
+	var canSelect:Bool = true;
+
 	override function create()
 	{
 		super.create();
@@ -23,25 +23,22 @@ class WarnState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey Partner!\n
-			This Mod was programmed on a different version of Psych\n
-			(You may need to go to the Options to change some of the Settings!)\n
-			It also contains some flashing lights!\n
-			Press ENTER to disable them now or Press ESCAPE to ignore this message.\n
-			You've been warned!",
-			32);
-		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
-		warnText.screenCenter(Y);
+		warnText = new FlxText(40, 40, 1180, Language.uiTexts.get('warn'), 30);
+		warnText.setFormat(Paths.font("vcr.ttf"), 30, FlxColor.WHITE, CENTER);
+		warnText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		warnText.antialiasing = true;
 		add(warnText);
+
+		warnText.x = (Math.floor((FlxG.width / 2) - (warnText.width / 2)));
+		warnText.y = Math.floor((FlxG.height / 2) - (warnText.height / 2));
 	}
 
 	override function update(elapsed:Float)
 	{
-		if(!leftState) {
+		if(canSelect) {
 			var back:Bool = controls.BACK;
 			if (controls.ACCEPT || back) {
-				leftState = true;
+				canSelect = false;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				if(!back) {

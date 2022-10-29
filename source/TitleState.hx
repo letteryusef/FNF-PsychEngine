@@ -213,10 +213,10 @@ class TitleState extends MusicBeatState
 		#elseif CHARTING
 		MusicBeatState.switchState(new ChartingState());
 		#else
-		if(FlxG.save.data.flashing == null && !WarnState.leftState) {
+		if((FlxG.save.data.flashing == null || FlxG.save.data.language == null) && !LanguageState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new WarnState());
+			MusicBeatState.switchState(new LanguageState());
 		} else {
 			#if desktop
 			if (!DiscordClient.isInitialized)

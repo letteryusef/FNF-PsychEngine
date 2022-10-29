@@ -2,6 +2,7 @@ package;
 
 class Language
 {
+    public static var availableLanguages:Array<String> = ['English', 'PT-BR'];
     public static var uiTexts:Map<String, Dynamic> = [];
     public static var pauseTranslation:Array<String> = [];
     public static var additionalPauseTranslation:Array<String> = [];
@@ -144,7 +145,13 @@ class Language
                         '< Offset do Combo (Clique em Aceitar para Mudar) >',
                         '< Delay de Nota/Batida (Clique em Aceitar para Mudar) >'
                     ],
-                    'secretOptionTitle' => 'Segredos Escondidos'
+                    'secretOptionTitle' => 'Segredos Escondidos',
+                    'warn' => "Eaí companheiro!\n
+                    Esse Mod foi programado em outra versão de Psych\n
+                    (Você meio que precisa ir pros Ajustes para alterar algumas Opções)\n
+                    Ele também contém Luzes Piscantes!\n
+                    Aperte ENTER para desativar-lás agora ou ESCAPE para ignorar a mensagem.\n
+                    Você foi Avisado!"
                 ];
                 pauseTranslation = ['Resumir', 'Reniciar a Música', 'Mudar a Dificuldade', 'Ajustes', 'Sair para o Menu'];
                 additionalPauseTranslation = ['Sair do Modo Charting', 'Pular Tempo', 'Acabar a Música', 'Mudar Modo Prática', 'Mudar Modo Botplay', 'Bolazuladas', 'MODO PRÁTICA', 'MODO CHARTING'];
@@ -282,7 +289,13 @@ class Language
                         '< Combo Offset (Press Accept to Switch) >',
                         '< Note/Beat Delay (Press Accept to Switch) >'
                     ],
-                    'secretOptionTitle' => 'Secret Stuff'
+                    'secretOptionTitle' => 'Secret Stuff',
+                    'warn' => "Hey Partner!\n
+                    This Mod was programmed on a different version of Psych\n
+                    (You may need to go to the Options to change some of the Settings!)\n
+                    It also contains some flashing lights!\n
+                    Press ENTER to disable them now or Press ESCAPE to ignore this message.\n
+                    You've been warned!"
                 ];
                 pauseTranslation = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
                 additionalPauseTranslation = ['Leave Charting Mode', 'Skip Time', 'End Song', 'Toggle Practice Mode', 'Toggle Botplay', 'Blueballed', 'PRACTICE MODE', 'CHARTING MODE'];
