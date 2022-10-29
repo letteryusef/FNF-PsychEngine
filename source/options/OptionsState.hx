@@ -53,7 +53,8 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.SecretOptionsState());
 		}
 
-		CoolUtil.setWindowTitle('${Language.titleWindow[5]}: ' + label == "Gráficos" ? "Graficos" : label);
+		if (label == "Gráficos") label = "Graficos";
+		CoolUtil.setWindowTitle('${Language.titleWindow[5]}: ' + label);
 	}
 
 	var selectorLeft:Alphabet;

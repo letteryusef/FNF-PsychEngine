@@ -31,25 +31,30 @@ class SecretOptionsState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Secret Stuff';
+		var uiArray:Array<Dynamic> = [
+			Language.uiTexts.get('curTitleOption'),
+			Language.uiTexts.get('curOptionNames'),
+			Language.uiTexts.get('curOptionDescription')
+		];
+		title = uiArray[0][3];
 		rpcTitle = 'Sssshhh, it\'s a secret!!'; //for Discord Rich Presence
 
-		var option:Option = new Option('Mosaic Mode',
-			"You want your game to be more pixelated?, then now you have it!",
+		var option:Option = new Option(uiArray[1][35],
+			uiArray[2][35],
 			'mosaicMode',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Fight Mode',
-			"f-fight??",
+		var option:Option = new Option(uiArray[1][36],
+			uiArray[2][36],
 			'fightMode',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Mosaic Strength',
-			'How pixelated you want your screen to be. (ONLY WORKS WITH MOSAIC MODE)',
+		var option:Option = new Option(uiArray[1][37],
+			uiArray[2][37],
 			'mosaicStrength',
 			'float',
 			3.0);

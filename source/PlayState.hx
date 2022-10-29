@@ -1376,7 +1376,7 @@ class PlayState extends MusicBeatState
 			nowPlayingBG.alpha = 0.6;
 			add(nowPlayingBG);
 	
-			nowPlaying = new FlxText(20, 10, 0, "NOW PLAYING: " + SONG.song.toUpperCase());
+			nowPlaying = new FlxText(20, 10, 0, '${Language.uiTexts.get('nowPlayingText')}: ' + SONG.song.toUpperCase());
 			nowPlaying.setFormat("VCR OSD Mono", 18);
 			add(nowPlaying);
 	

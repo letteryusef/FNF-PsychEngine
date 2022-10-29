@@ -26,6 +26,7 @@ class Language
                     'ratingGreat' => 'Ótimo',
                     'ratingSick' => 'Maneiro!',
                     'ratingPerfect' => 'Perfeito!!',
+                    'nowPlayingText' => 'AGORA TOCANDO',
                     'bestScoreFreeplay' => 'MELHOR PONTUAÇÃO',
                     'weekScore' => 'PONTUAÇÃO DA SEMANA',
                     'downTextFreeplayPRELOAD' => ['Aperte ESPAÇO para escutar a música / Aperte CTRL para abrir o menu de Modificadores / Aperte RESET para resetar sua Pontuação e Precisão.', 16],
@@ -39,7 +40,7 @@ class Language
                         'Segredos Escondidos'
                     ],
                     'curOptionNames' => [
-                        'Modo Controle', // Ajustes de Gameplay
+                        'Modo Controle',
                         'Downscroll',
                         'Middlescroll',
                         'Notas do Oponente',
@@ -48,12 +49,12 @@ class Language
                         'Tipo de Movimento da Câmera:',
                         'Desativar Botão de Resetar',
                         'Volume do Hitsound',
-                        'Offset da Precisão',
+                        'Offset da Avaliação',
                         'Maneiro! Hit Window',
                         'Ótimo Hit Window',
                         'Ruim Hit Window',
                         'Frames Seguros',
-                        'Língua:', // 14
+                        'Língua:',
                         'Tema Escuro',
                         'Efeitos de Onda no Hold',
                         'Splash de Notas',
@@ -70,16 +71,16 @@ class Language
                         'Música de Pausa',
                         'Checar as Atualizações',
                         'Pilha de Combos',
-                        'Baixa Qualidade', // 31
+                        'Baixa Qualidade',
                         'Anti-Aliasing',
                         'Shaders',
                         'Taxa de Quadros',
-                        'Modo Mosaico', // 35
+                        'Modo Mosaico',
                         'Modo Luta',
-                        ''
+                        'Concentração do Mosaico'
                     ],
                     'curOptionDescription' => [
-                        'Marque aqui se você quer jogar\ncom um Controle ao invés de usar o Teclado.', // Ajustes de Gameplay
+                        'Marque aqui se você quer jogar\ncom um Controle ao invés de usar o Teclado.',
                         'Se marcado, notas irão pra baixo ao invés de ir pra cima, simples não é?',
                         'Se marcado, suas notas ficarão no centro.',
                         'Se desmarcado, notas do oponente ficarão escondidos.',
@@ -93,7 +94,7 @@ class Language
                         'Muda a quantia de tempo para você ter\n um \"Ótimo\" em milisegundos.',
                         'Muda a quantia de tempo para você ter\n um \"Ruim\" em milisegundos.',
                         'Muda a quantia de frames você irá precisar para\nacertar uma nota mais cedo ou mais tarde.',
-                        'Auto-explicativo, não é?', // 14
+                        'Auto-explicativo, não é?',
                         'Se marcado, a janela do jogo ficará com um Tema Escuro.',
                         'Se marcado, sprites de "hold" irão ter um efeito de Ondas.',
                         'Se marcado, acertando notas "Maneiro!" não irá mostrar partículas.',
@@ -110,12 +111,13 @@ class Language
                         'Qual Música você quer que a Tela de Pausa toque?',
                         'Em Builds de Lançamento, Marque essa opção para checar se há\natualizações recentes no início.',
                         'Se desmarcado, Avaliações e Combos não irão empilhar, salvando Memória do Sistema e facilitando-os de ler.',
-                        'Se marcado, desativará alguns detalhes do fundo, diminui o tempo de carregamento e melhora o Performance.', // 31
+                        'Se marcado, desativará alguns detalhes do fundo, diminui o tempo de carregamento e melhora o Performance.',
                         'Se desmarcado, desativará o Anti-Aliasing, melhora a Performance ao custo dos Visuais Afiados.',
                         'Se desmarcado, desativará Shaders. É utilizado para alguns Efeitos Visuais, e também CPU Intensivo para PCs Fracos.',
                         'Muito auto-explicativo, não é?',
-                        'Você quer que o jogo esteja mais pixelizado?, bem agora você tem!',
-                        'l-luta??'
+                        'Você quer que a tela esteja mais pixelizado?, bem agora você tem!',
+                        'l-luta??',
+                        'Quão pixelizado você quer que a tela seja. (SÓ FUNCIONA COM O MODO MOSAICO ATIVADO)'
                     ],
                     'controlsDescription' => [
                         'NOTAS',
@@ -146,7 +148,7 @@ class Language
                 ];
                 pauseTranslation = ['Resumir', 'Reniciar a Música', 'Mudar a Dificuldade', 'Ajustes', 'Sair para o Menu'];
                 additionalPauseTranslation = ['Sair do Modo Charting', 'Pular Tempo', 'Acabar a Música', 'Mudar Modo Prática', 'Mudar Modo Botplay', 'Bolazuladas', 'MODO PRÁTICA', 'MODO CHARTING'];
-                titleWindow = ['Inicio', 'Menu Principal', 'Modo História', 'FreePlay: Carregando!', 'Creditos', 'Ajustes'];
+                titleWindow = ['Inicio', 'Menu Principal', 'Modo Historia', 'FreePlay: Carregando!', 'Creditos', 'Ajustes']; // Infelizmente os nomes das janelas não aceitam acentos, representação de uma xenofobia :)
             case 'English':
                 uiTexts = [
                     'score' => 'Score',
@@ -162,6 +164,7 @@ class Language
                     'ratingGreat' => 'Great',
                     'ratingSick' => 'Sick!',
                     'ratingPerfect' => 'Perfect!!',
+                    'nowPlayingText' => 'NOW PLAYING',
                     'bestScoreFreeplay' => 'PERSONAL BEST',
                     'weekScore' => 'WEEK SCORE',
                     'downTextFreeplayPRELOAD' => ['Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.', 16],
@@ -171,7 +174,8 @@ class Language
                     'curTitleOption' => [
                         'Gameplay Settings',
                         'Visuals and UI',
-                        'Graphics'
+                        'Graphics',
+                        'Secret Stuff'
                     ],
                     'curOptionNames' => [
                         'Controller Mode',
@@ -208,7 +212,10 @@ class Language
                         'Low Quality',
                         'Anti-Aliasing',
                         'Shaders',
-                        'Framerate'
+                        'Framerate',
+                        'Mosaic Mode',
+                        'Fight Mode',
+                        'Mosaic Strength'
                     ],
                     'curOptionDescription' => [
                         'Check this if you want to play with\na controller instead of using your Keyboard.',
@@ -245,7 +252,10 @@ class Language
                         'If checked, disables some background details,\ndecreases loading times and improves performance.',
                         'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
                         'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.',
-                        "Pretty self explanatory, isn't it?"
+                        "Pretty self explanatory, isn't it?",
+                        "You want your game to be more pixelated?, then now you have it!",
+                        "f-fight??",
+                        'How pixelated you want your screen to be. (ONLY WORKS WITH MOSAIC MODE)'
                     ],
                     'controlsDescription' => [
                         'NOTES',

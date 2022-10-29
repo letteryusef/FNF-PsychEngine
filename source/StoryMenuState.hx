@@ -199,7 +199,7 @@ class StoryMenuState extends MusicBeatState
 		if (persistentUpdate)
 		{
 			var weekName:String = returnWeekName();
-			if (weekName != '') CoolUtil.setWindowTitle('${Language.titleWindow[2]}: ' + weekName) else CoolUtil.setWindowTitle('Story Mode');
+			if (weekName != '') CoolUtil.setWindowTitle('${Language.titleWindow[2]}: ' + weekName) else CoolUtil.setWindowTitle(Language.titleWindow[2]);
 		}
 
 		// scoreText.setFormat('VCR OSD Mono', 32);

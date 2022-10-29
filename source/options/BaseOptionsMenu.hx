@@ -56,7 +56,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		#end
 		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		if (title == 'Secret Stuff')
+		if (title == 'Secret Stuff' || title == 'Segredos Escondidos')
 		{
 			bg.color = 0xff3a334a;
 		} else {

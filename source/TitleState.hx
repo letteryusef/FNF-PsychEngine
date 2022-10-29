@@ -142,8 +142,6 @@ class TitleState extends MusicBeatState
 		}
 		#end*/
 
-		CoolUtil.setWindowTitle(Language.titleWindow[0]);
-
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;
 		FlxG.sound.volumeDownKeys = volumeDownKeys;
@@ -162,6 +160,8 @@ class TitleState extends MusicBeatState
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
 		ClientPrefs.loadPrefs();
+		Language.reloadTextTranslation();
+		CoolUtil.setWindowTitle(Language.titleWindow[0]);
 
 		#if CHECK_FOR_UPDATES
 		if(ClientPrefs.checkForUpdates && !closedState) {
