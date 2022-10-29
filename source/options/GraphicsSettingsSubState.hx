@@ -33,19 +33,24 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Graphics';
+		var uiArray:Array<Dynamic> = [
+			Language.uiTexts.get('curTitleOption'),
+			Language.uiTexts.get('curOptionNames'),
+			Language.uiTexts.get('curOptionDescription')
+		];
+		title = uiArray[0][2];
 		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
-		var option:Option = new Option('Low Quality', //Name
-			'If checked, disables some background details,\ndecreases loading times and improves performance.', //Description
+		var option:Option = new Option(uiArray[1][31], //Name
+			uiArray[2][31], //Description
 			'lowQuality', //Save data variable name
 			'bool', //Variable type
 			false); //Default value
 		addOption(option);
 
-		var option:Option = new Option('Anti-Aliasing',
-			'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
+		var option:Option = new Option(uiArray[1][32],
+			uiArray[2][32],
 			'globalAntialiasing',
 			'bool',
 			true);
@@ -53,21 +58,20 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 
-		var option:Option = new Option('Shaders', //Name
-			'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.', //Description
+		var option:Option = new Option(uiArray[1][33], //Name
+			uiArray[2][33], //Description
 			'shaders', //Save data variable name
 			'bool', //Variable type
 			true); //Default value
 		addOption(option);
 
 		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
-		var option:Option = new Option('Framerate',
-			"Pretty self explanatory, isn't it?",
+		var option:Option = new Option(uiArray[1][34],
+			uiArray[2][34],
 			'framerate',
 			'int',
 			60);
 		addOption(option);
-
 		option.minValue = 60;
 		option.maxValue = 240;
 		option.displayFormat = '%v FPS';

@@ -35,7 +35,7 @@ class SecretOptionsState extends BaseOptionsMenu
 		rpcTitle = 'Sssshhh, it\'s a secret!!'; //for Discord Rich Presence
 
 		var option:Option = new Option('Mosaic Mode',
-			"You want your game to be more pixelated?, then now uou have it!",
+			"You want your game to be more pixelated?, then now you have it!",
 			'mosaicMode',
 			'bool',
 			false);

@@ -32,11 +32,16 @@ class VisualsUISubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Visuals and UI';
+		var uiArray:Array<Dynamic> = [
+			Language.uiTexts.get('curTitleOption'),
+			Language.uiTexts.get('curOptionNames'),
+			Language.uiTexts.get('curOptionDescription')
+		];
+		title = uiArray[0][1];
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Language:',
-			"Self explaining isn't it?, select your preferred language.",
+		var option:Option = new Option(uiArray[1][14],
+			uiArray[2][14],
 			'language',
 			'string',
 			'English',
@@ -45,8 +50,8 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeLanguage;
 
 		#if (windows && cpp)
-		var option:Option = new Option('Dark Theme',
-			"If checked, the current window theme will be Dark.",
+		var option:Option = new Option(uiArray[1][15],
+			uiArray[2][15],
 			'darkTheme',
 			'bool',
 			true);
@@ -54,66 +59,66 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeTheme;
 		#end
 
-		var option:Option = new Option('Wavy Holds',
-			"If checked, hold sprites will have a wavy effect.",
+		var option:Option = new Option(uiArray[1][16],
+			uiArray[2][16],
 			'wavyHolds',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Note Splashes',
-			"If unchecked, hitting \"Sick!\" notes won't show particles.",
+		var option:Option = new Option(uiArray[1][17],
+			uiArray[2][17],
 			'noteSplashes',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Hide HUD',
-			'If checked, hides most HUD elements.',
+		var option:Option = new Option(uiArray[1][18],
+			uiArray[2][18],
 			'hideHud',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Combo Style:',
-			"What Combo Style you want to display?",
+		var option:Option = new Option(uiArray[1][19],
+			uiArray[2][19],
 			'comboType',
 			'string',
 			'OG Combo',
 			['OG Combo', 'GoofyAAHText']);
 		addOption(option);
 		
-		var option:Option = new Option('Time Bar:',
-			"What should the Time Bar display?",
+		var option:Option = new Option(uiArray[1][20],
+			uiArray[2][20],
 			'timeBarType',
 			'string',
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
 
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
+		var option:Option = new Option(uiArray[1][21],
+			uiArray[2][21],
 			'flashing',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Camera Zooms',
-			"If unchecked, the camera won't zoom in on a beat hit.",
+		var option:Option = new Option(uiArray[1][22],
+			uiArray[2][22],
 			'camZooms',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Score Text Zoom on Hit',
-			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
+		var option:Option = new Option(uiArray[1][23],
+			uiArray[2][23],
 			'scoreZoom',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Health Bar Transparency',
-			'How much transparent should the health bar and icons be.',
+		var option:Option = new Option(uiArray[1][24],
+			uiArray[2][24],
 			'healthBarAlpha',
 			'percent',
 			1);
@@ -125,30 +130,30 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		
 		#if !mobile
-		var option:Option = new Option('FPS Counter',
-			'If unchecked, hides the FPS Counter.',
+		var option:Option = new Option(uiArray[1][25],
+			uiArray[2][25],
 			'showFPS',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Memory Counter',
-			'If unchecked, hides the Memory Counter.',
+		var option:Option = new Option(uiArray[1][26],
+			uiArray[2][26],
 			'showMEM',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Memory Peak Counter',
-			'If unchecked, hides the Memory Peak Counter.',
+		var option:Option = new Option(uiArray[1][27],
+			uiArray[2][27],
 			'showMEMPEAK',
 			'bool',
 			true);
 		addOption(option);
 		#end
 		
-		var option:Option = new Option('Pause Screen Song:',
-			"What song do you prefer for the Pause Screen?",
+		var option:Option = new Option(uiArray[1][28],
+			uiArray[2][28],
 			'pauseMusic',
 			'string',
 			'Tea Time',
@@ -157,16 +162,16 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangePauseMusic;
 		
 		#if CHECK_FOR_UPDATES
-		var option:Option = new Option('Check for Updates',
-			'On Release builds, turn this on to check for updates when you start the game.',
+		var option:Option = new Option(uiArray[1][29],
+			uiArray[2][29],
 			'checkForUpdates',
 			'bool',
 			true);
 		addOption(option);
 		#end
 
-		var option:Option = new Option('Combo Stacking',
-			"If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read",
+		var option:Option = new Option(uiArray[1][30],
+			uiArray[2][30],
 			'comboStacking',
 			'bool',
 			true);

@@ -34,36 +34,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var defaultKey:String = 'Reset to Default Keys';
 	private var bindLength:Int = 0;
 
-	var optionShit:Array<Dynamic> = [
-		['NOTES'],
-		['Left', 'note_left'],
-		['Down', 'note_down'],
-		['Up', 'note_up'],
-		['Right', 'note_right'],
-		[''],
-		['UI'],
-		['Left', 'ui_left'],
-		['Down', 'ui_down'],
-		['Up', 'ui_up'],
-		['Right', 'ui_right'],
-		[''],
-		['Reset', 'reset'],
-		['Accept', 'accept'],
-		['Back', 'back'],
-		['Pause', 'pause'],
-		[''],
-		['FULLSCREEN'],
-		['Keybinds', 'fullscreen'],
-		[''],
-		['VOLUME'],
-		['Mute', 'volume_mute'],
-		['Up', 'volume_up'],
-		['Down', 'volume_down'],
-		[''],
-		['DEBUG'],
-		['Key 1', 'debug_1'],
-		['Key 2', 'debug_2']
-	];
+	var optionShit:Array<Dynamic> = [];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
@@ -73,6 +44,39 @@ class ControlsSubState extends MusicBeatSubstate {
 
 	public function new() {
 		super();
+
+		var translationLol:Array<Dynamic> = Language.uiTexts.get('controlsDescription');
+
+		optionShit = [
+			[translationLol[0]],
+			[translationLol[1], 'note_left'],
+			[translationLol[2], 'note_down'],
+			[translationLol[3], 'note_up'],
+			[translationLol[4], 'note_right'],
+			[''],
+			['UI'],
+			[translationLol[1], 'ui_left'],
+			[translationLol[2], 'ui_down'],
+			[translationLol[3], 'ui_up'],
+			[translationLol[4], 'ui_right'],
+			[''],
+			['Reset', 'reset'],
+			[translationLol[5], 'accept'],
+			[translationLol[6], 'back'],
+			[translationLol[7], 'pause'],
+			[''],
+			[translationLol[8]],
+			[translationLol[9], 'fullscreen'],
+			[''],
+			['VOLUME'],
+			[translationLol[10], 'volume_mute'],
+			[translationLol[11], 'volume_up'],
+			[translationLol[12], 'volume_down'],
+			[''],
+			['DEBUG'],
+			['${translationLol[13]} 1', 'debug_1'],
+			['${translationLol[13]} 2', 'debug_2']
+		];
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xff764ad4;

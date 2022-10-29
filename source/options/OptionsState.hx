@@ -38,8 +38,6 @@ class OptionsState extends MusicBeatState
 	var pauseMusicC:FlxSound;
 
 	function openSelectedSubstate(label:String) {
-		CoolUtil.setWindowTitle('${Language.titleWindow[5]}: ' + label);
-
 		switch(label) {
 			case 'Controls' | 'Controles':
 				openSubState(new options.ControlsSubState());
@@ -54,6 +52,8 @@ class OptionsState extends MusicBeatState
 			case 'Secret Stuff' | 'Segredos Escondidos':
 				openSubState(new options.SecretOptionsState());
 		}
+
+		CoolUtil.setWindowTitle('${Language.titleWindow[5]}: ' + label == "Gráficos" ? "Graficos" : label);
 	}
 
 	var selectorLeft:Alphabet;
@@ -68,7 +68,7 @@ class OptionsState extends MusicBeatState
 
 		CoolUtil.setWindowTitle(Language.titleWindow[5]);
 
-		if (ClientPrefs.secretActivated)
+		if (ClientPrefs.secretActivated && !options.contains(Language.uiTexts.get('secretOptionTitle')))
 		{
 			options.insert(6, Language.uiTexts.get('secretOptionTitle'));
 		}

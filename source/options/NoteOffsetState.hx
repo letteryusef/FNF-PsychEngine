@@ -42,8 +42,11 @@ class NoteOffsetState extends MusicBeatState
 	var changeModeText:FlxText;
 	var downText:FlxText;
 
+	var translationLol:Array<Dynamic> = [];
+
 	override public function create()
 	{
+		translationLol = Language.uiTexts.get('noteOffsetUI');
 		// Cameras
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -142,7 +145,7 @@ class NoteOffsetState extends MusicBeatState
 
 		// Note delay stuff
 		
-		beatText = new Alphabet(0, 0, 'Beat Hit!', true);
+		beatText = new Alphabet(0, 0, translationLol[0], true);
 		beatText.scaleX = 0.6;
 		beatText.scaleY = 0.6;
 		beatText.x += 260;
@@ -228,9 +231,9 @@ class NoteOffsetState extends MusicBeatState
 
 		if(!ClientPrefs.comboCamera)
 		{
-			downText.text = "Press CTRL to change COMBO Sprites's Camera (HUD)";
+			downText.text = '${translationLol[1]} (HUD)';
 		} else {
-			downText.text = "Press CTRL to change COMBO Sprites's Camera (Game)";
+			downText.text = '${translationLol[1]} (Game)';
 		}
 
 		if(FlxG.keys.justPressed.CONTROL)
@@ -487,9 +490,9 @@ class NoteOffsetState extends MusicBeatState
 		{
 			switch(i)
 			{
-				case 0: dumbTexts.members[i].text = 'Rating Offset:';
+				case 0: dumbTexts.members[i].text = translationLol[2];
 				case 1: dumbTexts.members[i].text = '[' + ClientPrefs.comboOffset[0] + ', ' + ClientPrefs.comboOffset[1] + ']';
-				case 2: dumbTexts.members[i].text = 'Numbers Offset:';
+				case 2: dumbTexts.members[i].text = translationLol[3];
 				case 3: dumbTexts.members[i].text = '[' + ClientPrefs.comboOffset[2] + ', ' + ClientPrefs.comboOffset[3] + ']';
 			}
 		}
@@ -498,7 +501,7 @@ class NoteOffsetState extends MusicBeatState
 	function updateNoteDelay()
 	{
 		ClientPrefs.noteOffset = Math.round(barPercent);
-		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
+		timeTxt.text = '${translationLol[4]}: ' + Math.floor(barPercent) + ' ms';
 	}
 
 	function updateMode()
@@ -513,9 +516,9 @@ class NoteOffsetState extends MusicBeatState
 		beatText.visible = !onComboMenu;
 
 		if(onComboMenu)
-			changeModeText.text = '< Combo Offset (Press Accept to Switch) >';
+			changeModeText.text = translationLol[5];
 		else
-			changeModeText.text = '< Note/Beat Delay (Press Accept to Switch) >';
+			changeModeText.text = translationLol[6];
 
 		changeModeText.text = changeModeText.text.toUpperCase();
 		if (onComboMenu)

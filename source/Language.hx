@@ -33,7 +33,10 @@ class Language
                     'searchInput' => 'Clique aqui para Procurar...',
                     'optionsTitles' => ['Gameplay', 'Visuais e UI', 'Gráficos', 'Controles', 'Ajustar Delay e Combo'],
                     'curTitleOption' => [
-                        'Ajustes de Gameplay'
+                        'Ajustes de Gameplay',
+                        'Visuais e UI',
+                        'Gráficos',
+                        'Segredos Escondidos'
                     ],
                     'curOptionNames' => [
                         'Modo Controle', // Ajustes de Gameplay
@@ -55,15 +58,31 @@ class Language
                         'Efeitos de Onda no Hold',
                         'Splash de Notas',
                         'Esconder HUD',
-                        'Estilo do Combo',
-                        'Barra de Tempo',
-                        'Luzes Piscantes'
+                        'Estilo do Combo:',
+                        'Barra de Tempo:',
+                        'Luzes Piscantes',
+                        'Zooms de Câmera',
+                        'Zoom do Texto de Pontuação no Acerto',
+                        'Transparência da Barra de Vida',
+                        'Contador de FPS',
+                        'Contador de Memória',
+                        'Contador de Limite de Memória',
+                        'Música de Pausa',
+                        'Checar as Atualizações',
+                        'Pilha de Combos',
+                        'Baixa Qualidade', // 31
+                        'Anti-Aliasing',
+                        'Shaders',
+                        'Taxa de Quadros',
+                        'Modo Mosaico', // 35
+                        'Modo Luta',
+                        ''
                     ],
                     'curOptionDescription' => [
                         'Marque aqui se você quer jogar\ncom um Controle ao invés de usar o Teclado.', // Ajustes de Gameplay
                         'Se marcado, notas irão pra baixo ao invés de ir pra cima, simples não é?',
                         'Se marcado, suas notas ficarão no centro.',
-                        'Se não marcado, notas do oponente ficarão escondidos.',
+                        'Se desmarcado, notas do oponente ficarão escondidos.',
                         'Se marcado, você não irá pegar erros se clicar alguma tecla\nenquanto não tiver nenhuma nota para acertar.',
                         'Se marcado, câmera irá se mover enquanto você acerta as notas.',
                         'Selecione o modo que a câmera irá se mover.',
@@ -74,14 +93,54 @@ class Language
                         'Muda a quantia de tempo para você ter\n um \"Ótimo\" em milisegundos.',
                         'Muda a quantia de tempo para você ter\n um \"Ruim\" em milisegundos.',
                         'Muda a quantia de frames você irá precisar para\nacertar uma nota mais cedo ou mais tarde.',
-                        'Auto explanatório não é?, escolha sua língua com preferência.', // 14
+                        'Auto-explicativo, não é?', // 14
                         'Se marcado, a janela do jogo ficará com um Tema Escuro.',
                         'Se marcado, sprites de "hold" irão ter um efeito de Ondas.',
                         'Se marcado, acertando notas "Maneiro!" não irá mostrar partículas.',
                         'Se marcado, alguns elementos da HUD ficarão escondidos.',
                         'Qual estilo dos Combos você quer que apareça?',
                         'Como irá ser o texto da Barra de Tempo?',
-                        'Desmarque se você é sensivo a luzes piscantes!'
+                        'Desmarque-a se você é sensivo a luzes piscantes!',
+                        'Se desmarcado, a câmera não irá dar zooms na batida da música.',
+                        'Se desmarcado, desativará o zoom do texto de Pontuação\ntoda vez que você acertar uma nota.',
+                        'Quão transparente você quer que a Barra de Vida e os Icones fiquem?',
+                        'Se desmarcado, esconderá o Contador de FPS.',
+                        'Se desmarcado, esconderá o Contador de Memória.',
+                        'Se desmarcado, esconderá o Contador de Limite de Memória.',
+                        'Qual Música você quer que a Tela de Pausa toque?',
+                        'Em Builds de Lançamento, Marque essa opção para checar se há\natualizações recentes no início.',
+                        'Se desmarcado, Avaliações e Combos não irão empilhar, salvando Memória do Sistema e facilitando-os de ler.',
+                        'Se marcado, desativará alguns detalhes do fundo, diminui o tempo de carregamento e melhora o Performance.', // 31
+                        'Se desmarcado, desativará o Anti-Aliasing, melhora a Performance ao custo dos Visuais Afiados.',
+                        'Se desmarcado, desativará Shaders. É utilizado para alguns Efeitos Visuais, e também CPU Intensivo para PCs Fracos.',
+                        'Muito auto-explicativo, não é?',
+                        'Você quer que o jogo esteja mais pixelizado?, bem agora você tem!',
+                        'l-luta??'
+                    ],
+                    'controlsDescription' => [
+                        'NOTAS',
+                        'Esquerda',
+                        'Baixo',
+                        'Cima',
+                        'Direita',
+                        'Aceitar',
+                        'Voltar',
+                        'Pausa',
+                        'TELA-CHEIA',
+                        'Teclas',
+                        'Mutar',
+                        'Aumentar',
+                        'Diminuir',
+                        'Tecla'
+                    ],
+                    'noteOffsetUI' => [
+                        'Batida!',
+                        'Aperte CTRL para mudar a câmera dos Sprites do COMBO',
+                        'Offset da Avaliação:',
+                        'Offset dos Números:',
+                        'Offset Atual',
+                        '< Offset do Combo (Clique em Aceitar para Mudar) >',
+                        '< Delay de Nota/Batida (Clique em Aceitar para Mudar) >'
                     ],
                     'secretOptionTitle' => 'Segredos Escondidos'
                 ];
@@ -110,7 +169,9 @@ class Language
                     'searchInput' => 'Click here to search...',
                     'optionsTitles' => ['Gameplay', 'Visuals and UI', 'Graphics', 'Controls', 'Adjust Delay and Combo'],
                     'curTitleOption' => [
-                        'Gameplay Settings'
+                        'Gameplay Settings',
+                        'Visuals and UI',
+                        'Graphics'
                     ],
                     'curOptionNames' => [
                         'Controller Mode',
@@ -126,7 +187,28 @@ class Language
                         'Sick! Hit Window',
                         'Good Hit Window',
                         'Bad Hit Window',
-                        'Safe Frames'
+                        'Safe Frames',
+                        'Language:',
+                        'Dark Theme',
+                        'Wavy Holds',
+                        'Note Splashes',
+                        'Hide HUD',
+                        'Combo Style:',
+                        'Time Bar:',
+                        'Flashing Lights',
+                        'Camera Zooms',
+                        'Score Text Zoom on Hit',
+                        'Health Bar Transparency',
+                        'FPS Counter',
+                        'Memory Counter',
+                        'Memory Peak Counter',
+                        'Pause Screen Song:',
+                        'Check for Updates',
+                        'Combo Stacking',
+                        'Low Quality',
+                        'Anti-Aliasing',
+                        'Shaders',
+                        'Framerate'
                     ],
                     'curOptionDescription' => [
                         'Check this if you want to play with\na controller instead of using your Keyboard.',
@@ -142,7 +224,53 @@ class Language
                         'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.',
                         'Changes the amount of time you have\nfor hitting a "Good" in milliseconds.',
                         'Changes the amount of time you have\nfor hitting a "Bad" in milliseconds.',
-                        'Changes how many frames you have for\nhitting a note earlier or late.'
+                        'Changes how many frames you have for\nhitting a note earlier or late.',
+                        "Self explaining isn't it?",
+                        "If checked, the current window theme will be Dark.",
+                        "If checked, hold sprites will have a wavy effect.",
+                        "If unchecked, hitting \"Sick!\" notes won't show particles.",
+                        'If checked, hides most HUD elements.',
+                        "What Combo Style you want to display?",
+                        "What should the Time Bar display?",
+                        "Uncheck this if you're sensitive to flashing lights!",
+                        "If unchecked, the camera won't zoom in on a beat hit.",
+                        "If unchecked, disables the Score text zooming\neverytime you hit a note.",
+                        'How much transparent should the health bar and icons be.',
+                        'If unchecked, hides the FPS Counter.',
+                        'If unchecked, hides the Memory Counter.',
+                        'If unchecked, hides the Memory Peak Counter.',
+                        "What song do you prefer for the Pause Screen?",
+                        'On Release builds, turn this on to check for updates when you start the game.',
+                        "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read",
+                        'If checked, disables some background details,\ndecreases loading times and improves performance.',
+                        'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
+                        'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.',
+                        "Pretty self explanatory, isn't it?"
+                    ],
+                    'controlsDescription' => [
+                        'NOTES',
+                        'Left',
+                        'Down',
+                        'Up',
+                        'Right',
+                        'Accept',
+                        'Back',
+                        'Pause',
+                        'FULLSCREEN',
+                        'Keybinds',
+                        'Mute',
+                        'Up',
+                        'Down',
+                        'Key'
+                    ],
+                    'noteOffsetUI' => [
+                        'Beat Hit!',
+                        "Press CTRL to change COMBO Sprites's Camera",
+                        'Rating Offset:',
+                        'Numbers Offset:',
+                        'Current offset',
+                        '< Combo Offset (Press Accept to Switch) >',
+                        '< Note/Beat Delay (Press Accept to Switch) >'
                     ],
                     'secretOptionTitle' => 'Secret Stuff'
                 ];
