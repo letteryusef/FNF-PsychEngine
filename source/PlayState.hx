@@ -2230,10 +2230,10 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.timer(0.1, function()
 				{
 					wellWellWell.play(true);
-					if (ClientPrefs.language != "English") setSubtitle(subtitles[0]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[0]);
 				});
 
-				if (ClientPrefs.language != "English")
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(0.6, function()
 					{
@@ -2254,7 +2254,7 @@ class PlayState extends MusicBeatState
 				// Move camera to BF
 				cutsceneHandler.timer(3, function()
 				{
-					if (ClientPrefs.language != "English") setSubtitle('');
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle('');
 					camFollow.x += 750;
 					camFollow.y += 100;
 				});
@@ -2277,10 +2277,10 @@ class PlayState extends MusicBeatState
 					tankman.animation.play('killYou', true);
 					FlxG.sound.play(Paths.sound('killYou'));
 
-					if (ClientPrefs.language != "English") setSubtitle(subtitles[4]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[4]);
 				});
 
-				if (ClientPrefs.language != "English")
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(6.8, function()
 					{
@@ -2329,10 +2329,10 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2}, 4, {ease: FlxEase.quadInOut});
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2 * 1.2}, 0.5, {ease: FlxEase.quadInOut, startDelay: 4});
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2}, 1, {ease: FlxEase.quadInOut, startDelay: 4.5});
-					if (ClientPrefs.language != 'English') setSubtitle(subtitles[0]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[0]);
 				};
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(2.1, function()
 					{
@@ -2348,10 +2348,10 @@ class PlayState extends MusicBeatState
 						gf.playAnim('sad', true);
 					};
 
-					if (ClientPrefs.language != 'English') setSubtitle(subtitles[2]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[2]);
 				});
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(6, function()
 					{
@@ -2446,10 +2446,10 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.onStart = function()
 				{
 					cutsceneSnd.play(true);
-					if (ClientPrefs.language != 'English') setSubtitle(subtitles[0]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[0]);
 				};
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(1.4, function()
 					{
@@ -2556,7 +2556,7 @@ class PlayState extends MusicBeatState
 					};
 				});
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(15.8, function()
 					{
@@ -2580,10 +2580,10 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.timer(20, function()
 				{
 					camFollow.set(dad.x + 500, dad.y + 170);
-					if (ClientPrefs.language != 'English') setSubtitle(subtitles[13]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[13]);
 				});
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(20.4, function()
 					{
@@ -2636,7 +2636,7 @@ class PlayState extends MusicBeatState
 					camFollow.set(boyfriend.x + 280, boyfriend.y + 200);
 					cameraSpeed = 12;
 					FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 0.25, {ease: FlxEase.elasticOut});
-					if (ClientPrefs.language != 'English') setSubtitle(subtitles[12]);
+					if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(subtitles[12]);
 				});
 
 				cutsceneHandler.timer(32.2, function()
@@ -2644,7 +2644,7 @@ class PlayState extends MusicBeatState
 					zoomBack();
 				});
 
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					cutsceneHandler.timer(33.2, function()
 					{
@@ -4596,7 +4596,7 @@ class PlayState extends MusicBeatState
 					FunkinLua.setVarInArray(this, value1, value2);
 				}
 			case 'Tutorial Subtitles':
-				if (ClientPrefs.language != 'English')
+				if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles))
 				{
 					if (value1.toLowerCase() == 'n/a')
 					{
@@ -6563,18 +6563,18 @@ class PlayState extends MusicBeatState
 				{
 					case 736:
 						var tankmanSubtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles3');
-						if (ClientPrefs.language != 'English') setSubtitle(tankmanSubtitles[22]);
+						if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(tankmanSubtitles[22]);
 						trace(tankmanSubtitles[22]);
 					case 757:
 						var tankmanSubtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles3');
-						if (ClientPrefs.language != 'English') setSubtitle(tankmanSubtitles[23], true);
+						if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(tankmanSubtitles[23], true);
 						trace(tankmanSubtitles[23]);
 					case 761:
 						var tankmanSubtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles3');
-						if (ClientPrefs.language != 'English') setSubtitle(tankmanSubtitles[24], true);
+						if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle(tankmanSubtitles[24], true);
 						trace(tankmanSubtitles[24]);
 					case 768:
-						if (ClientPrefs.language != 'English') setSubtitle('');
+						if (ClientPrefs.language != "English" || (ClientPrefs.language == 'English' && ClientPrefs.subtitles)) setSubtitle('');
 				}
 		}
 

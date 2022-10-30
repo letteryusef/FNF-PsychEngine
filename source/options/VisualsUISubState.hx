@@ -61,64 +61,71 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		var option:Option = new Option(uiArray[1][16],
 			uiArray[2][16],
-			'wavyHolds',
+			'subtitles',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option(uiArray[1][17],
 			uiArray[2][17],
+			'wavyHolds',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option(uiArray[1][18],
+			uiArray[2][18],
 			'noteSplashes',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option(uiArray[1][18],
-			uiArray[2][18],
+		var option:Option = new Option(uiArray[1][19],
+			uiArray[2][19],
 			'hideHud',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option(uiArray[1][19],
-			uiArray[2][19],
+		var option:Option = new Option(uiArray[1][20],
+			uiArray[2][20],
 			'comboType',
 			'string',
 			'OG Combo',
 			['OG Combo', 'GoofyAAHText']);
 		addOption(option);
 		
-		var option:Option = new Option(uiArray[1][20],
-			uiArray[2][20],
+		var option:Option = new Option(uiArray[1][21],
+			uiArray[2][21],
 			'timeBarType',
 			'string',
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
 
-		var option:Option = new Option(uiArray[1][21],
-			uiArray[2][21],
-			'flashing',
-			'bool',
-			true);
-		addOption(option);
-
 		var option:Option = new Option(uiArray[1][22],
 			uiArray[2][22],
-			'camZooms',
+			'flashing',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option(uiArray[1][23],
 			uiArray[2][23],
-			'scoreZoom',
+			'camZooms',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option(uiArray[1][24],
 			uiArray[2][24],
+			'scoreZoom',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option(uiArray[1][25],
+			uiArray[2][25],
 			'healthBarAlpha',
 			'percent',
 			1);
@@ -130,30 +137,30 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		
 		#if !mobile
-		var option:Option = new Option(uiArray[1][25],
-			uiArray[2][25],
-			'showFPS',
-			'bool',
-			true);
-		addOption(option);
-
 		var option:Option = new Option(uiArray[1][26],
 			uiArray[2][26],
-			'showMEM',
+			'showFPS',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option(uiArray[1][27],
 			uiArray[2][27],
+			'showMEM',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option(uiArray[1][28],
+			uiArray[2][28],
 			'showMEMPEAK',
 			'bool',
 			true);
 		addOption(option);
 		#end
 		
-		var option:Option = new Option(uiArray[1][28],
-			uiArray[2][28],
+		var option:Option = new Option(uiArray[1][29],
+			uiArray[2][29],
 			'pauseMusic',
 			'string',
 			'Tea Time',
@@ -162,16 +169,16 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangePauseMusic;
 		
 		#if CHECK_FOR_UPDATES
-		var option:Option = new Option(uiArray[1][29],
-			uiArray[2][29],
+		var option:Option = new Option(uiArray[1][30],
+			uiArray[2][30],
 			'checkForUpdates',
 			'bool',
 			true);
 		addOption(option);
 		#end
 
-		var option:Option = new Option(uiArray[1][30],
-			uiArray[2][30],
+		var option:Option = new Option(uiArray[1][31],
+			uiArray[2][31],
 			'comboStacking',
 			'bool',
 			true);
@@ -194,6 +201,7 @@ class VisualsUISubState extends BaseOptionsMenu
 	function onChangeLanguage()
 	{
 		Language.reloadTextTranslation();
+		OptionsState.instance.resetState = true;
 	}
 
 	#if (windows && cpp)

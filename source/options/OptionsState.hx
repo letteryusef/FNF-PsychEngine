@@ -34,8 +34,11 @@ class OptionsState extends MusicBeatState
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
+	public static var instance:OptionsState;
 	
 	var pauseMusicC:FlxSound;
+
+	public var resetState:Bool = false;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
@@ -64,6 +67,8 @@ class OptionsState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
+
+		instance = this;
 
 		options = Language.uiTexts.get('optionsTitles');
 
@@ -131,8 +136,9 @@ class OptionsState extends MusicBeatState
 
 	override function closeSubState() {
 		CoolUtil.setWindowTitle(Language.titleWindow[5]);
-		super.closeSubState();
 		ClientPrefs.saveSettings();
+		if (resetState) FlxG.resetState();
+		super.closeSubState();
 	}
 
 	override function update(elapsed:Float) {
@@ -147,12 +153,12 @@ class OptionsState extends MusicBeatState
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			if (!MainMenuState.instance.stinkypoopoo)
+			if (PlayState.instance != null && MainMenuState.instance.stinkypoopoo)
 			{
+				MusicBeatState.switchState(new PlayState());
+			} else {
 				MusicBeatState.switchState(new MainMenuState());
 				MainMenuState.instance.stinkypoopoo = false;
-			} else {
-				LoadingState.loadAndSwitchState(new PlayState());
 			}
 		}
 

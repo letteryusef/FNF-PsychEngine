@@ -57,6 +57,7 @@ class Language
                         'Frames Seguros',
                         'Língua:',
                         'Tema Escuro',
+                        'Legendas',
                         'Efeitos de Onda no Hold',
                         'Splash de Notas',
                         'Esconder HUD',
@@ -97,6 +98,7 @@ class Language
                         'Muda a quantia de frames você irá precisar para\nacertar uma nota mais cedo ou mais tarde.',
                         'Auto-explicativo, não é?',
                         'Se marcado, a janela do jogo ficará com um Tema Escuro.',
+                        'Se marcado, quando tiver falas no jogo, Legendas aparecerão.',
                         'Se marcado, sprites de "hold" irão ter um efeito de Ondas.',
                         'Se marcado, acertando notas "Maneiro!" não irá mostrar partículas.',
                         'Se marcado, alguns elementos da HUD ficarão escondidos.',
@@ -155,11 +157,11 @@ class Language
                     'tutorialSubtitles' => ['Cima', 'Baixo', 'Esquerda', 'Direta', ', cima', ', baixo', ', esquerda', ', direita', 'É assim que se faz!'],
                     'tankmanSubtitles1' => ['Ora', 'Ora, ora', 'Ora, ora, ora', 'O que temos aqui?', 'Eu deveria', ' MATAR', ' você', ' mas...', 'Esse dia foi entediante do caralho.', 'Vamos ver o que você tem!'],
                     'tankmanSubtitles2' => ['Belas barras apertadas para um', 'Pequeno cara que "simpa" uma', 'Pequena jovem burra e entediante', 'que veste as roupas da mãe dela.', 'HEH!', '*risadinhas*'],
-                    'tankmanSubtitles3' => ['Porra...', 'Puta merda.', 'Boa jogada seu merdinha.', 'Mas isso é guerra', 'e em guerra', 'PESSOAS', ' MORREM!', 'Cara, fique preparado para tiros!', 'Desculpe', ', Sem festas de formatura pra', ' VOCÊ', ' esse ano.', '*Risadas*', 'Aah', ' olha quem apareceu.', 'Seu amiguinho sexualmente ambíguo e raivoso.', 'Você não tem uma escola para fazer tiroteios?', 'Só tem um jeito de resolver isso.', 'VAMOS', ' GRITAR', 'Seu merdinha!', 'Seus merdinhas!', 'Heh', ', muito', ' bom!']
+                    'tankmanSubtitles3' => ['Porra...', 'Puta merda.', 'Boa jogada seu merdinha.', 'Mas isso é guerra', 'e em guerra', 'PESSOAS', ' MORREM!', 'Cara, fique preparado para tiros!', 'Desculpe', ', Sem festa de formatura pra', ' VOCÊ', ' esse ano.', '*Risadas*', 'Aah', ' olha quem apareceu.', 'Seu amiguinho sexualmente ambíguo e raivoso.', 'Você não tem uma escola para fazer tiroteios?', 'Só tem um jeito de resolver isso.', 'VAMOS', ' GRITAR', 'Seu merdinha!', 'Seus merdinhas!', 'Heh', ', muito', ' bom!']
                 ];
                 pauseTranslation = ['Resumir', 'Reniciar a Música', 'Mudar a Dificuldade', 'Ajustes', 'Sair para o Menu'];
                 additionalPauseTranslation = ['Sair do Modo Charting', 'Pular Tempo', 'Acabar a Música', 'Mudar Modo Prática', 'Mudar Modo Botplay', 'Bolazuladas', 'MODO PRÁTICA', 'MODO CHARTING'];
-                titleWindow = ['Inicio', 'Menu Principal', 'Modo Historia', 'FreePlay: Carregando!', 'Creditos', 'Ajustes']; // Infelizmente os nomes das janelas não aceitam acentos, representação de uma xenofobia :)
+                titleWindow = ['Inicio', 'Menu Principal', 'Modo Historia', 'FreePlay: Carregando!', 'Creditos', 'Ajustes']; // Infelizmente os nomes das janelas do OpenFL não aceitam acentos, representação de uma xenofobia :)
             case 'English':
                 uiTexts = [
                     'score' => 'Score',
@@ -205,6 +207,7 @@ class Language
                         'Safe Frames',
                         'Language:',
                         'Dark Theme',
+                        'Subtitles',
                         'Wavy Holds',
                         'Note Splashes',
                         'Hide HUD',
@@ -245,6 +248,7 @@ class Language
                         'Changes how many frames you have for\nhitting a note earlier or late.',
                         "Self explaining isn't it?",
                         "If checked, the current window theme will be Dark.",
+                        'If checked, when the game have voice lines, Subtitles will be shown.',
                         "If checked, hold sprites will have a wavy effect.",
                         "If unchecked, hitting \"Sick!\" notes won't show particles.",
                         'If checked, hides most HUD elements.',
@@ -299,7 +303,11 @@ class Language
                     (You may need to go to the Options to change some of the Settings!)\n
                     It also contains some flashing lights!\n
                     Press ENTER to disable them now or Press ESCAPE to ignore this message.\n
-                    You've been warned!"
+                    You've been warned!",
+                    'tutorialSubtitles' => ['Up', 'Down', 'Left', 'Right', ', up', ', down', ', left', ', right', "That's how you do it!"],
+                    'tankmanSubtitles1' => ['Well', 'Well, well', 'Well, well, well', 'What do we got here?', 'I should just', ' KILL', ' you', ' but...', "What the hell it's been a boring day.", "Let's see what you got!"],
+                    'tankmanSubtitles2' => ['Pretty tight bars for a', "Little dude who's simping over an", 'Ugly boring little teenager', "that wears her mom's clothes.", 'HEH!', '*giggles*'],
+                    'tankmanSubtitles3' => ['God...', 'Effing dammit.', 'Well played you little shit.', 'But this is war', 'and in war', 'PEOPLE', ' DIE!', 'Man, get ready to fire!', 'Sorry', ', no prom for', ' YOU', ' this year.', '*Laughs*', 'Aah', ' look who it is.', 'Your sexually ambiguous angry little friend.', "Don't you have a School to shoot up?", "There's one way to settle this.", "LET'S", ' ROCK', 'You little cunt!', 'You little cunts!', 'Heh', ', pretty', ' good!']
                 ];
                 pauseTranslation = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
                 additionalPauseTranslation = ['Leave Charting Mode', 'Skip Time', 'End Song', 'Toggle Practice Mode', 'Toggle Botplay', 'Blueballed', 'PRACTICE MODE', 'CHARTING MODE'];

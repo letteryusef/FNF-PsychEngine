@@ -42,15 +42,15 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
-		var option:Option = new Option(uiArray[1][31], //Name
-			uiArray[2][31], //Description
+		var option:Option = new Option(uiArray[1][32], //Name
+			uiArray[2][32], //Description
 			'lowQuality', //Save data variable name
 			'bool', //Variable type
 			false); //Default value
 		addOption(option);
 
-		var option:Option = new Option(uiArray[1][32],
-			uiArray[2][32],
+		var option:Option = new Option(uiArray[1][33],
+			uiArray[2][33],
 			'globalAntialiasing',
 			'bool',
 			true);
@@ -58,16 +58,16 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 
-		var option:Option = new Option(uiArray[1][33], //Name
-			uiArray[2][33], //Description
+		var option:Option = new Option(uiArray[1][34], //Name
+			uiArray[2][34], //Description
 			'shaders', //Save data variable name
 			'bool', //Variable type
 			true); //Default value
 		addOption(option);
 
 		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
-		var option:Option = new Option(uiArray[1][34],
-			uiArray[2][34],
+		var option:Option = new Option(uiArray[1][35],
+			uiArray[2][35],
 			'framerate',
 			'int',
 			60);
