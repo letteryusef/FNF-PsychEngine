@@ -152,9 +152,10 @@ class Language
                     Ele também contém Luzes Piscantes!\n
                     Aperte ENTER para desativar-lás agora ou ESCAPE para ignorar a mensagem.\n
                     Você foi Avisado!",
+                    'tutorialSubtitles' => ['Cima', 'Baixo', 'Esquerda', 'Direta', ', cima', ', baixo', ', esquerda', ', direita', 'É assim que se faz!'],
                     'tankmanSubtitles1' => ['Ora', 'Ora, ora', 'Ora, ora, ora', 'O que temos aqui?', 'Eu deveria', ' MATAR', ' você', ' mas...', 'Esse dia foi entediante do caralho.', 'Vamos ver o que você tem!'],
                     'tankmanSubtitles2' => ['Belas barras apertadas para um', 'Pequeno cara que "simpa" uma', 'Pequena jovem burra e entediante', 'que veste as roupas da mãe dela.', 'HEH!', '*risadinhas*'],
-                    'tankmanSubtitles3' => ['Porra...', 'Puta merda.', 'Boa jogada seu merdinha.', 'Mas isso é guerra', 'e em guerra', 'PESSOAS', ' MORREM!', 'Cara, fique preparado para tiros!', 'Desculpe', ', Sem festas de formatura pra', ' VOCÊ', ' esse ano.', '*Risadas*', 'Aah', ' olha quem apareceu.', 'Seu amiguinho sexualmente ambíguo e raivoso.', 'Você não tem uma escola para fazer tiroteios?', 'Só tem um jeito de resolver isso.', 'VAMOS', ' GRITAR', 'Seu merdinha!', 'Seus merdinhas!']
+                    'tankmanSubtitles3' => ['Porra...', 'Puta merda.', 'Boa jogada seu merdinha.', 'Mas isso é guerra', 'e em guerra', 'PESSOAS', ' MORREM!', 'Cara, fique preparado para tiros!', 'Desculpe', ', Sem festas de formatura pra', ' VOCÊ', ' esse ano.', '*Risadas*', 'Aah', ' olha quem apareceu.', 'Seu amiguinho sexualmente ambíguo e raivoso.', 'Você não tem uma escola para fazer tiroteios?', 'Só tem um jeito de resolver isso.', 'VAMOS', ' GRITAR', 'Seu merdinha!', 'Seus merdinhas!', 'Heh', ', muito', ' bom!']
                 ];
                 pauseTranslation = ['Resumir', 'Reniciar a Música', 'Mudar a Dificuldade', 'Ajustes', 'Sair para o Menu'];
                 additionalPauseTranslation = ['Sair do Modo Charting', 'Pular Tempo', 'Acabar a Música', 'Mudar Modo Prática', 'Mudar Modo Botplay', 'Bolazuladas', 'MODO PRÁTICA', 'MODO CHARTING'];

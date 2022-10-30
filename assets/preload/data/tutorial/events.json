@@ -1,1 +1,336 @@
-{"song":{"sectionLengths":[],"player1":"bf","player2":"gf","notes":[{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[[18650,-1,"Hey!","2",""]],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[[28250,-1,"Hey!","2",""]],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":false},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"sectionNotes":[],"lengthInSteps":16,"typeOfSection":0,"mustHitSection":true},{"typeOfSection":0,"sectionNotes":[],"lengthInSteps":16,"bpm":100,"changeBPM":false,"mustHitSection":true},{"lengthInSteps":16,"altAnim":false,"typeOfSection":0,"sectionNotes":[],"bpm":100,"changeBPM":false,"mustHitSection":true},{"lengthInSteps":16,"altAnim":false,"typeOfSection":0,"sectionNotes":[],"bpm":100,"changeBPM":false,"mustHitSection":true}],"song":"Tutorial","validScore":true,"sections":0,"needsVoices":false,"speed":1,"bpm":100}}
+{
+	"song": {
+		"events": [
+			[
+				9600,
+				[
+					[
+						"Tutorial Subtitles",
+						"2",
+						""
+					]
+				]
+			],
+			[
+				10800,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				12000,
+				[
+					[
+						"Tutorial Subtitles",
+						"6",
+						"add"
+					]
+				]
+			],
+			[
+				13200,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				14400,
+				[
+					[
+						"Tutorial Subtitles",
+						"n/a",
+						""
+					]
+				]
+			],
+			[
+				18000,
+				[
+					[
+						"Tutorial Subtitles",
+						"8",
+						""
+					],
+					[
+						"Hey!",
+						"gf",
+						"1"
+					]
+				]
+			],
+			[
+				18600,
+				[
+					[
+						"Hey!",
+						"bf",
+						""
+					]
+				]
+			],
+			[
+				19200,
+				[
+					[
+						"Tutorial Subtitles",
+						"0",
+						""
+					]
+				]
+			],
+			[
+				20400,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				21600,
+				[
+					[
+						"Tutorial Subtitles",
+						"4",
+						"add"
+					]
+				]
+			],
+			[
+				22800,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				24000,
+				[
+					[
+						"Tutorial Subtitles",
+						"n/a",
+						""
+					]
+				]
+			],
+			[
+				27600,
+				[
+					[
+						"Tutorial Subtitles",
+						"8",
+						""
+					],
+					[
+						"Hey!",
+						"gf",
+						"1"
+					]
+				]
+			],
+			[
+				28200,
+				[
+					[
+						"Hey!",
+						"bf",
+						""
+					]
+				]
+			],
+			[
+				28800,
+				[
+					[
+						"Tutorial Subtitles",
+						"2",
+						""
+					]
+				]
+			],
+			[
+				30000,
+				[
+					[
+						"Tutorial Subtitles",
+						"4",
+						"add"
+					]
+				]
+			],
+			[
+				31200,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				32400,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				33600,
+				[
+					[
+						"Tutorial Subtitles",
+						"n/a",
+						""
+					]
+				]
+			],
+			[
+				38400,
+				[
+					[
+						"Tutorial Subtitles",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				39000,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				39600,
+				[
+					[
+						"Tutorial Subtitles",
+						"4",
+						"add"
+					]
+				]
+			],
+			[
+				40800,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				41400,
+				[
+					[
+						"Tutorial Subtitles",
+						"5",
+						"add"
+					]
+				]
+			],
+			[
+				42000,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				43200,
+				[
+					[
+						"Tutorial Subtitles",
+						"n/a",
+						""
+					]
+				]
+			],
+			[
+				48000,
+				[
+					[
+						"Tutorial Subtitles",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				48300,
+				[
+					[
+						"Tutorial Subtitles",
+						"4",
+						"add"
+					]
+				]
+			],
+			[
+				48600,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				48900,
+				[
+					[
+						"Tutorial Subtitles",
+						"4",
+						"add"
+					]
+				]
+			],
+			[
+				49800,
+				[
+					[
+						"Tutorial Subtitles",
+						"7",
+						"add"
+					]
+				]
+			],
+			[
+				50400,
+				[
+					[
+						"Tutorial Subtitles",
+						"n/a",
+						""
+					]
+				]
+			]
+		]
+	}
+}

@@ -41,17 +41,14 @@ class PauseSubState extends MusicBeatSubstate
 
 		if(PlayState.chartingMode)
 		{
-			menuItemsOG.insert(2, Language.additionalPauseTranslation[0]);
-			
-			var num:Int = 0;
-			if(!PlayState.instance.startingSong)
+			if (!menuItemsOG.contains(Language.additionalPauseTranslation[0])) menuItemsOG.insert(2, Language.additionalPauseTranslation[0]);
+			if(!PlayState.instance.startingSong && !menuItemsOG.contains(Language.additionalPauseTranslation[1]))
 			{
-				num = 1;
-				menuItemsOG.insert(3, Language.additionalPauseTranslation[1]);
+				menuItemsOG.insert(6, Language.additionalPauseTranslation[1]);
 			}
-			menuItemsOG.insert(3 + num, Language.additionalPauseTranslation[2]);
-			menuItemsOG.insert(4 + num, Language.additionalPauseTranslation[3]);
-			menuItemsOG.insert(5 + num, Language.additionalPauseTranslation[4]);
+			if (!menuItemsOG.contains(Language.additionalPauseTranslation[2])) menuItemsOG.insert(3, Language.additionalPauseTranslation[2]);
+			if (!menuItemsOG.contains(Language.additionalPauseTranslation[3])) menuItemsOG.insert(4, Language.additionalPauseTranslation[3]);
+			if (!menuItemsOG.contains(Language.additionalPauseTranslation[4])) menuItemsOG.insert(5, Language.additionalPauseTranslation[4]);
 		}
 		menuItems = menuItemsOG;
 
