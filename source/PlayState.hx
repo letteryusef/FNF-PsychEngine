@@ -385,6 +385,10 @@ class PlayState extends MusicBeatState
 	var nowPlayingBG:FlxSprite;
 	var nowPlaying:FlxText;
 
+	public var subtitlesText:FlxText;
+	var ogPositionSubtitleShow:Float;
+	var ogPositionSubtitleHide:Float;
+
 	var precacheList:Map<String, String> = new Map<String, String>();
 	
 	// stores the last judgement object
@@ -1160,7 +1164,7 @@ class PlayState extends MusicBeatState
 			dialogueJson = DialogueBoxPsych.parseDialogue(file);
 		}
 
-		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue'); //Checks for vanilla/Senpai dialogue
+		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue-' + ClientPrefs.language); //Checks for vanilla/Senpai dialogue
 		if (OpenFlAssets.exists(file)) {
 			dialogue = CoolUtil.coolTextFile(file);
 		}
@@ -1445,6 +1449,17 @@ class PlayState extends MusicBeatState
 		msTimingText.alpha = 0;
 		add(msTimingText);
 
+		subtitlesText = new FlxText(0, 0, FlxG.width - 80, '');
+		subtitlesText.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		subtitlesText.screenCenter();
+		subtitlesText.y += 220;
+		subtitlesText.borderSize = 2;
+		subtitlesText.alpha = 0;
+		add(subtitlesText);
+
+		ogPositionSubtitleShow = subtitlesText.y - 20;
+		ogPositionSubtitleHide = subtitlesText.y + 20;
+
 		CoolUtil.precacheSound('noteComboSound');
 
 		if (showNowPlaying)
@@ -1496,6 +1511,7 @@ class PlayState extends MusicBeatState
 		noteShit.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		msTimingText.cameras = [camHUD];
 		doof.cameras = [camHUD];
+		subtitlesText.cameras = [camOther];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1938,6 +1954,41 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
+	var showSubtitle:FlxTween;
+	var hideSubtitle:FlxTween;
+	function setSubtitle(text:String, add:Bool = false)
+	{
+		if (!add && text.length > 1) subtitlesText.text = text;
+		if (add) subtitlesText.text += text;
+
+		if (!add)
+		{
+			if (text.length < 1)
+			{
+				if (subtitlesText.alpha > 0)
+				{
+					if (hideSubtitle != null) hideSubtitle.cancel();
+					if (showSubtitle != null) showSubtitle.cancel();
+					hideSubtitle = FlxTween.tween(subtitlesText, {y: ogPositionSubtitleHide, alpha: 0}, 0.4, {ease: FlxEase.circIn, onComplete: function(twn:FlxTween) 
+					{
+						subtitlesText.text = text;
+						hideSubtitle = null;
+					}});
+				}
+			} else {
+				if (subtitlesText.alpha < 1)
+				{
+					if (showSubtitle != null) showSubtitle.cancel();
+					if (hideSubtitle != null) hideSubtitle.cancel();
+					showSubtitle = FlxTween.tween(subtitlesText, {y: ogPositionSubtitleShow, alpha: 1}, 0.4, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween) 
+					{
+						showSubtitle = null;
+					}});
+				}
+			}
+		}
+	}
+
 	public function startVideo(name:String)
 	{
 		#if VIDEOS_ALLOWED
@@ -2142,6 +2193,7 @@ class PlayState extends MusicBeatState
 			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, timeForStuff, {ease: FlxEase.quadInOut});
 			moveCamera(true);
 			startCountdown();
+			if (subtitlesText.text.length > 1) setSubtitle('');
 
 			dadGroup.alpha = 1;
 			camHUD.visible = true;
@@ -2154,6 +2206,7 @@ class PlayState extends MusicBeatState
 		switch(songName)
 		{
 			case 'ugh':
+				var subtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles1');
 				cutsceneHandler.endTime = 12;
 				cutsceneHandler.music = 'DISTORTO';
 				precacheList.set('wellWellWell', 'sound');
@@ -2172,11 +2225,31 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.timer(0.1, function()
 				{
 					wellWellWell.play(true);
+					if (ClientPrefs.language != "English") setSubtitle(subtitles[0]);
 				});
 
+				if (ClientPrefs.language != "English")
+				{
+					cutsceneHandler.timer(0.6, function()
+					{
+						setSubtitle(subtitles[1]);
+					});
+
+					cutsceneHandler.timer(1.1, function()
+					{
+						setSubtitle(subtitles[2]);
+					});
+
+					cutsceneHandler.timer(1.5, function()
+					{
+						setSubtitle(subtitles[3]);
+					});
+				}
+				
 				// Move camera to BF
 				cutsceneHandler.timer(3, function()
 				{
+					if (ClientPrefs.language != "English") setSubtitle('');
 					camFollow.x += 750;
 					camFollow.y += 100;
 				});
@@ -2198,9 +2271,40 @@ class PlayState extends MusicBeatState
 					// We should just kill you but... what the hell, it's been a boring day... let's see what you've got!
 					tankman.animation.play('killYou', true);
 					FlxG.sound.play(Paths.sound('killYou'));
+
+					if (ClientPrefs.language != "English") setSubtitle(subtitles[4]);
 				});
 
+				if (ClientPrefs.language != "English")
+				{
+					cutsceneHandler.timer(6.8, function()
+					{
+						setSubtitle(subtitles[5], true);
+					});
+
+					cutsceneHandler.timer(7.1, function()
+					{
+						setSubtitle(subtitles[6], true);
+					});
+
+					cutsceneHandler.timer(7.4, function()
+					{
+						setSubtitle(subtitles[7], true);
+					});
+
+					cutsceneHandler.timer(8, function()
+					{
+						setSubtitle(subtitles[8]);
+					});
+
+					cutsceneHandler.timer(10.3, function()
+					{
+						setSubtitle(subtitles[9]);
+					});
+				}
+
 			case 'guns':
+				var subtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles2');
 				cutsceneHandler.endTime = 11.5;
 				cutsceneHandler.music = 'DISTORTO';
 				tankman.x += 40;
@@ -2220,7 +2324,16 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2}, 4, {ease: FlxEase.quadInOut});
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2 * 1.2}, 0.5, {ease: FlxEase.quadInOut, startDelay: 4});
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom * 1.2}, 1, {ease: FlxEase.quadInOut, startDelay: 4.5});
+					if (ClientPrefs.language != 'English') setSubtitle(subtitles[0]);
 				};
+
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(2.1, function()
+					{
+						setSubtitle(subtitles[1]);
+					});
+				}
 
 				cutsceneHandler.timer(4, function()
 				{
@@ -2229,9 +2342,30 @@ class PlayState extends MusicBeatState
 					{
 						gf.playAnim('sad', true);
 					};
+
+					if (ClientPrefs.language != 'English') setSubtitle(subtitles[2]);
 				});
 
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(6, function()
+					{
+						setSubtitle(subtitles[3]);
+					});
+
+					cutsceneHandler.timer(8.1, function()
+					{
+						setSubtitle(subtitles[4]);
+					});
+				
+					cutsceneHandler.timer(9.4, function()
+					{
+						setSubtitle(subtitles[5]);
+					});
+				}
+
 			case 'stress':
+				var subtitles:Array<Dynamic> = Language.uiTexts.get('tankmanSubtitles3');
 				cutsceneHandler.endTime = 35.5;
 				tankman.x -= 54;
 				tankman.y -= 14;
@@ -2307,7 +2441,71 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.onStart = function()
 				{
 					cutsceneSnd.play(true);
+					if (ClientPrefs.language != 'English') setSubtitle(subtitles[0]);
 				};
+
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(1.4, function()
+					{
+						setSubtitle(subtitles[1]);
+					});	
+					
+					cutsceneHandler.timer(3.2, function()
+					{
+						setSubtitle(subtitles[2]);
+					});	
+
+					cutsceneHandler.timer(5.6, function()
+					{
+						setSubtitle(subtitles[3]);
+					});	
+
+					cutsceneHandler.timer(6.8, function()
+					{
+						setSubtitle(subtitles[4]);
+					});	
+
+					cutsceneHandler.timer(8, function()
+					{
+						setSubtitle(subtitles[5]);
+					});	
+
+					cutsceneHandler.timer(8.4, function()
+					{
+						setSubtitle(subtitles[6], true);
+					});	
+
+					cutsceneHandler.timer(9.8, function()
+					{
+						setSubtitle(subtitles[7]);
+					});
+
+					cutsceneHandler.timer(11.9, function()
+					{
+						setSubtitle(subtitles[8]);
+					});	
+
+					cutsceneHandler.timer(12.5, function()
+					{
+						setSubtitle(subtitles[9], true);
+					});	
+
+					cutsceneHandler.timer(13.4, function()
+					{
+						setSubtitle(subtitles[10], true);
+					});	
+
+					cutsceneHandler.timer(13.8, function()
+					{
+						setSubtitle(subtitles[11], true);
+					});	
+
+					cutsceneHandler.timer(14.6, function()
+					{
+						setSubtitle(subtitles[12]);
+					});	
+				}
 
 				cutsceneHandler.timer(15.2, function()
 				{
@@ -2353,6 +2551,14 @@ class PlayState extends MusicBeatState
 					};
 				});
 
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(15.8, function()
+					{
+						setSubtitle('');
+					});	
+				}
+
 				cutsceneHandler.timer(17.5, function()
 				{
 					zoomBack();
@@ -2369,7 +2575,46 @@ class PlayState extends MusicBeatState
 				cutsceneHandler.timer(20, function()
 				{
 					camFollow.set(dad.x + 500, dad.y + 170);
+					if (ClientPrefs.language != 'English') setSubtitle(subtitles[13]);
 				});
+
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(20.4, function()
+					{
+						setSubtitle(subtitles[14], true);
+					});	
+
+					cutsceneHandler.timer(21.2, function()
+					{
+						setSubtitle(subtitles[15]);
+					});	
+
+					cutsceneHandler.timer(24.1, function()
+					{
+						setSubtitle(subtitles[16]);
+					});	
+
+					cutsceneHandler.timer(26.7, function()
+					{
+						setSubtitle(subtitles[17]);
+					});	
+
+					cutsceneHandler.timer(29.0, function()
+					{
+						setSubtitle(subtitles[18]);
+					});	
+
+					cutsceneHandler.timer(29.3, function()
+					{
+						setSubtitle(subtitles[19], true);
+					});	
+
+					cutsceneHandler.timer(30.2, function()
+					{
+						setSubtitle(subtitles[20]);
+					});	
+				}
 
 				cutsceneHandler.timer(31.2, function()
 				{
@@ -2386,12 +2631,21 @@ class PlayState extends MusicBeatState
 					camFollow.set(boyfriend.x + 280, boyfriend.y + 200);
 					cameraSpeed = 12;
 					FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 0.25, {ease: FlxEase.elasticOut});
+					if (ClientPrefs.language != 'English') setSubtitle(subtitles[12]);
 				});
 
 				cutsceneHandler.timer(32.2, function()
 				{
 					zoomBack();
 				});
+
+				if (ClientPrefs.language != 'English')
+				{
+					cutsceneHandler.timer(33.2, function()
+					{
+						setSubtitle(subtitles[21]);
+					});	
+				}
 		}
 	}
 
