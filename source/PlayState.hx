@@ -5647,7 +5647,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
-	public var holdBlock:Bool = false;
+	public var sustainsBlocked:Array<Int> = [];
 	private function onKeyPress(event:KeyboardEvent):Void
 	{
 		var eventKey:FlxKey = event.keyCode;
@@ -5727,6 +5727,7 @@ class PlayState extends MusicBeatState
 			{
 				spr.playAnim('pressed');
 				spr.resetAnim = 0;
+				sustainsBlocked.push(key);
 			}
 			callOnLuas('onKeyPress', [key]);
 		}
@@ -5754,6 +5755,7 @@ class PlayState extends MusicBeatState
 			{
 				spr.playAnim('static');
 				spr.resetAnim = 0;
+				if (sustainsBlocked.contains(key)) sustainsBlocked.remove(key);
 			}
 			callOnLuas('onKeyRelease', [key]);
 		}
@@ -5806,7 +5808,7 @@ class PlayState extends MusicBeatState
 			{
 				// hold note functions
 				if (strumsBlocked[daNote.noteData] != true && daNote.isSustainNote && parsedHoldArray[daNote.noteData] && daNote.canBeHit
-				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit) {
+				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit && !sustainsBlocked.contains(daNote.noteData)) {
 					goodNoteHit(daNote);
 				}
 			});
@@ -6270,6 +6272,11 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
+			} else {
+				if (note.animation.curAnim.name.endsWith('end') && !sustainsBlocked.contains(note.noteData))
+				{
+					sustainsBlocked.push(note.noteData);
+				}
 			}
 		}
 	}
