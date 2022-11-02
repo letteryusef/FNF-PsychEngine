@@ -6272,11 +6272,6 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
-			} else {
-				if (note.animation.curAnim.name.endsWith('end') && !sustainsBlocked.contains(note.noteData))
-				{
-					sustainsBlocked.push(note.noteData);
-				}
 			}
 		}
 	}

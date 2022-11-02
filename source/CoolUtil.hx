@@ -292,9 +292,4 @@ class CoolUtil
 		xArray.insert(xArray.length + 1, -delta(a, b, c) / 4 * a);
 		return xArray;
 	}
-
-	public static function adjustFPS(num:Float):Float // from ANDROMEDA ENGINE
-	{
-		return FlxG.elapsed / (1 / 60) * num;
-	}
 }
