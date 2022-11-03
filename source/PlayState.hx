@@ -5263,6 +5263,8 @@ class PlayState extends MusicBeatState
 
 	private function popUpMiss():Void
 	{
+		noteComboNumberlol = 0;
+		
 		if (combo > 0)
 			combo = 0;
 		else
