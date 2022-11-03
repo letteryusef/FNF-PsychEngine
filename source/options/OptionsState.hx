@@ -35,6 +35,8 @@ class OptionsState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 	public static var instance:OptionsState;
+
+	var optionsLanguage:Array<String> = [];
 	
 	var pauseMusicC:FlxSound;
 
@@ -70,7 +72,8 @@ class OptionsState extends MusicBeatState
 
 		instance = this;
 
-		options = Language.uiTexts.get('optionsTitles');
+		optionsLanguage = Language.uiTexts.get('optionsTitles');
+		options = optionsLanguage;
 
 		CoolUtil.setWindowTitle(Language.titleWindow[5]);
 

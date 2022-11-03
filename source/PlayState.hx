@@ -525,12 +525,12 @@ class PlayState extends MusicBeatState
 		{
 			mosaicShit.setStrength(ClientPrefs.mosaicStrength, ClientPrefs.mosaicStrength);
 			effectMosaic = new ShaderFilter(mosaicShit.shader);
-			camGame.setFilters([effectMosaic]);
-			camHUD.setFilters([effectMosaic]);
-			camStrum.setFilters([effectMosaic]);
-			camHold.setFilters([effectMosaic]);
-			camNote.setFilters([effectMosaic]);
-			camOther.setFilters([effectMosaic]); // hi my name is carmen winstead, AAAAAAAAUUUGGGGH.
+
+			var camArray:Array<FlxCamera> = [camGame, camHUD, camStrum, camHold, camNote, camOther];
+			for (i in 0...camArray.length)
+			{
+				camArray[i].setFilters([effectMosaic]); // hi my name is carmen winstead, AAAAAAAAUUUGGGGH.
+			}
 		}
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
@@ -1413,14 +1413,14 @@ class PlayState extends MusicBeatState
 		noteShit.animation.play('boom', true);
 
 		noteShitNumGroup = new FlxTypedGroup<FlxSprite>();
-		add(noteShitNumGroup);
+		if (!ClientPrefs.comboCamera) add(noteShitNumGroup) else insert(members.indexOf(noteShit) + 1, noteShitNumGroup);
 
 		for (i in 0...3)
 		{
 			var noteShitNum = new FlxSprite(0, 0, Paths.image('noteComboNumbers'));
 
-			noteShitNum.x = (noteShit.x + 124) + (i * 114);
-			noteShitNum.y = (noteShit.y + 76) - (i * 40);
+			noteShitNum.x = (noteShit.x + 268) + (i * 114);
+			noteShitNum.y = (noteShit.y + 16) - (i * 40);
 
 			noteShitNum.frames = Paths.getSparrowAtlas('noteComboNumbers');
 
@@ -1429,12 +1429,14 @@ class PlayState extends MusicBeatState
 				noteShitNum.animation.addByPrefix("boom-" + Std.string(m), Std.string(m) + "_appear", 30, false);
 				noteShitNum.animation.addByPrefix("fosh-" + Std.string(m), Std.string(m) + "_disappear", 60, false);
 			}
-			noteShitNum.scrollFactor.set();
+			if (!ClientPrefs.comboCamera) noteShitNum.scrollFactor.set();
 			noteShitNum.antialiasing = ClientPrefs.globalAntialiasing;
 			noteShitNum.ID = i;
-			noteShitNum.cameras = [camHUD];
+			noteShitNum.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 			noteShitNumGroup.add(noteShitNum);
-			add(noteShitNum);
+			if (!ClientPrefs.comboCamera) add(noteShitNum) else insert(members.indexOf(noteShitNumGroup) + 1, noteShitNum);
+
+			noteShitNum.animation.play("boom-0");
 	
 			noteShitNum.setGraphicSize(Std.int(noteShitNum.width * 0.74));
 			noteShitNum.updateHitbox();
@@ -1512,6 +1514,7 @@ class PlayState extends MusicBeatState
 			nowPlaying.cameras = [camOther];
 		}
 		noteShit.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
+		noteShitNumGroup.cameras = !ClientPrefs.comboCamera ? [camHUD] : [camGame];
 		msTimingText.cameras = [camHUD];
 		doof.cameras = [camHUD];
 		subtitlesText.cameras = [camOther];
@@ -3419,6 +3422,8 @@ class PlayState extends MusicBeatState
 	var hasMoreAnimationsGF:Bool = false;
 	var harmonyAlphaDuration:Float = 0.6;
 
+	var noteComboNumDisplay:String = '';
+
 	override public function update(elapsed:Float)
 	{
 		if (FlxG.keys.justPressed.NINE)
@@ -3443,7 +3448,24 @@ class PlayState extends MusicBeatState
 					noteShit.visible = true;
 					noteShit.active = true;
 					playAnimationAdvanced(noteShit, 'boom');
+
+					noteComboNumDisplay = Std.string(noteComboNumberlol);
 					noteComboNumberlol = 0;
+					var seperatedNoteCombo:Array<String> = noteComboNumDisplay.split("");
+					for (i in 0...seperatedNoteCombo.length)
+					{
+						var offsetNumX:Float = 0;
+						noteShitNumGroup.members[i].visible = true;
+						noteShitNumGroup.members[i].active = true;
+						switch(seperatedNoteCombo[i])
+						{
+							case '1': offsetNumX = -14;
+							case '2': offsetNumX = 18;
+							case '3' | '8': offsetNumX = 12;
+							case '4': offsetNumX = 20;
+						}
+						playAnimationAdvanced(noteShitNumGroup.members[i], 'boom-' + seperatedNoteCombo[i], offsetNumX);
+					}
 				}
 			}
 		
@@ -3452,10 +3474,23 @@ class PlayState extends MusicBeatState
 				if (noteShit.animation.curAnim.name == 'boom')
 				{
 					playAnimationAdvanced(noteShit, 'fosh', -150);
+					var seperatedNoteCombo:Array<String> = noteComboNumDisplay.split("");
+					for (i in 0...seperatedNoteCombo.length)
+					{
+						playAnimationAdvanced(noteShitNumGroup.members[i], 'fosh-' + seperatedNoteCombo[i]);
+					}
 				} else if (noteShit.animation.curAnim.name == 'fosh') {
 					noteShit.visible = false;
 					noteShit.active = false;
 					noteShit.offset.x = 0;
+					var seperatedNoteCombo:Array<String> = noteComboNumDisplay.split("");
+					for (i in 0...seperatedNoteCombo.length)
+					{
+						noteShitNumGroup.members[i].visible = false;
+						noteShitNumGroup.members[i].active = false;
+						noteShitNumGroup.members[i].offset.x = 0;
+					}
+					noteComboNumDisplay = "";
 				}
 			}
 		}
@@ -4442,7 +4477,7 @@ class PlayState extends MusicBeatState
 
 			case 'Screen Shake':
 				var valuesArray:Array<String> = [value1, value2];
-				var targetsArray:Array<FlxCamera> = [camGame, camHUD];
+				var targetsArray:Array<FlxCamera> = [camGame, camHUD, camStrum, camHold, camNote];
 				for (i in 0...targetsArray.length) {
 					var split:Array<String> = valuesArray[i].split(',');
 					var duration:Float = 0;
@@ -4452,16 +4487,7 @@ class PlayState extends MusicBeatState
 					if(Math.isNaN(duration)) duration = 0;
 					if(Math.isNaN(intensity)) intensity = 0;
 
-					if(duration > 0 && intensity != 0) {
-						targetsArray[i].shake(intensity, duration);
-
-						if (value2 != null)
-						{
-							camStrum.shake(intensity, duration);
-							camHold.shake(intensity, duration);
-							camNote.shake(intensity, duration);
-						}
-					}
+					if(duration > 0 && intensity != 0) targetsArray[i].shake(intensity, duration);
 				}
 
 
