@@ -72,14 +72,24 @@ class OptionsState extends MusicBeatState
 
 		instance = this;
 
-		optionsLanguage = Language.uiTexts.get('optionsTitles');
+		var shitArray:Array<String> = Language.uiTexts.get('optionsTitles');
+
+		for (option in shitArray)
+		{
+			optionsLanguage.push(option);
+		}
 		options = optionsLanguage;
 
 		CoolUtil.setWindowTitle(Language.titleWindow[5]);
 
-		if (ClientPrefs.secretActivated && !options.contains(Language.uiTexts.get('secretOptionTitle')))
+		if (MainMenuState.instance.stinkypoopoo)
 		{
-			options.insert(6, Language.uiTexts.get('secretOptionTitle'));
+			options.remove(shitArray[4]);
+		}
+
+		if (ClientPrefs.secretActivated)
+		{
+			options.push(Language.uiTexts.get('secretOptionTitle'));
 		}
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

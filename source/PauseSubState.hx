@@ -20,7 +20,7 @@ class PauseSubState extends MusicBeatSubstate
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = Language.pauseTranslation;
+	var menuItemsOG:Array<String> = [];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -36,6 +36,11 @@ class PauseSubState extends MusicBeatSubstate
 	public function new(x:Float, y:Float)
 	{
 		super();
+
+		for (option in Language.pauseTranslation)
+		{
+			menuItemsOG.push(option);
+		}
 
 		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove(Language.pauseTranslation[2]); //No need to change difficulty if there is only one!
 

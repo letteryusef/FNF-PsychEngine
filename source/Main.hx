@@ -12,6 +12,12 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 
+/*
+import away3d.entities.Mesh;
+import away3d.materials.ColorMaterial;
+import away3d.primitives.CubeGeometry;
+*/
+
 //crash handler stuff
 #if CRASH_HANDLER
 import lime.app.Application;
@@ -38,6 +44,12 @@ class Main extends Sprite
 	var canToggleFullscreen:Bool = false;
 	public static var fullscreenKeys:Array<Null<FlxKey>>;
 	public static var fpsVar:FPS;
+
+	/*
+	// 3D Stuff (like literally, that's the 50 i do this shit)
+	public static var _viewLol:ModelView;
+	public static var _cube:Mesh;
+	*/
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -108,10 +120,25 @@ class Main extends Sprite
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+
+		/*
+		_viewLol = new ModelView(1, 0, 1, 1, 6000);
+
+		_cube = new Mesh(new CubeGeometry(), new ColorMaterial(0xffcc00));
+		_cube.scale(5);
+		trace(_cube.x);
+		trace(_viewLol.view.camera.x);
+		_viewLol.addModel(_cube);
+
+		_viewLol.resize();
+		*/
 	}
 
 	public function update(e:Event)
 	{
+		// _cube.x += 1;
+		// _viewLol.update();
+
 		if (FlxG.keys == null)
 			return;
 

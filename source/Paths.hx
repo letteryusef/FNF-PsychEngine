@@ -37,6 +37,7 @@ class Paths
 		'custom_notetypes',
 		'data',
 		'songs',
+		'models',
 		'music',
 		'sounds',
 		'shaders',
@@ -362,6 +363,18 @@ class Paths
 		}
 		trace('oh no its returning null NOOOO');
 		return null;
+	}
+
+	inline static public function modelsTexturePNG(texture:String):String {
+		return 'assets/models/textures/$texture.png';
+	}
+
+	inline static public function modelsTextureJPG(texture:String):String {
+		return 'assets/models/textures/$texture.jpg';
+	}
+
+	inline static public function modelsTexture(texture:String):String {
+		return 'assets/models/textures/$texture';
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];

@@ -1190,7 +1190,7 @@ class PlayState extends MusicBeatState
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 2;
-		timeTxt.visible = showTime;
+		timeTxt.visible = showTime && !ClientPrefs.classicMode;
 		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 44;
 
 		if(ClientPrefs.timeBarType == 'Song Name')
@@ -1204,7 +1204,7 @@ class PlayState extends MusicBeatState
 		timeBarBG.y = timeTxt.y + (timeTxt.height / 4);
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
-		timeBarBG.visible = showTime;
+		timeBarBG.visible = showTime && !ClientPrefs.classicMode;
 		timeBarBG.color = FlxColor.BLACK;
 		timeBarBG.xAdd = -4;
 		timeBarBG.yAdd = -4;
@@ -1216,7 +1216,7 @@ class PlayState extends MusicBeatState
 		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
-		timeBar.visible = showTime;
+		timeBar.visible = showTime && !ClientPrefs.classicMode;
 		add(timeBar);
 		add(timeTxt);
 		timeBarBG.sprTracker = timeBar;
@@ -1342,24 +1342,30 @@ class PlayState extends MusicBeatState
 		ouchUI.visible = !ClientPrefs.hideHud || !cpuControlled;
 		add(ouchUI);
 
-		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
+		if (!ClientPrefs.classicMode) iconP1 = new HealthIcon(boyfriend.healthIcon, true) else iconP1 = new HealthIcon('bf-old', true);
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP1.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP1);
 
-		iconP2 = new HealthIcon(dad.healthIcon, false);
+		if (!ClientPrefs.classicMode) iconP2 = new HealthIcon(dad.healthIcon, false) else iconP2 = new HealthIcon('dad', false);
 		iconP2.y = healthBar.y - 75;
 		iconP2.visible = !ClientPrefs.hideHud || !cpuControlled;
 		iconP2.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1.25;
+		if (!ClientPrefs.classicMode)
+		{
+			scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			scoreTxt.borderSize = 1.25;
+		} else {
+			scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+		}
 		scoreTxt.visible = !ClientPrefs.hideHud || !cpuControlled;
+		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
 		botplayTxt = new FlxText(-20, 632, FlxG.width - 800, "BOTPLAY", 32);
@@ -1452,6 +1458,7 @@ class PlayState extends MusicBeatState
 		msTimingText.borderColor = FlxColor.BLACK;
 		msTimingText.size = 20;
 		msTimingText.alpha = 0;
+		msTimingText.visible = !ClientPrefs.classicMode;
 		add(msTimingText);
 
 		subtitlesText = new FlxText(0, 0, FlxG.width - 80, '');
@@ -1871,9 +1878,13 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
-			FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
-
+		if (!ClientPrefs.classicMode)
+		{
+			healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
+				FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
+		} else {
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		}
 		healthBar.updateBar();
 	}
 
@@ -2905,7 +2916,7 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
+		if(ClientPrefs.scoreZoom && !ClientPrefs.classicMode && !miss && !cpuControlled)
 		{
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
@@ -3426,7 +3437,7 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.NINE)
+		if (FlxG.keys.justPressed.NINE && !ClientPrefs.classicMode)
 		{
 			iconP1.swapOldIcon();
 		}
@@ -3764,26 +3775,41 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
+		if (!ClientPrefs.classicMode)
+		{
+			var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
+			iconP1.scale.set(mult, mult);
+			iconP1.updateHitbox();
+	
+			var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
+			iconP2.scale.set(mult, mult);
+			iconP2.updateHitbox();
+	
+			var iconOffset:Int = 26;
+	
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
-		iconP2.scale.set(mult, mult);
-		iconP2.updateHitbox();
+			songScoreDisplay = Math.floor(FlxMath.lerp(songScore, songScoreDisplay, CoolUtil.boundTo(1 - (elapsed * 24), 0, 1)));
+			scoreTxt.text = '${Language.uiTexts.get('score')}: ' + songScoreDisplay + ' | ${Language.uiTexts.get('misses')}: ' + songMisses + ' | ${Language.uiTexts.get('accuracy')}: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
+		} else {
+			iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
+			iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
 
-		var iconOffset:Int = 26;
+			iconP1.updateHitbox();
+			iconP2.updateHitbox();
+
+			var iconOffset:Int = 26;
+
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+
+			scoreTxt.text = '${Language.uiTexts.get('score')}:' + songScore;
+		}
 
 		botplayTxt.x = FlxMath.lerp(botPlayx, botplayTxt.x, CoolUtil.boundTo(1 - (elapsed * 9.6), 0, 1));
 
 		ouchUI.alpha = FlxMath.lerp(0, ouchUI.alpha, CoolUtil.boundTo(1 - (elapsed * 4), 0, 1));
-
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-
-		songScoreDisplay = Math.floor(FlxMath.lerp(songScore, songScoreDisplay, CoolUtil.boundTo(1 - (elapsed * 24), 0, 1)));
-
-		scoreTxt.text = '${Language.uiTexts.get('score')}: ' + songScoreDisplay + ' | ${Language.uiTexts.get('misses')}: ' + songMisses + ' | ${Language.uiTexts.get('accuracy')}: ' + ratingName + (ratingName != '?' ? ' [${Highscore.floorDecimal(ratingPercent * 100, 2)}% | $ratingFC]' : '');
 
 		if (msTimingText.alpha > 0 && !cpuControlled)
 		{

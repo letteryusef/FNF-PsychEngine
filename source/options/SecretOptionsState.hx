@@ -39,22 +39,22 @@ class SecretOptionsState extends BaseOptionsMenu
 		title = uiArray[0][3];
 		rpcTitle = 'Sssshhh, it\'s a secret!!'; //for Discord Rich Presence
 
-		var option:Option = new Option(uiArray[1][36],
-			uiArray[2][36],
-			'mosaicMode',
-			'bool',
-			false);
-		addOption(option);
-
 		var option:Option = new Option(uiArray[1][37],
 			uiArray[2][37],
-			'fightMode',
+			'mosaicMode',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option(uiArray[1][38],
 			uiArray[2][38],
+			'fightMode',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option(uiArray[1][39],
+			uiArray[2][39],
 			'mosaicStrength',
 			'float',
 			3.0);
